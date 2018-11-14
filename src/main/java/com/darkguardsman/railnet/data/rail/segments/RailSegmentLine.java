@@ -16,8 +16,7 @@ public class RailSegmentLine extends RailSegment {
     public final RailHeading heading;
     public final int distance;
 
-    public RailSegmentLine(RailHeading heading, float startX, float startY, float startZ, int distance)
-    {
+    public RailSegmentLine(RailHeading heading, float startX, float startY, float startZ, int distance) {
         this.heading = heading;
         this.distance = distance;
         start = new RailJoint(this, startX, startY, startZ);
@@ -27,20 +26,31 @@ public class RailSegmentLine extends RailSegment {
 
     @Override
     protected void generatePaths() {
+
+        //Reset
+        getAllPaths().clear();
+
+        //Create
         RailPath path = new RailPath(start, end);
+
+        //Add start
         path.newPoint(start.x(), start.y(), start.z());
 
+        //Generate mid points
         int cuts = distance < RailConfig.railPathPointDistanceDivide ? 1 : distance / RailConfig.railPathPointDistanceDivide;
 
         float distancePerCut = distance / (cuts + 1f);
-        for(int i = 0; i < cuts; i++)
-        {
+        for (int i = 0; i < cuts; i++) {
             path.newPoint(
-                    start.x() + heading.offsetX * distancePerCut * i, 
+                    start.x() + heading.offsetX * distancePerCut * i,
                     start.y(),
                     start.z() + heading.offsetZ * distancePerCut * i);
         }
 
+        //Add end
         path.newPoint(end.x(), end.y(), end.z());
+
+        //add path
+        getAllPaths().add(path);
     }
 }
