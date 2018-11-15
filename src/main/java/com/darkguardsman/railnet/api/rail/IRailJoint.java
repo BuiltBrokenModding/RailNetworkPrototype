@@ -1,6 +1,6 @@
 package com.darkguardsman.railnet.api.rail;
 
-import com.darkguardsman.railnet.api.*;
+import com.darkguardsman.railnet.api.math.*;
 
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.

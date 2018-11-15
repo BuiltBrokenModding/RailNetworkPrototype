@@ -1,8 +1,6 @@
 package com.darkguardsman.railnet.api.train;
 
-import com.darkguardsman.railnet.api.*;
-
-import java.util.*;
+import com.darkguardsman.railnet.api.math.*;
 
 /**
  * A single cart in the train
