@@ -58,10 +58,11 @@ public class RenderPanel extends JPanel {
         double scaleX = getScaleX();
         double scaleY = getScaleY();
 
-        //Get pixel position
-        double x = PAD + scaleX * point_x;
-        double y = getHeight() - PAD - scaleY * point_y;
+        //Get x & y, render position is based on data point plus offset, scaled to match view, and then offset by padding to avoid edges
+        double x = PAD + scaleX * (point_x + getOffsetX());
+        double y = getHeight() - PAD - scaleY * (point_y + getOffsetY());
 
+        //Only render if the ellipse will be in view TODO check size not just center
         if (x >= 0 && x <= getWidth() && y <= getHeight()) {
             //Generate circle
             Ellipse2D circle = new Ellipse2D.Double(x - (size_x / 2), y - (size_y / 2), size_x, size_y);
@@ -158,7 +159,18 @@ public class RenderPanel extends JPanel {
     public double getPointMaxY() {
         return rendersToRun.stream()
                 .filter(a -> a.hasSize())
-                .max(Comparator.comparingDouble(IPlotRenderObject::getMaxY)).get().getMaxY();
+                .max(Comparator.comparingDouble(IPlotRenderObject::getMaxY))
+                .orElseGet(() -> new IPlotRenderObject(){
+                    @Override
+                    public void draw(Graphics2D g2, RenderPanel renderPanel) {
+
+                    }
+
+                    @Override
+                    public double getMaxY() {
+                        return 0;
+                    }
+                }).getMaxY();
     }
 
     /**
@@ -169,7 +181,18 @@ public class RenderPanel extends JPanel {
     public double getPointMaxX() {
         return rendersToRun.stream()
                 .filter(a -> a.hasSize())
-                .max(Comparator.comparingDouble(IPlotRenderObject::getMaxX)).get().getMaxX();
+                .max(Comparator.comparingDouble(IPlotRenderObject::getMaxX))
+                .orElseGet(() -> new IPlotRenderObject(){
+                    @Override
+                    public void draw(Graphics2D g2, RenderPanel renderPanel) {
+
+                    }
+
+                    @Override
+                    public double getMaxX() {
+                        return 0;
+                    }
+                }).getMaxX();
     }
 
     /**
@@ -180,7 +203,18 @@ public class RenderPanel extends JPanel {
     public double getPointMinY() {
         return rendersToRun.stream()
                 .filter(a -> a.hasSize())
-                .min(Comparator.comparingDouble(IPlotRenderObject::getMinY)).get().getMinY();
+                .min(Comparator.comparingDouble(IPlotRenderObject::getMinY))
+                .orElseGet(() -> new IPlotRenderObject(){
+                    @Override
+                    public void draw(Graphics2D g2, RenderPanel renderPanel) {
+
+                    }
+
+                    @Override
+                    public double getMinY() {
+                        return 0;
+                    }
+                }).getMinY();
     }
 
     /**
@@ -191,7 +225,18 @@ public class RenderPanel extends JPanel {
     public double getPointMinX() {
         return rendersToRun.stream()
                 .filter(a -> a.hasSize())
-                .min(Comparator.comparingDouble(IPlotRenderObject::getMinX)).get().getMinX();
+                .min(Comparator.comparingDouble(IPlotRenderObject::getMinX))
+                .orElseGet(() -> new IPlotRenderObject(){
+                    @Override
+                    public void draw(Graphics2D g2, RenderPanel renderPanel) {
+
+                    }
+
+                    @Override
+                    public double getMinX() {
+                        return 0;
+                    }
+                }).getMinX();
     }
 
     /**
@@ -218,5 +263,9 @@ public class RenderPanel extends JPanel {
 
     public void addRendersToRun(IPlotRenderObject renderFunction) {
         rendersToRun.add(renderFunction);
+    }
+
+    public void clear() {
+        rendersToRun.forEach(r -> r.clearData());
     }
 }

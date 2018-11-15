@@ -23,17 +23,17 @@ public abstract class RailSegment implements IRailSegment {
 
     @Override
     public List<IRailPath> getAllPaths() {
+        if (!arePathsInit) {
+            arePathsInit = true;
+            generatePaths();
+        }
         return paths;
     }
 
 
     @Override
     public IRailPath getPath(IRailJoint from, IRailJoint to) {
-        if(!arePathsInit)
-        {
-            arePathsInit = true;
-            generatePaths();
-        }
+
         for (IRailPath path : getAllPaths()) {
             if (path.getStart() == from && path.getEnd() == to
                     || path.isTwoWay() &&

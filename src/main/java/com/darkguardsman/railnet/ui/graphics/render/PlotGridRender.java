@@ -11,8 +11,14 @@ import java.awt.geom.*;
  */
 public class PlotGridRender implements IPlotRenderObject {
 
-    public double plotLineSpacingX = -1;
-    public double plotLineSpacingY = -1;
+    public double plotLineSpacingX;
+    public double plotLineSpacingY;
+
+    public PlotGridRender(double x, double y)
+    {
+        this.plotLineSpacingX = x;
+        this.plotLineSpacingY = y;
+    }
 
     @Override
     public void draw(Graphics2D g2, RenderPanel renderPanel)
