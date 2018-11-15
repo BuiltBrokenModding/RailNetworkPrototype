@@ -28,4 +28,9 @@ public class RailPathPoint extends AbstractPos<RailPathPoint> implements IRailPa
     {
         return index;
     }
+
+    @Override
+    public RailPathPoint newCopyAtPosition(float x, float y, float z) {
+        return new RailPathPoint(x, y, z, index);
+    }
 }

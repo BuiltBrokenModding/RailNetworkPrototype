@@ -1,5 +1,6 @@
 package com.darkguardsman.railnet.data.rail;
 
+import com.darkguardsman.railnet.api.math.IPosM;
 import com.darkguardsman.railnet.api.rail.*;
 import com.darkguardsman.railnet.lib.*;
 
@@ -21,5 +22,10 @@ public class RailJoint extends AbstractPos implements IRailJoint {
     @Override
     public IRailSegment getRail() {
         return rail;
+    }
+
+    @Override
+    public IPosM newCopyAtPosition(float x, float y, float z) {
+        return new RailJoint(rail, x, y, z);
     }
 }
