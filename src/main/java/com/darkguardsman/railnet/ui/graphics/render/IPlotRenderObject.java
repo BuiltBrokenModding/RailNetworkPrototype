@@ -18,23 +18,61 @@ public interface IPlotRenderObject {
      */
     void draw(Graphics2D g2, RenderPanel renderPanel);
 
-    double getMaxY();
+    default double getMaxY()
+    {
+        return 0;
+    }
 
-    double getMaxX();
+    default double getMaxX()
+    {
+        return 0;
+    }
 
-    double getMinY();
+    default double getMinY()
+    {
+        return 0;
+    }
 
-    double getMinX();
+    default double getMinX()
+    {
+        return 0;
+    }
+
+    /**
+     * Does the render object have a size or defined
+     * shape that would take up a space that can be
+     * thought of as a size.
+     *
+     * By default most components have a size for the render.
+     * The exceptions to this are renders that exist to support
+     * other renders or data sets. This includes grid renders,
+     * line renders, and measurement tools. Components that are
+     * placed to  support reading the data. As well auto scale
+     * with the data or other components.
+     *
+     * @return true to define a size;
+     */
+    default boolean hasSize()
+    {
+        return getMaxY() != getMinY() && getMaxX() != getMinX();
+    }
 
     /**
      * Called to clear all data used
      * by the renderer.
      */
-    void clearData();
+    default void clearData()
+    {
+
+    }
+
 
     /**
      * Called to pull in any data
      * used by the renderer.
      */
-    void refreshData();
+    default void refreshData()
+    {
+
+    }
 }
