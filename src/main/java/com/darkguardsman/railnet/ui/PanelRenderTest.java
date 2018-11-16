@@ -1,6 +1,9 @@
 package com.darkguardsman.railnet.ui;
 
 import com.darkguardsman.railnet.api.RailHeading;
+import com.darkguardsman.railnet.api.rail.IRailPath;
+import com.darkguardsman.railnet.api.rail.IRailPathPoint;
+import com.darkguardsman.railnet.data.rail.path.RailPathPoint;
 import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
 import com.darkguardsman.railnet.ui.graphics.PlotPoint;
@@ -14,6 +17,7 @@ import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.List;
 
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
@@ -82,8 +86,22 @@ public class PanelRenderTest extends JPanel {
             double x = heading.offsetX * (distance / 2);
             double z = heading.offsetZ * (distance / 2);
 
+            System.out.println("Generating line rail for render");
+            System.out.println("\tWith Heading: " + heading);
+            System.out.println("\tStart: " + x + ", " + z);
+            System.out.println("\tDistance: " + distance);
+
             RailSegmentLine segment = new RailSegmentLine(heading, (float) x, 0, (float) z, (int) distance);
-            segment.getAllPaths().get(0).getPathPoints().forEach(pp -> pointRender.add(new PlotPoint(pp.x(), pp.y(), Color.RED)));
+
+            System.out.println("\tPoints: ");
+            List<IRailPathPoint> points = segment.getAllPaths().get(0).getPathPoints();
+            System.out.println("\t\tSize: " + points);
+
+            for (int i = 0; i < points.size(); i++) {
+                IRailPathPoint pp = points.get(i);
+                pointRender.add(new PlotPoint(pp.x(), pp.z(), Color.RED));
+                System.out.println("\t\t[" + i + "]: " + pp.x() + ", " + pp.z());
+            }
             renderPanel.repaint();
         } catch (Exception e) {
             e.printStackTrace();
