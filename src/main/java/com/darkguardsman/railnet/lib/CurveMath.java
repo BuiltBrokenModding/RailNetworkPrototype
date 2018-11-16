@@ -26,7 +26,8 @@ public class CurveMath {
         if(segmentCount > 1) {
             //Calculate the curve influencing positions
             //Get the distance between the points and divide by 3 to give a smooth curve.
-        	float distance = (float)start.horizontalDistance(end)/3f;
+        	float divider = (float) (3f - (getAngleBetween2Angles(startAngle,endAngle)/Math.PI)*1.5);
+        	float distance = (float)(start.horizontalDistance(end)/divider);
 
             //Get the influencing points, from simple tests 1/3rd the ditance to the next point at the incoming angle seems to work fine.
             Pos p1t = calculateInfluencingPoint(start, distance, startAngle);
@@ -34,20 +35,25 @@ public class CurveMath {
             Pos p2t = calculateInfluencingPoint(end, distance, endAngle);
             points.add(p2t); //TODO change how we pass this back to the rail
             //Once those points are removed, remember to change the rail as well or the data will be wrong
-
+            
             //Add the sub points that will create the bend
             for (int i = 1; i <= segmentCount; i++) {
             	float t = i / (segmentCount + 1f);
             	float x = getCurveValue(start.x(), p1t.x(), end.x(), p2t.x(), t);
                 float z = getCurveValue(start.z(), p1t.z(), end.z(), p2t.z(), t);
-                points.add(new Pos(x, 0, z));
+                float y = start.y()+((end.y()- start.y())*t); 
+                points.add(new Pos(x, y, z));
                 //TODO we could use a lambda expression to create an add directly to the host allowing more reusablity
             }
 
         }
         return points;
     }
+    private static double getAngleBetween2Angles(double angle1, double angle2) {
+    	double a = angle1 - angle2;
+    	return ((a + 5*Math.PI) % (Math.PI*2));
 
+    }
     public static Pos calculateInfluencingPoint(IPosM position, double distance, double angle) {
         Pos outPosition = new Pos(position);
         Pos vector = new Pos(distance * Math.sin(angle), 0, distance * Math.cos(angle));
