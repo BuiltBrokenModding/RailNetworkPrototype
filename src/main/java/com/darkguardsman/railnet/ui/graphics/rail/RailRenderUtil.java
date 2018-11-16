@@ -1,7 +1,10 @@
 package com.darkguardsman.railnet.ui.graphics.rail;
 
 import com.darkguardsman.railnet.api.RailHeading;
+import com.darkguardsman.railnet.api.math.IPos;
 import com.darkguardsman.railnet.api.rail.IRailPathPoint;
+import com.darkguardsman.railnet.data.rail.segments.RailSegment;
+import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 
@@ -18,14 +21,21 @@ public class RailRenderUtil {
     public static Color NODE_COLOR = Color.YELLOW;
     public static Color NODE_COLOR_ENDS = Color.BLUE;
 
-    public static RailSegmentLine generateLineRail(List<PlotPoint> dots, RailHeading heading,
-                                                      double x, double z, double distance) {
+    public static RailSegmentLine generateRail(List<PlotPoint> dots, RailHeading heading,
+                                               double x, double z, double distance) {
         RailSegmentLine segment = new RailSegmentLine(heading, (float) x, 0, (float) z, (int) distance);
         populatePlotPoints(segment, dots);
         return segment;
     }
 
-    public static void populatePlotPoints(RailSegmentLine segment, List<PlotPoint> dots) {
+    public static RailSegmentCurve generateRail(List<PlotPoint> dots, IPos start, IPos end, double startAngle, double endAngle)
+    {
+        RailSegmentCurve segment = new RailSegmentCurve(start, end, (float)startAngle, (float)endAngle);
+        populatePlotPoints(segment, dots);
+        return segment;
+    }
+
+    public static void populatePlotPoints(RailSegment segment, List<PlotPoint> dots) {
 
         List<IRailPathPoint> points = segment.getAllPaths().get(0).getPathPoints();
         for (int i = 0; i < points.size(); i++) {

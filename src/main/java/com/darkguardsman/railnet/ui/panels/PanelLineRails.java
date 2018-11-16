@@ -1,9 +1,6 @@
 package com.darkguardsman.railnet.ui.panels;
 
 import com.darkguardsman.railnet.api.RailHeading;
-import com.darkguardsman.railnet.api.rail.IRailPathPoint;
-import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
-import com.darkguardsman.railnet.lib.RailUtils;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
@@ -102,13 +99,13 @@ public class PanelLineRails extends JPanel {
         System.out.println("\tStart: " + x + ", " + z);
         System.out.println("\tDistance: " + distance);
 
-        //Generate rail and get dots, dots include two reference dots to show start and end points more clearly
+        //Generate rail and get dots
         List<PlotPoint> dots = new ArrayList();
-        RailRenderUtil.generateLineRail(dots, heading, x, z, distance);
+        RailRenderUtil.generateRail(dots, heading, x, z, distance);
 
         //More debug
         System.out.println("\tPoints:");
-        System.out.println("\t\tSize: " + (dots.size() - 2)); //-2 is to remove the reference points
+        System.out.println("\t\tSize: " + dots.size());
 
         //Extra line to visual show start to end path, added to debug for issues
         pointRender.addLine(dots.get(0), dots.get(dots.size() - 1), Color.blue, 8);
@@ -120,7 +117,7 @@ public class PanelLineRails extends JPanel {
             PlotPoint dot = dots.get(i);
 
             //Debug data to show the exact data used
-            System.out.println("\t\t[" + (i - 2) + "]: " + dot.x + ", " + dot.y);
+            System.out.println("\t\t[" + i+ "]: " + dot.x + ", " + dot.y);
 
             //Adds node and sets a line to last node
             pointRender.addPlusLinkLast(dot, Color.CYAN, 2); //TODO consider moving links to data generator

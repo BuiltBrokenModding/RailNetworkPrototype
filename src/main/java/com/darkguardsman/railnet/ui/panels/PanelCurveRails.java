@@ -8,6 +8,7 @@ import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
+import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
@@ -20,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -147,32 +149,38 @@ public class PanelCurveRails extends JPanel {
 
         try {
 
+            //Debug info so we can see the math
             System.out.println("Generating line rail for render");
             System.out.println("\tStart: " + start);
             System.out.println("\tend: " + end);
             System.out.println("\tAngles: " + startAngle + ", " + endAngle);
 
-            RailSegmentCurve segment = new RailSegmentCurve(start, end, (float)startAngle, (float)endAngle);
+            //Generate rail and get dots
+            List<PlotPoint> dots = new ArrayList();
+            RailSegmentCurve segment = RailRenderUtil.generateRail(dots, start, end, startAngle, endAngle);
 
-            System.out.println("\tPoints: ");
-            List<IRailPathPoint> points = segment.getAllPaths().get(0).getPathPoints();
-            System.out.println("\t\tSize: " + points.size());
-
-            pointRender.add(new PlotPoint(segment.start.x(), segment.start.z(), Color.CYAN, 14));
-            pointRender.add(new PlotPoint(segment.end.x(), segment.end.z(), Color.CYAN, 14));
-
+            //Add influence points for debug
             pointRender.add(new PlotPoint(segment.influencePointA.x(), segment.influencePointA.z(), Color.GREEN, 14));
             pointRender.add(new PlotPoint(segment.influencePointB.x(), segment.influencePointB.y(), Color.GREEN, 14));
 
-            for (int i = 0; i < points.size(); i++) {
-                IRailPathPoint pp = points.get(i);
-                if (i == 0) {
-                    pointRender.add(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10));
-                } else {
-                    pointRender.addPlusLinkLast(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10), Color.GREEN, 2);
+            //Add dots to render, include lines to trace path easier
+            for (int i = 0; i < dots.size(); i++) {
+
+                PlotPoint dot = dots.get(i);
+
+                //Debug data to show the exact data used
+                System.out.println("\t\t[" + i+ "]: " + dot.x + ", " + dot.y);
+
+                if(i != 0) {
+                    //Adds node and sets a line to last node
+                    pointRender.addPlusLinkLast(dot, Color.CYAN, 2); //TODO consider moving links to data generator
                 }
-                System.out.println("\t\t[" + i + "]: " + pp.x() + ", " + pp.z());
+                else
+                {
+                    pointRender.add(dot);
+                }
             }
+
             renderPanel.repaint();
         } catch (Exception e) {
             e.printStackTrace();
