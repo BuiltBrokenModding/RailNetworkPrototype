@@ -1,6 +1,7 @@
 package com.darkguardsman.railnet.ui.graphics;
 
 
+import com.darkguardsman.railnet.ui.graphics.data.PlotConnection;
 import com.darkguardsman.railnet.ui.graphics.render.IPlotRenderObject;
 
 import javax.swing.*;
@@ -77,6 +78,10 @@ public class RenderPanel extends JPanel {
                 g2.draw(circle);
             }
         }
+    }
+
+    public void drawLine(Graphics2D g2, PlotConnection line) {
+        drawLine(g2, line.lineColor, line.a.x, line.a.y, line.b.x, line.b.y);
     }
 
     public void drawLine(Graphics2D g2, Color color, double point_x, double point_y, double point_x2, double point_y2) {

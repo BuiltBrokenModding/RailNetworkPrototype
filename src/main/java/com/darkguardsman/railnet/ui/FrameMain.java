@@ -1,5 +1,7 @@
 package com.darkguardsman.railnet.ui;
 
+import com.darkguardsman.railnet.ui.panels.PanelLineRails;
+
 import javax.swing.*;
 
 /**

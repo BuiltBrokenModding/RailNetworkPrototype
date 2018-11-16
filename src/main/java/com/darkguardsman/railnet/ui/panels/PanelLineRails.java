@@ -1,17 +1,13 @@
-package com.darkguardsman.railnet.ui;
+package com.darkguardsman.railnet.ui.panels;
 
 import com.darkguardsman.railnet.api.RailHeading;
-import com.darkguardsman.railnet.api.rail.IRailPath;
 import com.darkguardsman.railnet.api.rail.IRailPathPoint;
-import com.darkguardsman.railnet.data.rail.path.RailPathPoint;
-import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
-import com.darkguardsman.railnet.ui.graphics.PlotPoint;
+import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
-import com.sun.codemodel.internal.JFieldRef;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,6 +38,7 @@ public class PanelLineRails extends JPanel {
         renderPanel.lowerBound = new Dimension(-10, -10);
 
         renderPanel.addRendersToRun(new PlotGridRender(1, 1));
+        renderPanel.addRendersToRun(new PlotGridRender(2, 2, Color.BLUE));
         renderPanel.addRendersToRun(new PlotCenterRender());
         renderPanel.addRendersToRun(pointRender = new PlotPointRender(null));
         return renderPanel;
@@ -103,7 +100,7 @@ public class PanelLineRails extends JPanel {
 
             for (int i = 0; i < points.size(); i++) {
                 IRailPathPoint pp = points.get(i);
-                pointRender.add(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10));
+                pointRender.addPlusLinkLast(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10), Color.GREEN);
                 System.out.println("\t\t[" + i + "]: " + pp.x() + ", " + pp.z());
             }
             renderPanel.repaint();

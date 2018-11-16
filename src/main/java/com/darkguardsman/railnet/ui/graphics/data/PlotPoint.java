@@ -1,4 +1,4 @@
-package com.darkguardsman.railnet.ui.graphics;
+package com.darkguardsman.railnet.ui.graphics.data;
 
 import java.awt.*;
 

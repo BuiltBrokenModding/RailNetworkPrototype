@@ -15,21 +15,22 @@ public class PlotGridRender implements IPlotRenderObject {
     public double plotLineSpacingY;
     public Color lineColor = Color.BLACK;
 
-    public PlotGridRender(double x, double y)
-    {
+    public PlotGridRender(double x, double y) {
         this.plotLineSpacingX = x;
         this.plotLineSpacingY = y;
     }
 
+    public PlotGridRender(double x, double y, Color color) {
+        this(x, y);
+        this.lineColor = color;
+    }
+
     @Override
-    public void draw(Graphics2D g2, RenderPanel renderPanel)
-    {
-        if (plotLineSpacingX > 0)
-        {
+    public void draw(Graphics2D g2, RenderPanel renderPanel) {
+        if (plotLineSpacingX > 0) {
             drawGridX(g2, renderPanel);
         }
-        if (plotLineSpacingY > 0)
-        {
+        if (plotLineSpacingY > 0) {
             drawGridY(g2, renderPanel);
         }
     }
@@ -64,23 +65,19 @@ public class PlotGridRender implements IPlotRenderObject {
 
     }
 
-    protected void drawGridX(Graphics2D g2, RenderPanel renderPanel)
-    {
-        int neg_x_steps = (int)Math.floor(renderPanel.getDrawMinX() / plotLineSpacingX);
+    protected void drawGridX(Graphics2D g2, RenderPanel renderPanel) {
+        int neg_x_steps = (int) Math.floor(renderPanel.getDrawMinX() / plotLineSpacingX);
         double current = neg_x_steps * plotLineSpacingX;
-        while(current < renderPanel.getDrawMaxX())
-        {
+        while (current < renderPanel.getDrawMaxX()) {
             renderPanel.drawVerticalLine(g2, lineColor, current);
             current += plotLineSpacingX;
         }
     }
 
-    protected void drawGridY(Graphics2D g2, RenderPanel renderPanel)
-    {
-        int neg_x_steps = (int)Math.floor(renderPanel.getDrawMinY() / plotLineSpacingY);
+    protected void drawGridY(Graphics2D g2, RenderPanel renderPanel) {
+        int neg_x_steps = (int) Math.floor(renderPanel.getDrawMinY() / plotLineSpacingY);
         double current = neg_x_steps * plotLineSpacingY;
-        while(current < renderPanel.getDrawMaxY())
-        {
+        while (current < renderPanel.getDrawMaxY()) {
             renderPanel.drawHorizontalLine(g2, lineColor, current);
             current += plotLineSpacingY;
         }
