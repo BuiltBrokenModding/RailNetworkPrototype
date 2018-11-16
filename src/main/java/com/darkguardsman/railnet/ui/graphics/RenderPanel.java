@@ -30,7 +30,7 @@ public class RenderPanel extends JPanel {
     public Dimension upperBound;
 
     public RenderPanel() {
-
+        addComponentListener(new ResizeListenerBoxSize());
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RenderPanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Traslate the Origin and flip the co-ordinate space
-        g2.translate(getWidth() - PAD, getHeight() - PAD);
+        g2.translate(getWidth(), getHeight());
         g2.scale(-1, -1);
 
         drawBorder(g2);
@@ -53,7 +53,9 @@ public class RenderPanel extends JPanel {
      * @param g2
      */
     protected void drawBorder(Graphics2D g2) {
-        g2.drawRect(1, 1, getWidth() - 2, getHeight() - 2); //TODO why -2?
+        setLineStroke(g2, 2);
+        g2.drawRect(2, 2, getWidth() - 3, getHeight() - 3);
+        setLineStroke(g2, 1);
     }
 
     public void drawCircle(Graphics2D g2, Color color, double point_x, double point_y, double size, boolean fill) {
