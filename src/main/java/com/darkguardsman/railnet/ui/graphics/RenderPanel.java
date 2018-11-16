@@ -127,7 +127,7 @@ public class RenderPanel extends JPanel {
         int x1 = (int) Math.floor((x + getOffsetX()) * scaleX);
 
         g2.setColor(color);
-        g2.drawLine(x1, PAD, x1, getHeight() - PAD);
+        g2.drawLine(x1, 0, x1, getHeight());
     }
 
     public void drawHorizontalLine(Graphics2D g2, Color color, double y) {
@@ -135,7 +135,7 @@ public class RenderPanel extends JPanel {
         int y1 = (int) Math.floor((y + getOffsetY()) * scaleY);
 
         g2.setColor(color);
-        g2.drawLine(PAD, y1, getWidth() - PAD, y1);
+        g2.drawLine(0, y1, getWidth(), y1);
     }
 
     public void drawBox(Graphics2D g2, Color color, double x, double y, double size_x, double size_y, boolean filled) {
