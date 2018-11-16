@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 
 /**
@@ -26,6 +25,7 @@ public class PanelGridRenderTest extends JPanel {
     protected PlotPointRender pointRender;
 
     protected JTextField sizeField;
+    protected JTextField padField;
 
     protected JTextField xStartField;
     protected JTextField yStartField;
@@ -52,6 +52,20 @@ public class PanelGridRenderTest extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(20, 2));
         JButton button;
+
+
+        panel.add(new JLabel("Pad:"));
+        panel.add(padField = new JTextField("1"));
+        
+        panel.add(new JPanel());
+        button = new JButton("Set");
+        button.addActionListener((a) -> setPad());
+        panel.add(button);
+
+        //Spacer
+        panel.add(new JPanel());
+        panel.add(new JPanel());
+
 
         panel.add(new JLabel("Size:"));
         panel.add(sizeField = new JTextField("10"));
@@ -104,6 +118,14 @@ public class PanelGridRenderTest extends JPanel {
 
 
         return panel;
+    }
+
+    protected void setPad()
+    {
+        int pad = (int)Double.parseDouble(padField.getText().trim());
+        renderPanel.data_pad = pad;
+
+        repaint();
     }
 
     protected void setSize()

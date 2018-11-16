@@ -24,7 +24,7 @@ public class RenderPanel extends JPanel {
     /**
      * Spacing from each side
      */
-    public int DATA_PAD = 1;
+    public int data_pad = 1;
 
     public Dimension lowerBound;
     public Dimension upperBound;
@@ -219,19 +219,19 @@ public class RenderPanel extends JPanel {
     }
 
     public double getDrawMaxX() {
-        return (upperBound != null ? upperBound.width : getPointMaxX()) + DATA_PAD;
+        return (upperBound != null ? upperBound.width : getPointMaxX()) + data_pad;
     }
 
     public double getDrawMaxY() {
-        return (upperBound != null ? upperBound.height : getPointMinY()) + DATA_PAD;
+        return (upperBound != null ? upperBound.height : getPointMinY()) + data_pad;
     }
 
     public double getDrawMinX() {
-        return (lowerBound != null ? lowerBound.width : getPointMaxX()) - DATA_PAD;
+        return (lowerBound != null ? lowerBound.width : getPointMaxX()) - data_pad;
     }
 
     public double getDrawMinY() {
-        return (lowerBound != null ? lowerBound.height : getPointMinY()) - DATA_PAD;
+        return (lowerBound != null ? lowerBound.height : getPointMinY()) - data_pad;
     }
 
     /**
@@ -242,7 +242,7 @@ public class RenderPanel extends JPanel {
      */
     public double getOffsetX() {
 
-        return (lowerBound != null ? -lowerBound.width : -getPointMinX()) + DATA_PAD;
+        return (lowerBound != null ? -lowerBound.width : -getPointMinX()) + data_pad;
     }
 
     /**
@@ -252,7 +252,7 @@ public class RenderPanel extends JPanel {
      * @return
      */
     public double getOffsetY() {
-        return (lowerBound != null ? -lowerBound.height :  -getPointMinY()) + DATA_PAD;
+        return (lowerBound != null ? -lowerBound.height :  -getPointMinY()) + data_pad;
     }
 
     /**
