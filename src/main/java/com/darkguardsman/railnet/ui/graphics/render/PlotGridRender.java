@@ -13,6 +13,7 @@ public class PlotGridRender implements IPlotRenderObject {
 
     public double plotLineSpacingX;
     public double plotLineSpacingY;
+    public Color lineColor = Color.BLACK;
 
     public PlotGridRender(double x, double y)
     {
@@ -65,43 +66,23 @@ public class PlotGridRender implements IPlotRenderObject {
 
     protected void drawGridX(Graphics2D g2, RenderPanel renderPanel)
     {
-        double start = 0;
-        double end = renderPanel.getDrawMaxX();
-
-        double current = start;
-        double xScale = renderPanel.getScaleX();
-
-        while (current < end)
+        int neg_x_steps = (int)Math.floor(renderPanel.getDrawMinX() / plotLineSpacingX);
+        double current = neg_x_steps * plotLineSpacingX;
+        while(current < renderPanel.getDrawMaxX())
         {
-            //Increase
+            renderPanel.drawVerticalLine(g2, lineColor, current);
             current += plotLineSpacingX;
-
-            //Get pixel point of x
-            int x = renderPanel.PAD + (int) Math.ceil(current * xScale);
-
-            //Draw line
-            g2.draw(new Line2D.Double(x, renderPanel.PAD, x, renderPanel.getHeight() - renderPanel.PAD));
         }
     }
 
     protected void drawGridY(Graphics2D g2, RenderPanel renderPanel)
     {
-        double start = 0;
-        double end = renderPanel.getDrawMaxY();
-
-        double current = start;
-        double xScale = renderPanel.getScaleY();
-
-        while (current < end)
+        int neg_x_steps = (int)Math.floor(renderPanel.getDrawMinY() / plotLineSpacingY);
+        double current = neg_x_steps * plotLineSpacingY;
+        while(current < renderPanel.getDrawMaxY())
         {
-            //Increase
+            renderPanel.drawHorizontalLine(g2, lineColor, current);
             current += plotLineSpacingY;
-
-            //Get pixel point of x
-            int y = renderPanel.PAD + (int) Math.ceil(current * xScale);
-
-            //Draw line
-            g2.draw(new Line2D.Double(renderPanel.PAD, y, renderPanel.getWidth() - renderPanel.PAD, y));
         }
     }
 }

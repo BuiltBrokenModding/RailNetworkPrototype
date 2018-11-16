@@ -23,8 +23,8 @@ public class RenderPanel extends JPanel {
      */
     public int PAD = 20;
 
-    int plotSizeX = -1;
-    int plotSizeY = -1;
+    public Dimension lowerBound;
+    public Dimension upperBound;
 
     public RenderPanel() {
 
@@ -79,6 +79,57 @@ public class RenderPanel extends JPanel {
         }
     }
 
+    public void drawLine(Graphics2D g2, Color color, double point_x, double point_y, double point_x2, double point_y2) {
+        //Calculate scale to fit display
+        double scaleX = getScaleX();
+        double scaleY = getScaleY();
+
+        double x1 = (point_x + getOffsetX()) * scaleX;
+        double y1 = (point_y + getOffsetY()) * scaleY;
+
+        double x2 = (point_x2 + getOffsetX()) * scaleX;
+        double y2 = (point_y2 + getOffsetY()) * scaleY;
+
+        //TODO trim line to fit inside view & padding
+
+        g2.setColor(color);
+        g2.drawLine((int) Math.floor(x1), (int) Math.floor(y1), (int) Math.ceil(x2), (int) Math.ceil(y2));
+    }
+
+    public void drawVerticalLine(Graphics2D g2, Color color, double x) {
+        double scaleX = getScaleX();
+        int x1 = (int) Math.floor((x + getOffsetX()) * scaleX);
+
+        g2.setColor(color);
+        g2.drawLine(x1, PAD, x1, getHeight() - PAD);
+    }
+
+    public void drawHorizontalLine(Graphics2D g2, Color color, double y) {
+        double scaleY = getScaleY();
+        int y1 = (int) Math.floor((y + getOffsetY()) * scaleY);
+
+        g2.setColor(color);
+        g2.drawLine(PAD, y1, getWidth() - PAD, y1);
+    }
+
+    public void drawBox(Graphics2D g2, Color color, double x, double y, double size_x, double size_y, boolean filled) {
+        double scaleX = getScaleX();
+        double scaleY = getScaleY();
+
+        double x1 = (x + getOffsetX()) * scaleX;
+        double y1 = (y + getOffsetY()) * scaleY;
+
+        double x2 = size_x * scaleX;
+        double y2 = size_y * scaleY;
+
+        g2.setColor(color);
+        if (filled) {
+            g2.fillRect((int) x1, (int) y1, (int) x2, (int) y2);
+        } else {
+            g2.drawRect((int) x1, (int) y1, (int) x2, (int) y2);
+        }
+    }
+
     /**
      * Scale to draw the data on the screen.
      * <p>
@@ -87,6 +138,9 @@ public class RenderPanel extends JPanel {
      * @return scale of view ((width - padding) / size)
      */
     public double getScaleX() {
+        if (upperBound != null && lowerBound != null) {
+            return (getWidth() - 2 * PAD) / (upperBound.width - lowerBound.width);
+        }
         return (double) (getWidth() - 2 * PAD) / getRenderComponentWidth();
     }
 
@@ -98,15 +152,26 @@ public class RenderPanel extends JPanel {
      * @return scale of view ((width - padding) / size)
      */
     public double getScaleY() {
+        if (upperBound != null && lowerBound != null) {
+            return (getWidth() - 2 * PAD) / (upperBound.height - lowerBound.height);
+        }
         return (double) (getHeight() - 2 * PAD) / getRenderComponentHeight();
     }
 
     public double getDrawMaxX() {
-        return plotSizeX > 0 ? plotSizeX : getPointMaxX();
+        return upperBound != null ? upperBound.width : getPointMaxX();
     }
 
     public double getDrawMaxY() {
-        return plotSizeY > 0 ? plotSizeY : getPointMaxY();
+        return upperBound != null ? upperBound.height : getPointMinY();
+    }
+
+    public double getDrawMinX() {
+        return lowerBound != null ? lowerBound.width : getPointMaxX();
+    }
+
+    public double getDrawMinY() {
+        return lowerBound != null ? lowerBound.height : getPointMinY();
     }
 
     /**
@@ -116,6 +181,10 @@ public class RenderPanel extends JPanel {
      * @return
      */
     public double getOffsetX() {
+        if (lowerBound != null) {
+            return -lowerBound.width;
+        }
+
         return -getPointMinX();
     }
 
@@ -126,6 +195,9 @@ public class RenderPanel extends JPanel {
      * @return
      */
     public double getOffsetY() {
+        if (lowerBound != null) {
+            return -lowerBound.height;
+        }
         return -getPointMinY();
     }
 
@@ -160,7 +232,7 @@ public class RenderPanel extends JPanel {
         return rendersToRun.stream()
                 .filter(a -> a.hasSize())
                 .max(Comparator.comparingDouble(IPlotRenderObject::getMaxY))
-                .orElseGet(() -> new IPlotRenderObject(){
+                .orElseGet(() -> new IPlotRenderObject() {
                     @Override
                     public void draw(Graphics2D g2, RenderPanel renderPanel) {
 
@@ -182,7 +254,7 @@ public class RenderPanel extends JPanel {
         return rendersToRun.stream()
                 .filter(a -> a.hasSize())
                 .max(Comparator.comparingDouble(IPlotRenderObject::getMaxX))
-                .orElseGet(() -> new IPlotRenderObject(){
+                .orElseGet(() -> new IPlotRenderObject() {
                     @Override
                     public void draw(Graphics2D g2, RenderPanel renderPanel) {
 
@@ -204,7 +276,7 @@ public class RenderPanel extends JPanel {
         return rendersToRun.stream()
                 .filter(a -> a.hasSize())
                 .min(Comparator.comparingDouble(IPlotRenderObject::getMinY))
-                .orElseGet(() -> new IPlotRenderObject(){
+                .orElseGet(() -> new IPlotRenderObject() {
                     @Override
                     public void draw(Graphics2D g2, RenderPanel renderPanel) {
 
@@ -226,7 +298,7 @@ public class RenderPanel extends JPanel {
         return rendersToRun.stream()
                 .filter(a -> a.hasSize())
                 .min(Comparator.comparingDouble(IPlotRenderObject::getMinX))
-                .orElseGet(() -> new IPlotRenderObject(){
+                .orElseGet(() -> new IPlotRenderObject() {
                     @Override
                     public void draw(Graphics2D g2, RenderPanel renderPanel) {
 
@@ -237,28 +309,6 @@ public class RenderPanel extends JPanel {
                         return 0;
                     }
                 }).getMinX();
-    }
-
-    /**
-     * Sets the plot size of the display.
-     * <p>
-     * By default the display will auto scale to match the data.
-     * This can be used to ensure the data scales to a defined value.
-     *
-     * @param x
-     * @param y
-     */
-    public void setPlotSize(int x, int y) {
-        this.plotSizeY = y;
-        this.plotSizeX = x;
-    }
-
-    public int getPlotSizeX() {
-        return plotSizeX;
-    }
-
-    public int getPlotSizeY() {
-        return plotSizeY;
     }
 
     public void addRendersToRun(IPlotRenderObject renderFunction) {

@@ -8,15 +8,13 @@ import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
 import com.darkguardsman.railnet.ui.graphics.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
+import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 import com.sun.codemodel.internal.JFieldRef;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Button;
-import java.awt.Color;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -38,7 +36,11 @@ public class PanelRenderTest extends JPanel {
 
     private JPanel createRenderPanel() {
         renderPanel = new RenderPanel();
+        renderPanel.upperBound = new Dimension(10, 10);
+        renderPanel.lowerBound = new Dimension(-10, -10);
+
         renderPanel.addRendersToRun(new PlotGridRender(1, 1));
+        renderPanel.addRendersToRun(new PlotCenterRender());
         renderPanel.addRendersToRun(pointRender = new PlotPointRender(null));
         return renderPanel;
     }
