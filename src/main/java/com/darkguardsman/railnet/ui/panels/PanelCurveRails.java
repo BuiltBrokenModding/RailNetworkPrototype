@@ -10,7 +10,9 @@ import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -28,6 +30,8 @@ public class PanelCurveRails extends JPanel {
 
     protected RenderPanel renderPanel;
     protected PlotPointRender pointRender;
+
+    protected JTextField scaleField;
 
     public PanelCurveRails() {
         setLayout(new BorderLayout());
@@ -52,8 +56,10 @@ public class PanelCurveRails extends JPanel {
         panel.setLayout(new GridLayout(20, 2));
         JButton button;
 
-        for(RailTestSet railTestSet : RailTestSet.values())
-        {
+        panel.add(new JLabel("Scale: "));
+        panel.add(scaleField = new JTextField("1"));
+
+        for (RailTestSet railTestSet : RailTestSet.values()) {
             button = new JButton(railTestSet.name().replace("_", " "));
             button.addActionListener((a) -> generate(railTestSet));
             panel.add(button);
@@ -76,41 +82,47 @@ public class PanelCurveRails extends JPanel {
         return panel;
     }
 
-    protected void generate(RailTestSet railTestSet)
-    {
+    protected void generate(RailTestSet railTestSet) {
         renderPanel.clear();
 
-        renderPanel.upperBound = new Dimension(railTestSet.startX + 2, railTestSet.endX + 2);
-        renderPanel.lowerBound = new Dimension(railTestSet.startX - 2, railTestSet.endX - 2);
+        int scale;
+
+        try {
+            scale = (int) Double.parseDouble(scaleField.getText().trim());
+            scaleField.setText("" + scale);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            //TODO show error
+            return;
+        }
+
+        int size = scale * 2 + 2; //TODO make method to set grid size
+        renderPanel.upperBound = new Dimension(size, size);
+        renderPanel.lowerBound = new Dimension(-size, -size);
 
         RailRenderUtil.generateRail(pointRender,
-                new Pos(railTestSet.startX, 0, railTestSet.endX),
-                new Pos(railTestSet.startZ, 0, railTestSet.endZ),
+                new Pos(0, 0, 0),
+                new Pos(railTestSet.endX, 0, railTestSet.endZ),
                 railTestSet.startAngle,
                 railTestSet.endAngle, true);
 
         renderPanel.repaint();
     }
 
-    enum RailTestSet
-    {
-        UP_2x2__90_TO_0(90, 0, -1, -1, 1, 1),
-        UP_2x2__0_TO_90(0, 90, -1, -1, 1, 1),
-        DOWN_2x2__0_TO_90(0, 90, -1, -1, 1, 1),
-        DOWN_2x2__90_TO_0(90, 0, -1, -1, 1, 1);
+    enum RailTestSet {
+        UP_LEFT(0, 270, 2, 2), //TODO use heading enum to map enter & exit angles and test points
+        UP_RIGHT(0, 90, -2, 2), //TODO Ex: SOUTH(180) to EAST(90) & START(0, 0) to END (2, 0)
+        DOWN_LEFT(180, 90, -2, -2),
+        DOWN_RIGHT(180, 270, 2, -2);
 
         public final double startAngle;
         public final double endAngle;
-        public final int startX;
-        public final int startZ;
         public final int endX;
         public final int endZ;
 
-        RailTestSet(double startAngle, double endAngle, int startX, int startZ, int endX, int endZ) {
+        RailTestSet(double startAngle, double endAngle, int endX, int endZ) {
             this.startAngle = startAngle;
             this.endAngle = endAngle;
-            this.startX = startX;
-            this.startZ = startZ;
             this.endX = endX;
             this.endZ = endZ;
         }
