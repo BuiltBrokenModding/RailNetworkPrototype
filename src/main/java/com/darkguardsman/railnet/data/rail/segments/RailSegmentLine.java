@@ -40,7 +40,7 @@ public class RailSegmentLine extends RailSegment {
         int cuts = distance < RailConfig.railPathPointDistanceDivide ? 1 : distance / RailConfig.railPathPointDistanceDivide;
 
         float distancePerCut = distance / (cuts + 1f);
-        for (int i = 0; i < cuts; i++) {
+        for (int i = 1; i <= cuts; i++) {
             path.newPoint(
                     start.x() + heading.offsetX * distancePerCut * i,
                     start.y(),

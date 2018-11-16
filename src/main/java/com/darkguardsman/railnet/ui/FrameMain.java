@@ -17,7 +17,7 @@ public class FrameMain extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
         ImageIcon icon = null;
 
-        tabbedPane.addTab("Render Test", icon, new PanelRenderTest(),
+        tabbedPane.addTab("Line Rails", icon, new PanelLineRails(),
                 "Visual test of display of rail types");
 
         add(tabbedPane);

@@ -59,8 +59,8 @@ public class RenderPanel extends JPanel {
         double scaleY = getScaleY();
 
         //Get x & y, render position is based on data point plus offset, scaled to match view, and then offset by padding to avoid edges
-        double x = PAD + scaleX * (point_x + getOffsetX());
-        double y = getHeight() - PAD - scaleY * (point_y + getOffsetY());
+        double x = scaleX * (point_x + getOffsetX());
+        double y = scaleY * (point_y + getOffsetY());
 
         //Only render if the ellipse will be in view TODO check size not just center
         if (x >= 0 && x <= getWidth() && y <= getHeight()) {

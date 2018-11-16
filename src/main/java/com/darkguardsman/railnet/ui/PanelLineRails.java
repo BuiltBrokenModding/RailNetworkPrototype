@@ -18,17 +18,19 @@ import java.awt.*;
 import java.util.List;
 
 /**
+ * Used to test logic for line rails visually
+ *
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/15/18.
  */
-public class PanelRenderTest extends JPanel {
+public class PanelLineRails extends JPanel {
 
     protected RenderPanel renderPanel;
     protected PlotPointRender pointRender;
 
     protected JTextField distanceField;
 
-    public PanelRenderTest() {
+    public PanelLineRails() {
         setLayout(new BorderLayout());
         add(createRenderPanel(), BorderLayout.CENTER);
         add(createControlPanel(), BorderLayout.WEST);
@@ -85,8 +87,8 @@ public class PanelRenderTest extends JPanel {
 
         try {
             double distance = Math.floor(Double.parseDouble(distanceField.getText().trim()));
-            double x = heading.offsetX * (distance / 2);
-            double z = heading.offsetZ * (distance / 2);
+            double x = -heading.offsetX * (distance / 2);
+            double z = -heading.offsetZ * (distance / 2);
 
             System.out.println("Generating line rail for render");
             System.out.println("\tWith Heading: " + heading);
@@ -97,11 +99,11 @@ public class PanelRenderTest extends JPanel {
 
             System.out.println("\tPoints: ");
             List<IRailPathPoint> points = segment.getAllPaths().get(0).getPathPoints();
-            System.out.println("\t\tSize: " + points);
+            System.out.println("\t\tSize: " + points.size());
 
             for (int i = 0; i < points.size(); i++) {
                 IRailPathPoint pp = points.get(i);
-                pointRender.add(new PlotPoint(pp.x(), pp.z(), Color.RED));
+                pointRender.add(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10));
                 System.out.println("\t\t[" + i + "]: " + pp.x() + ", " + pp.z());
             }
             renderPanel.repaint();
