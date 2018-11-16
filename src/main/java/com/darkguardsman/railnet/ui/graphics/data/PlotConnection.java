@@ -12,10 +12,11 @@ public class PlotConnection {
     public Color lineColor;
     public int lineSize = 2;
 
-    public PlotConnection(PlotPoint a, PlotPoint b, Color lineColor)
+    public PlotConnection(PlotPoint a, PlotPoint b, Color lineColor, int lineSize)
     {
         this.a = a;
         this.b = b;
         this.lineColor = lineColor;
+        this.lineSize = lineSize;
     }
 }

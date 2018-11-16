@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public class RenderPanel extends JPanel {
     protected List<IPlotRenderObject> rendersToRun = new ArrayList();
+    protected HashMap<Integer, Stroke> lineSizeToStroke = new HashMap();
     /**
      * Spacing from each side
      */
@@ -81,8 +83,21 @@ public class RenderPanel extends JPanel {
     }
 
     public void drawLine(Graphics2D g2, PlotConnection line) {
+
+        setLineStroke(g2, line.lineSize);
         drawLine(g2, line.lineColor, line.a.x, line.a.y, line.b.x, line.b.y);
+        setLineStroke(g2, 1);
     }
+
+    protected void setLineStroke(Graphics2D g2, int size)
+    {
+        if(!lineSizeToStroke.containsKey(size))
+        {
+            lineSizeToStroke.put(size, new BasicStroke(size));
+        }
+        g2.setStroke(lineSizeToStroke.get(size));
+    }
+
 
     public void drawLine(Graphics2D g2, Color color, double point_x, double point_y, double point_x2, double point_y2) {
         //Calculate scale to fit display

@@ -98,9 +98,16 @@ public class PanelLineRails extends JPanel {
             List<IRailPathPoint> points = segment.getAllPaths().get(0).getPathPoints();
             System.out.println("\t\tSize: " + points.size());
 
+            pointRender.add(new PlotPoint(segment.start.x(), segment.start.z(), Color.CYAN, 14));
+            pointRender.add(new PlotPoint(segment.end.x(), segment.end.z(), Color.CYAN, 14));
+
             for (int i = 0; i < points.size(); i++) {
                 IRailPathPoint pp = points.get(i);
-                pointRender.addPlusLinkLast(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10), Color.GREEN);
+                if (i == 0 || i - 1 == points.size()) {
+                    pointRender.add(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10));
+                } else {
+                    pointRender.addPlusLinkLast(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10), Color.GREEN, 2);
+                }
                 System.out.println("\t\t[" + i + "]: " + pp.x() + ", " + pp.z());
             }
             renderPanel.repaint();

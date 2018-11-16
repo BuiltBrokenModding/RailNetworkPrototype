@@ -31,18 +31,18 @@ public class PlotPointRender implements IPlotRenderObject {
 
     @Override
     public void draw(Graphics2D g2, RenderPanel renderPanel) {
-        data.forEach(pos -> renderPanel.drawCircle(g2, pos.color, pos.x, pos.y, pos.size, true));
         lines.forEach(line -> renderPanel.drawLine(g2, line));
+        data.forEach(pos -> renderPanel.drawCircle(g2, pos.color, pos.x, pos.y, pos.size, true));
     }
 
     public void add(PlotPoint plotPoint) {
         data.add(plotPoint);
     }
 
-    public void addPlusLinkLast(PlotPoint plotPoint, Color lineColor) {
+    public void addPlusLinkLast(PlotPoint plotPoint, Color lineColor, int size) {
         data.add(plotPoint);
         if (lineColor != null && data.size() > 0) {
-            lines.add(new PlotConnection(data.get(0), plotPoint, lineColor));
+            lines.add(new PlotConnection(data.get(0), plotPoint, lineColor, size));
         }
     }
 
