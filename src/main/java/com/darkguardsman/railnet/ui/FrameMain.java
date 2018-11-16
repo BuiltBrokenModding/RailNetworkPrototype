@@ -2,6 +2,7 @@ package com.darkguardsman.railnet.ui;
 
 import com.darkguardsman.railnet.ui.panels.PanelCurveRailAlg;
 import com.darkguardsman.railnet.ui.panels.PanelCurveRails;
+import com.darkguardsman.railnet.ui.panels.PanelGridRenderTest;
 import com.darkguardsman.railnet.ui.panels.PanelLineRails;
 
 import javax.swing.*;
@@ -29,6 +30,11 @@ public class FrameMain extends JFrame {
 
         tabbedPane.addTab("Curve Rails", icon, new PanelCurveRails(),
                 "Visual test of pre-generated curved rails");
+
+
+        //Place everything before, everything after is render tests
+        tabbedPane.addTab("Grid Render Test", icon, new PanelGridRenderTest(),
+                "Tests that the grid is rendering correctly");
 
         add(tabbedPane);
     }

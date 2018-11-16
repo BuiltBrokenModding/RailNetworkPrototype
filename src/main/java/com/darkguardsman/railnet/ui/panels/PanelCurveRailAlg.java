@@ -50,8 +50,7 @@ public class PanelCurveRailAlg extends JPanel {
 
     private JPanel createRenderPanel() {
         renderPanel = new RenderPanel();
-        renderPanel.upperBound = new Dimension(20, 20);
-        renderPanel.lowerBound = new Dimension(-20, -20);
+        renderPanel.setViewBoundSize(20);
 
         renderPanel.addRendersToRun(new PlotGridRender(1, 1));
         renderPanel.addRendersToRun(new PlotGridRender(2, 2, Color.BLUE));

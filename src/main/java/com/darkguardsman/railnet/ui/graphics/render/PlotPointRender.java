@@ -40,8 +40,14 @@ public class PlotPointRender implements IPlotRenderObject {
         });
     }
 
-    public void add(PlotPoint plotPoint) {
+    public PlotPoint add(PlotPoint plotPoint) {
         data.add(plotPoint);
+        return plotPoint;
+    }
+
+    public PlotPoint add(double x, double y, Color color, int size)
+    {
+        return add(new PlotPoint(x, y, color, size));
     }
 
     public void addPlusLinkLast(PlotPoint plotPoint, Color lineColor, int size) {

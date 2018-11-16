@@ -24,7 +24,7 @@ public class RenderPanel extends JPanel {
     /**
      * Spacing from each side
      */
-    public int PAD = 20;
+    public int DATA_PAD = 1;
 
     public Dimension lowerBound;
     public Dimension upperBound;
@@ -55,6 +55,8 @@ public class RenderPanel extends JPanel {
     protected void drawBorder(Graphics2D g2) {
         setLineStroke(g2, 2);
         g2.drawRect(2, 2, getWidth() - 3, getHeight() - 3);
+
+        drawBox(g2, Color.GRAY, getDrawMinX(), getDrawMinY(), getDrawMaxX(), getDrawMaxY(), false);
         setLineStroke(g2, 1);
     }
 
@@ -164,10 +166,7 @@ public class RenderPanel extends JPanel {
      * @return scale of view ((width - padding) / size)
      */
     public double getScaleX() {
-        if (upperBound != null && lowerBound != null) {
-            return (getWidth() - 2 * PAD) / (upperBound.width - lowerBound.width);
-        }
-        return (double) (getWidth() - 2 * PAD) / getRenderComponentWidth();
+        return getRenderAreaWidth() / getVisibleDataAreaWidth();
     }
 
     /**
@@ -178,26 +177,61 @@ public class RenderPanel extends JPanel {
      * @return scale of view ((width - padding) / size)
      */
     public double getScaleY() {
-        if (upperBound != null && lowerBound != null) {
-            return (getWidth() - 2 * PAD) / (upperBound.height - lowerBound.height);
-        }
-        return (double) (getHeight() - 2 * PAD) / getRenderComponentHeight();
+        return getRenderAreaHeight() / getVisibleDataAreaHeight();
+    }
+
+    /**
+     * Size of the render area
+     * @return
+     */
+    public double getRenderAreaWidth()
+    {
+        return getWidth();
+    }
+
+    /**
+     * Size of the render area
+     * @return
+     */
+    public double getRenderAreaHeight()
+    {
+        return getHeight();
+    }
+
+    /**
+     * Size of the data set that can be seen
+     * before it has been scaled
+     * @return
+     */
+    public double getVisibleDataAreaWidth()
+    {
+        return getDrawMaxX() - getDrawMinX();
+    }
+
+    /**
+     * Size of the data set that can be seen
+     * before it has been scaled
+     * @return
+     */
+    public double getVisibleDataAreaHeight()
+    {
+        return getDrawMaxY() - getDrawMinY();
     }
 
     public double getDrawMaxX() {
-        return upperBound != null ? upperBound.width : getPointMaxX();
+        return (upperBound != null ? upperBound.width : getPointMaxX()) + DATA_PAD;
     }
 
     public double getDrawMaxY() {
-        return upperBound != null ? upperBound.height : getPointMinY();
+        return (upperBound != null ? upperBound.height : getPointMinY()) + DATA_PAD;
     }
 
     public double getDrawMinX() {
-        return lowerBound != null ? lowerBound.width : getPointMaxX();
+        return (lowerBound != null ? lowerBound.width : getPointMaxX()) - DATA_PAD;
     }
 
     public double getDrawMinY() {
-        return lowerBound != null ? lowerBound.height : getPointMinY();
+        return (lowerBound != null ? lowerBound.height : getPointMinY()) - DATA_PAD;
     }
 
     /**
@@ -207,11 +241,8 @@ public class RenderPanel extends JPanel {
      * @return
      */
     public double getOffsetX() {
-        if (lowerBound != null) {
-            return -lowerBound.width;
-        }
 
-        return -getPointMinX();
+        return (lowerBound != null ? -lowerBound.width : -getPointMinX()) + DATA_PAD;
     }
 
     /**
@@ -221,10 +252,7 @@ public class RenderPanel extends JPanel {
      * @return
      */
     public double getOffsetY() {
-        if (lowerBound != null) {
-            return -lowerBound.height;
-        }
-        return -getPointMinY();
+        return (lowerBound != null ? -lowerBound.height :  -getPointMinY()) + DATA_PAD;
     }
 
     /**
@@ -343,5 +371,15 @@ public class RenderPanel extends JPanel {
 
     public void clear() {
         rendersToRun.forEach(r -> r.clearData());
+    }
+
+    public void setViewBoundSize(int size) {
+        setViewBoundSize(-size, -size, size, size);
+    }
+
+    public void setViewBoundSize(int x, int y, int x2, int y2)
+    {
+        this.lowerBound = new Dimension(x, y);
+        this.upperBound = new Dimension(x2, y2);
     }
 }

@@ -41,8 +41,7 @@ public class PanelCurveRails extends JPanel {
 
     private JPanel createRenderPanel() {
         renderPanel = new RenderPanel();
-        renderPanel.upperBound = new Dimension(5, 5);
-        renderPanel.lowerBound = new Dimension(-5, -5);
+        renderPanel.setViewBoundSize(5);
 
         renderPanel.addRendersToRun(new PlotGridRender(1, 1));
         renderPanel.addRendersToRun(new PlotGridRender(2, 2, Color.BLUE));
