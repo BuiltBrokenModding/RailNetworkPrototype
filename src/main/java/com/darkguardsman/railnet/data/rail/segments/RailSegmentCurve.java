@@ -19,6 +19,9 @@ public class RailSegmentCurve extends RailSegment {
     public final float startAngle;
     public final float endAngle;
 
+    public IPos influencePointA;
+    public IPos influencePointB;
+
     public RailSegmentCurve(IPos start, IPos end, float startAngle, float endAngle) {
 
         this.start = new RailJoint(this, start);
@@ -45,6 +48,13 @@ public class RailSegmentCurve extends RailSegment {
         int cuts = distance < RailConfig.railPathPointDistanceDivide ? 1 : distance / RailConfig.railPathPointDistanceDivide;
 
         List<IPos> points = CurveMath.getCurvePoints(start, Math.toRadians(startAngle), end, Math.toRadians(endAngle), cuts);
+
+        //Extract influence point data TODO change how we get the data
+        influencePointA = points.get(0);
+        influencePointB = points.get(1);
+        points.remove(0);
+        points.remove(0);
+
         path.newPoints(points);
 
         //Add end

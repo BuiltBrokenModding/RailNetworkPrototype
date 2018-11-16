@@ -19,7 +19,7 @@ public class CurveMath {
      * @throws Exception
      */
     public static List<IPos> getCurvePoints(IPosM start, double startAngle, IPosM end, double endAngle, int segmentCount) {
-    	segmentCount = 1000;
+    	segmentCount = 10;
         //Create the array ready to hold all the points
         List<IPos> points = new ArrayList();
 
@@ -30,9 +30,11 @@ public class CurveMath {
 
             //Get the influencing points, from simple tests 1/3rd the ditance to the next point at the incoming angle seems to work fine.
             Pos p1t = calculateInfluencingPoint(start, distance, startAngle);
-            points.add(p1t);
+            points.add(p1t); //TODO change how we pass this back to the rail
             Pos p2t = calculateInfluencingPoint(end, distance, endAngle);
-            points.add(p2t);
+            points.add(p2t); //TODO change how we pass this back to the rail
+            //Once those points are removed, remember to change the rail as well or the data will be wrong
+
             //Add the sub points that will create the bend
             for (int i = 1; i <= segmentCount; i++) {
             	float t = i / (segmentCount + 1f);

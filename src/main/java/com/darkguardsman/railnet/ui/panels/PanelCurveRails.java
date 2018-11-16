@@ -154,12 +154,15 @@ public class PanelCurveRails extends JPanel {
 
             RailSegmentCurve segment = new RailSegmentCurve(start, end, (float)startAngle, (float)endAngle);
 
-            pointRender.add(new PlotPoint(segment.start.x(), segment.start.z(), Color.CYAN, 14));
-            pointRender.add(new PlotPoint(segment.end.x(), segment.end.z(), Color.CYAN, 14));
-
             System.out.println("\tPoints: ");
             List<IRailPathPoint> points = segment.getAllPaths().get(0).getPathPoints();
             System.out.println("\t\tSize: " + points.size());
+
+            pointRender.add(new PlotPoint(segment.start.x(), segment.start.z(), Color.CYAN, 14));
+            pointRender.add(new PlotPoint(segment.end.x(), segment.end.z(), Color.CYAN, 14));
+
+            pointRender.add(new PlotPoint(segment.influencePointA.x(), segment.influencePointA.z(), Color.GREEN, 14));
+            pointRender.add(new PlotPoint(segment.influencePointB.x(), segment.influencePointB.y(), Color.GREEN, 14));
 
             for (int i = 0; i < points.size(); i++) {
                 IRailPathPoint pp = points.get(i);
