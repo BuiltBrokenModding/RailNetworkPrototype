@@ -41,8 +41,9 @@ public class PlotPointRender implements IPlotRenderObject {
 
     public void addPlusLinkLast(PlotPoint plotPoint, Color lineColor, int size) {
         data.add(plotPoint);
-        if (lineColor != null && data.size() > 0) {
-            lines.add(new PlotConnection(data.get(0), plotPoint, lineColor, size));
+        if (lineColor != null && data.size() > 1) {
+            PlotPoint prevPoint = data.get(data.size() - 2);
+            lines.add(new PlotConnection(prevPoint, plotPoint, lineColor, size));
         }
     }
 
