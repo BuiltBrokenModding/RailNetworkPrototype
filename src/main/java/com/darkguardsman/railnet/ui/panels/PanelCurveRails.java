@@ -1,13 +1,9 @@
 package com.darkguardsman.railnet.ui.panels;
 
-import com.darkguardsman.railnet.api.RailHeading;
-import com.darkguardsman.railnet.api.rail.IRailPathPoint;
-import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
-import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
 import com.darkguardsman.railnet.lib.Pos;
-import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
+import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
@@ -35,13 +31,6 @@ public class PanelCurveRails extends JPanel {
     protected RenderPanel renderPanel;
     protected PlotPointRender pointRender;
 
-    protected JTextField startXField;
-    protected JTextField startZField;
-    protected JTextField endXField;
-    protected JTextField endZField;
-    protected JTextField startAngleField;
-    protected JTextField endAngleField;
-
     public PanelCurveRails() {
         setLayout(new BorderLayout());
         add(createRenderPanel(), BorderLayout.CENTER);
@@ -65,42 +54,6 @@ public class PanelCurveRails extends JPanel {
         panel.setLayout(new GridLayout(20, 2));
         JButton button;
 
-        panel.add(new JLabel("Start:"));
-        panel.add(new JPanel());
-        panel.add(new JLabel("X:"));
-        panel.add(startXField = new JTextField("-5"));
-        panel.add(new JLabel("Z:"));
-        panel.add(startZField = new JTextField("-5"));
-
-        //Spacer
-        panel.add(new JPanel());
-        panel.add(new JPanel());
-
-        panel.add(new JLabel("End:"));
-        panel.add(new JPanel());
-        panel.add(new JLabel("X:"));
-        panel.add(endXField = new JTextField("5"));
-        panel.add(new JLabel("Z:"));
-        panel.add(endZField = new JTextField("5"));
-
-        //Spacer
-        panel.add(new JPanel());
-        panel.add(new JPanel());
-
-        panel.add(new JLabel("Start Angle:"));
-        panel.add(startAngleField = new JTextField("0"));
-        panel.add(new JLabel("End Angle:"));
-        panel.add(endAngleField = new JTextField("90"));
-
-        //Spacer
-        panel.add(new JPanel());
-        panel.add(new JPanel());
-
-        panel.add(new JPanel());
-        button = new JButton("Generate");
-        button.addActionListener((a) -> generateRail());
-        panel.add(button);
-
         //Spacer
         panel.add(new JPanel());
         panel.add(new JPanel());
@@ -116,77 +69,5 @@ public class PanelCurveRails extends JPanel {
 
 
         return panel;
-    }
-
-    protected void generateRail()
-    {
-        double startX;
-        double startZ;
-        double endX;
-        double endZ;
-        double startAngle;
-        double endAngle;
-        try {
-            startX = Double.parseDouble(startXField.getText().trim());
-            startZ = Double.parseDouble(startZField.getText().trim());
-            endX = Double.parseDouble(endXField.getText().trim());
-            endZ = Double.parseDouble(endZField.getText().trim());
-            startAngle = Double.parseDouble(startAngleField.getText().trim());
-            endAngle = Double.parseDouble(endAngleField.getText().trim());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            //TODO display to user that data is invalid
-            return;
-        }
-
-        generateRail(new Pos(startX, 0, startZ), new Pos(endX, 0, endZ), startAngle, endAngle);
-    }
-
-    protected void generateRail(Pos start, Pos end, double startAngle, double endAngle) {
-        renderPanel.clear();
-
-        try {
-
-            //Debug info so we can see the math
-            System.out.println("Generating line rail for render");
-            System.out.println("\tStart: " + start);
-            System.out.println("\tend: " + end);
-            System.out.println("\tAngles: " + startAngle + ", " + endAngle);
-
-            //Generate rail and get dots
-            List<PlotPoint> dots = new ArrayList();
-            RailSegmentCurve segment = RailRenderUtil.generateRail(dots, start, end, startAngle, endAngle);
-
-            //Add influence points for debug
-            pointRender.add(new PlotPoint(segment.influencePointA.x(), segment.influencePointA.z(), Color.GREEN, 14));
-            pointRender.add(new PlotPoint(segment.influencePointB.x(), segment.influencePointB.y(), Color.GREEN, 14));
-
-            //Add dots to render, include lines to trace path easier
-            for (int i = 0; i < dots.size(); i++) {
-
-                PlotPoint dot = dots.get(i);
-
-                //Debug data to show the exact data used
-                System.out.println("\t\t[" + i+ "]: " + dot.x + ", " + dot.y);
-
-                if(i != 0) {
-                    //Adds node and sets a line to last node
-                    pointRender.addPlusLinkLast(dot, Color.CYAN, 2); //TODO consider moving links to data generator
-                }
-                else
-                {
-                    pointRender.add(dot);
-                }
-            }
-
-            renderPanel.repaint();
-        } catch (Exception e) {
-            e.printStackTrace();
-            renderPanel.clear();
-            //TODO display error
-        }
-
     }
 }
