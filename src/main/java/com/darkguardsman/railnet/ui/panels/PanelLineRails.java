@@ -103,7 +103,7 @@ public class PanelLineRails extends JPanel {
 
             for (int i = 0; i < points.size(); i++) {
                 IRailPathPoint pp = points.get(i);
-                if (i == 0 || i - 1 == points.size()) {
+                if (i == 0) {
                     pointRender.add(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10));
                 } else {
                     pointRender.addPlusLinkLast(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10), Color.GREEN, 2);

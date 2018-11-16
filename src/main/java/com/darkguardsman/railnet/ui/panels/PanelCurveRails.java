@@ -147,7 +147,15 @@ public class PanelCurveRails extends JPanel {
 
         try {
 
-            RailSegment segment = new RailSegmentCurve(start, end, (float)startAngle, (float)endAngle);
+            System.out.println("Generating line rail for render");
+            System.out.println("\tStart: " + start);
+            System.out.println("\tend: " + end);
+            System.out.println("\tAngles: " + startAngle + ", " + endAngle);
+
+            RailSegmentCurve segment = new RailSegmentCurve(start, end, (float)startAngle, (float)endAngle);
+
+            pointRender.add(new PlotPoint(segment.start.x(), segment.start.z(), Color.CYAN, 14));
+            pointRender.add(new PlotPoint(segment.end.x(), segment.end.z(), Color.CYAN, 14));
 
             System.out.println("\tPoints: ");
             List<IRailPathPoint> points = segment.getAllPaths().get(0).getPathPoints();
@@ -155,7 +163,11 @@ public class PanelCurveRails extends JPanel {
 
             for (int i = 0; i < points.size(); i++) {
                 IRailPathPoint pp = points.get(i);
-                pointRender.add(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10));
+                if (i == 0) {
+                    pointRender.add(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10));
+                } else {
+                    pointRender.addPlusLinkLast(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10), Color.GREEN, 2);
+                }
                 System.out.println("\t\t[" + i + "]: " + pp.x() + ", " + pp.z());
             }
             renderPanel.repaint();
