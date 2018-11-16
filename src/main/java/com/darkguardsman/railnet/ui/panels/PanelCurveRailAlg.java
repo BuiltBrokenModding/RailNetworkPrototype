@@ -118,8 +118,7 @@ public class PanelCurveRailAlg extends JPanel {
         return panel;
     }
 
-    protected void generateRail()
-    {
+    protected void generateRail() {
         double startX;
         double startZ;
         double endX;
@@ -133,9 +132,7 @@ public class PanelCurveRailAlg extends JPanel {
             endZ = Double.parseDouble(endZField.getText().trim());
             startAngle = Double.parseDouble(startAngleField.getText().trim());
             endAngle = Double.parseDouble(endAngleField.getText().trim());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             //TODO display to user that data is invalid
             return;
@@ -156,29 +153,12 @@ public class PanelCurveRailAlg extends JPanel {
             System.out.println("\tAngles: " + startAngle + ", " + endAngle);
 
             //Generate rail and get dots
-            List<PlotPoint> dots = new ArrayList();
-            RailSegmentCurve segment = RailRenderUtil.generateRail(dots, start, end, startAngle, endAngle);
+            RailSegmentCurve segment = RailRenderUtil.generateRail(pointRender, start, end, startAngle, endAngle, true);
 
-            //Add influence points for debug
-            pointRender.add(new PlotPoint(segment.influencePointA.x(), segment.influencePointA.z(), Color.GREEN, 14));
-            pointRender.add(new PlotPoint(segment.influencePointB.x(), segment.influencePointB.y(), Color.GREEN, 14));
-
-            //Add dots to render, include lines to trace path easier
-            for (int i = 0; i < dots.size(); i++) {
-
-                PlotPoint dot = dots.get(i);
-
-                //Debug data to show the exact data used
-                System.out.println("\t\t[" + i+ "]: " + dot.x + ", " + dot.y);
-
-                if(i != 0) {
-                    //Adds node and sets a line to last node
-                    pointRender.addPlusLinkLast(dot, Color.CYAN, 2); //TODO consider moving links to data generator
-                }
-                else
-                {
-                    pointRender.add(dot);
-                }
+            //Data Debug
+            int i = 0;
+            for (IRailPathPoint dot : segment.getAllPaths().get(0).getPathPoints()) {
+                System.out.println("\t\t[" + (i++) + "]: " + dot.x() + ", " + dot.y());
             }
 
             renderPanel.repaint();

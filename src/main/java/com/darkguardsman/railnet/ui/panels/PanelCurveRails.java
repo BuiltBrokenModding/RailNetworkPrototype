@@ -10,9 +10,7 @@ import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -39,8 +37,8 @@ public class PanelCurveRails extends JPanel {
 
     private JPanel createRenderPanel() {
         renderPanel = new RenderPanel();
-        renderPanel.upperBound = new Dimension(20, 20);
-        renderPanel.lowerBound = new Dimension(-20, -20);
+        renderPanel.upperBound = new Dimension(5, 5);
+        renderPanel.lowerBound = new Dimension(-5, -5);
 
         renderPanel.addRendersToRun(new PlotGridRender(1, 1));
         renderPanel.addRendersToRun(new PlotGridRender(2, 2, Color.BLUE));
@@ -53,6 +51,13 @@ public class PanelCurveRails extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(20, 2));
         JButton button;
+
+        for(RailTestSet railTestSet : RailTestSet.values())
+        {
+            button = new JButton(railTestSet.name().replace("_", " "));
+            button.addActionListener((a) -> generate(railTestSet));
+            panel.add(button);
+        }
 
         //Spacer
         panel.add(new JPanel());
@@ -69,5 +74,45 @@ public class PanelCurveRails extends JPanel {
 
 
         return panel;
+    }
+
+    protected void generate(RailTestSet railTestSet)
+    {
+        renderPanel.clear();
+
+        renderPanel.upperBound = new Dimension(railTestSet.startX + 2, railTestSet.endX + 2);
+        renderPanel.lowerBound = new Dimension(railTestSet.startX - 2, railTestSet.endX - 2);
+
+        RailRenderUtil.generateRail(pointRender,
+                new Pos(railTestSet.startX, 0, railTestSet.endX),
+                new Pos(railTestSet.startZ, 0, railTestSet.endZ),
+                railTestSet.startAngle,
+                railTestSet.endAngle, true);
+
+        renderPanel.repaint();
+    }
+
+    enum RailTestSet
+    {
+        UP_2x2__90_TO_0(90, 0, -1, -1, 1, 1),
+        UP_2x2__0_TO_90(0, 90, -1, -1, 1, 1),
+        DOWN_2x2__0_TO_90(0, 90, -1, -1, 1, 1),
+        DOWN_2x2__90_TO_0(90, 0, -1, -1, 1, 1);
+
+        public final double startAngle;
+        public final double endAngle;
+        public final int startX;
+        public final int startZ;
+        public final int endX;
+        public final int endZ;
+
+        RailTestSet(double startAngle, double endAngle, int startX, int startZ, int endX, int endZ) {
+            this.startAngle = startAngle;
+            this.endAngle = endAngle;
+            this.startX = startX;
+            this.startZ = startZ;
+            this.endX = endX;
+            this.endZ = endZ;
+        }
     }
 }
