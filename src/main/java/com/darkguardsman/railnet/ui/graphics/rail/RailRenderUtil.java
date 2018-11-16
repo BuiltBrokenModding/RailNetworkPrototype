@@ -81,7 +81,6 @@ public class RailRenderUtil {
             point.addEdge(Color.CYAN, NODE_EDGE_SIZE);
 
             dots.add(point);
-            System.out.println("\t\t[" + i + "]: " + pp.x() + ", " + pp.z());
         }
     }
 }
