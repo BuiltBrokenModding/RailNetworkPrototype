@@ -32,7 +32,7 @@ public class RailRenderUtil {
         //Add influence points for debug
         if(influencePoints) {
             pointRender.add(new PlotPoint(segment.influencePointA.x(), segment.influencePointA.z(), Color.GREEN, 14));
-            pointRender.add(new PlotPoint(segment.influencePointB.x(), segment.influencePointB.y(), Color.GREEN, 14));
+            pointRender.add(new PlotPoint(segment.influencePointB.x(), segment.influencePointB.z(), Color.GREEN, 14));
         }
 
         //Add dots to render, include lines to trace path easier
