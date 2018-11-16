@@ -1,5 +1,6 @@
 package com.darkguardsman.railnet.data.rail.path;
 
+import com.darkguardsman.railnet.api.math.IPos;
 import com.darkguardsman.railnet.api.rail.*;
 
 import java.util.*;
@@ -67,5 +68,10 @@ public class RailPath implements IRailPath {
     {
         int index = getPathPoints().size();
         getPathPoints().add(new RailPathPoint(x, y, z, index));
+    }
+
+    public void newPoints(Collection<IPos> list)
+    {
+        list.forEach(pos -> newPoint(pos.x(), pos.y(), pos.z()));
     }
 }

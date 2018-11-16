@@ -1,5 +1,6 @@
 package com.darkguardsman.railnet.ui;
 
+import com.darkguardsman.railnet.ui.panels.PanelCurveRails;
 import com.darkguardsman.railnet.ui.panels.PanelLineRails;
 
 import javax.swing.*;
@@ -20,7 +21,10 @@ public class FrameMain extends JFrame {
         ImageIcon icon = null;
 
         tabbedPane.addTab("Line Rails", icon, new PanelLineRails(),
-                "Visual test of display of rail types");
+                "Visual test of line rails");
+
+        tabbedPane.addTab("Curve Rails", icon, new PanelCurveRails(),
+                "Visual test of curve rails");
 
         add(tabbedPane);
     }
