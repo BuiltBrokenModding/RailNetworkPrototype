@@ -39,6 +39,10 @@ public class RenderPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        // Traslate the Origin and flip the co-ordinate space
+        g2.translate(getWidth() - PAD, getHeight() - PAD);
+        g2.scale(-1, -1);
+
         drawBorder(g2);
         rendersToRun.forEach(render -> render.draw(g2, this));
     }
