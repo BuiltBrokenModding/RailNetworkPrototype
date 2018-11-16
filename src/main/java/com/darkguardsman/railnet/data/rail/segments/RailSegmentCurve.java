@@ -44,7 +44,7 @@ public class RailSegmentCurve extends RailSegment {
         int distance = (int) Math.ceil(start.distance(end));
         int cuts = distance < RailConfig.railPathPointDistanceDivide ? 1 : distance / RailConfig.railPathPointDistanceDivide;
 
-        List<IPos> points = CurveMath.getCurvePoints(start, startAngle, end, endAngle, cuts);
+        List<IPos> points = CurveMath.getCurvePoints(start, Math.toRadians(startAngle), end, Math.toRadians(endAngle), cuts);
         path.newPoints(points);
 
         //Add end

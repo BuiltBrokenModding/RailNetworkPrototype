@@ -18,23 +18,25 @@ public class CurveMath {
      * @return
      * @throws Exception
      */
-    public static List<IPos> getCurvePoints(IPosM start, float startAngle, IPosM end, float endAngle, int segmentCount) {
-
+    public static List<IPos> getCurvePoints(IPosM start, double startAngle, IPosM end, double endAngle, int segmentCount) {
+    	segmentCount = 1000;
         //Create the array ready to hold all the points
         List<IPos> points = new ArrayList();
 
         if(segmentCount > 1) {
             //Calculate the curve influencing positions
             //Get the distance between the points and divide by 3 to give a smooth curve.
-            float distance = (float)start.distance(end) / 3f;
+        	float distance = (float)start.horizontalDistance(end)/3f;
 
             //Get the influencing points, from simple tests 1/3rd the ditance to the next point at the incoming angle seems to work fine.
             Pos p1t = calculateInfluencingPoint(start, distance, startAngle);
-            Pos p2t = calculateInfluencingPoint(start, distance, startAngle);
+            points.add(p1t);
+            Pos p2t = calculateInfluencingPoint(end, distance, endAngle);
+            points.add(p2t);
             //Add the sub points that will create the bend
             for (int i = 1; i <= segmentCount; i++) {
-                float t = i / (segmentCount + 1);
-                float x = getCurveValue(start.x(), p1t.x(), end.x(), p2t.x(), t);
+            	float t = i / (segmentCount + 1f);
+            	float x = getCurveValue(start.x(), p1t.x(), end.x(), p2t.x(), t);
                 float z = getCurveValue(start.z(), p1t.z(), end.z(), p2t.z(), t);
                 points.add(new Pos(x, 0, z));
                 //TODO we could use a lambda expression to create an add directly to the host allowing more reusablity
