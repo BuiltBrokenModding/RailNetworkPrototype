@@ -10,10 +10,16 @@ import java.awt.*;
  */
 public class PlotPoint
 {
+    //Data position, not scaled to view
     public final double x;
     public final double y;
+
+    //Render data
     public Color color;
     public int size = 4;
+
+    public Color edgeColor;
+    public int edgeSize;
 
 
     public PlotPoint(double x, double y, Color color)
@@ -37,5 +43,10 @@ public class PlotPoint
     public double y()
     {
         return y;
+    }
+
+    public void addEdge(Color color, int size) {
+        this.edgeColor = color;
+        this.edgeSize = size;
     }
 }

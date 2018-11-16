@@ -32,7 +32,12 @@ public class PlotPointRender implements IPlotRenderObject {
     @Override
     public void draw(Graphics2D g2, RenderPanel renderPanel) {
         lines.forEach(line -> renderPanel.drawLine(g2, line));
-        data.forEach(pos -> renderPanel.drawCircle(g2, pos.color, pos.x, pos.y, pos.size, true));
+        data.forEach(pos -> {
+            if (pos.edgeColor != null) {
+                renderPanel.drawCircle(g2, pos.edgeColor, pos.x, pos.y, pos.size + pos.edgeSize * 2, true);
+            }
+            renderPanel.drawCircle(g2, pos.color, pos.x, pos.y, pos.size, true);
+        });
     }
 
     public void add(PlotPoint plotPoint) {
@@ -43,8 +48,12 @@ public class PlotPointRender implements IPlotRenderObject {
         data.add(plotPoint);
         if (lineColor != null && data.size() > 1) {
             PlotPoint prevPoint = data.get(data.size() - 2);
-            lines.add(new PlotConnection(prevPoint, plotPoint, lineColor, size));
+            addLine(prevPoint, plotPoint, lineColor, size);
         }
+    }
+
+    public void addLine(PlotPoint a, PlotPoint b, Color color, int size) {
+        lines.add(new PlotConnection(a, b, color, size));
     }
 
     @Override

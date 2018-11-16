@@ -3,14 +3,17 @@ package com.darkguardsman.railnet.ui.panels;
 import com.darkguardsman.railnet.api.RailHeading;
 import com.darkguardsman.railnet.api.rail.IRailPathPoint;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
+import com.darkguardsman.railnet.lib.RailUtils;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
+import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,42 +83,50 @@ public class PanelLineRails extends JPanel {
     }
 
     protected void generateLineRail(RailHeading heading) {
+        double distance = Math.floor(Double.parseDouble(distanceField.getText().trim()));
+        generateLineRail(heading, distance);
+    }
+
+    protected void generateLineRail(RailHeading heading, double distance) {
+
+        //Reset data
         renderPanel.clear();
 
-        try {
-            double distance = Math.floor(Double.parseDouble(distanceField.getText().trim()));
-            double x = -heading.offsetX * (distance / 2);
-            double z = -heading.offsetZ * (distance / 2);
+        //Set start position negative of center for best visual layout
+        double x = -heading.offsetX * (distance / 2);
+        double z = -heading.offsetZ * (distance / 2);
 
-            System.out.println("Generating line rail for render");
-            System.out.println("\tWith Heading: " + heading);
-            System.out.println("\tStart: " + x + ", " + z);
-            System.out.println("\tDistance: " + distance);
+        //Debug info so we can see the math
+        System.out.println("Generating line rail for render");
+        System.out.println("\tWith Heading: " + heading);
+        System.out.println("\tStart: " + x + ", " + z);
+        System.out.println("\tDistance: " + distance);
 
-            RailSegmentLine segment = new RailSegmentLine(heading, (float) x, 0, (float) z, (int) distance);
+        //Generate rail and get dots, dots include two reference dots to show start and end points more clearly
+        List<PlotPoint> dots = new ArrayList();
+        RailRenderUtil.generateLineRail(dots, heading, x, z, distance);
 
-            System.out.println("\tPoints: ");
-            List<IRailPathPoint> points = segment.getAllPaths().get(0).getPathPoints();
-            System.out.println("\t\tSize: " + points.size());
+        //More debug
+        System.out.println("\tPoints:");
+        System.out.println("\t\tSize: " + (dots.size() - 2)); //-2 is to remove the reference points
 
-            pointRender.add(new PlotPoint(segment.start.x(), segment.start.z(), Color.CYAN, 14));
-            pointRender.add(new PlotPoint(segment.end.x(), segment.end.z(), Color.CYAN, 14));
+        //Extra line to visual show start to end path, added to debug for issues
+        pointRender.addLine(dots.get(0), dots.get(dots.size() - 1), Color.blue, 8);
 
-            for (int i = 0; i < points.size(); i++) {
-                IRailPathPoint pp = points.get(i);
-                if (i == 0) {
-                    pointRender.add(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10));
-                } else {
-                    pointRender.addPlusLinkLast(new PlotPoint(pp.x(), pp.z(), Color.BLUE, 10), Color.GREEN, 2);
-                }
-                System.out.println("\t\t[" + i + "]: " + pp.x() + ", " + pp.z());
-            }
-            renderPanel.repaint();
-        } catch (Exception e) {
-            e.printStackTrace();
-            renderPanel.clear();
-            //TODO display error
+
+        //Add dots to render, include lines to trace path easier
+        for (int i = 0; i < dots.size(); i++) {
+
+            PlotPoint dot = dots.get(i);
+
+            //Debug data to show the exact data used
+            System.out.println("\t\t[" + (i - 2) + "]: " + dot.x + ", " + dot.y);
+
+            //Adds node and sets a line to last node
+            pointRender.addPlusLinkLast(dot, Color.CYAN, 2); //TODO consider moving links to data generator
         }
 
+        //Trigger UI to draw new data
+        renderPanel.repaint();
     }
 }
