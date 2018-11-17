@@ -47,7 +47,7 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	default double horizontalDistance(IPos end) {
 		return Math.sqrt(Math.pow(end.x() - x(), 2) + Math.pow(end.z() - z(), 2));
 	}
-
+	
 	/**
 	 * Distance to the point
 	 * @param end

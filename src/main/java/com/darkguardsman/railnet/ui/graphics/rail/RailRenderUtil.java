@@ -2,10 +2,12 @@ package com.darkguardsman.railnet.ui.graphics.rail;
 
 import com.darkguardsman.railnet.api.RailHeading;
 import com.darkguardsman.railnet.api.math.IPos;
+import com.darkguardsman.railnet.api.math.IPosM;
 import com.darkguardsman.railnet.api.rail.IRailPathPoint;
 import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
+import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
@@ -23,18 +25,17 @@ public class RailRenderUtil {
     public static Color NODE_COLOR = Color.YELLOW;
     public static Color NODE_COLOR_ENDS = Color.BLUE;
 
-    public static RailSegmentCurve generateRail(PlotPointRender pointRender, IPos start, IPos end, double startAngle, double endAngle, boolean influencePoints)
+    public static RailSegmentCurve generateRail(PlotPointRender pointRender, IPosM start, IPosM end, int startAngle, boolean influencePoints)
     {
         //Generate rail and get dots
         List<PlotPoint> dots = new ArrayList();
-        List<IPos> rail1 = new ArrayList();
-        List<IPos> rail2 = new ArrayList();
-        RailSegmentCurve segment = generateRail(dots, start, end, startAngle, endAngle);
-        rail1 = segment.rail1;
-        rail2 = segment.rail2;
-        pointRender.add(new PlotPoint(segment.influencePointA.x(), segment.influencePointA.z(), Color.GREEN, 14));
-        pointRender.add(new PlotPoint(segment.influencePointB.x(), segment.influencePointB.z(), Color.GREEN, 14));
-
+        List<IPosM> rail1 = new ArrayList<IPosM>();
+        List<IPosM> rail2 = new ArrayList<IPosM>();
+        RailSegmentCurve segment = generateRail(dots, start, end);
+        if(influencePoints) {
+        	pointRender.add(new PlotPoint(segment.influencePointA.x(), segment.influencePointA.z(), Color.GREEN, 14));
+        	pointRender.add(new PlotPoint(segment.influencePointB.x(), segment.influencePointB.z(), Color.GREEN, 14));
+        }
         //Add dots to render, include lines to trace path easier
         for (int i = 0; i < dots.size(); i++) {
 
@@ -85,9 +86,9 @@ public class RailRenderUtil {
         return segment;
     }
 
-    public static RailSegmentCurve generateRail(List<PlotPoint> dots, IPos start, IPos end, double startAngle, double endAngle)
+    public static RailSegmentCurve generateRail(List<PlotPoint> dots, IPosM start, IPosM end)
     {
-        RailSegmentCurve segment = new RailSegmentCurve(start, end, (float)startAngle, (float)endAngle);
+        RailSegmentCurve segment = new RailSegmentCurve(start, end);
         populatePlotPoints(segment, dots);
         return segment;
     }

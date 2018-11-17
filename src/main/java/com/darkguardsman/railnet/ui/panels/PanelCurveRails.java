@@ -102,8 +102,7 @@ public class PanelCurveRails extends JPanel {
         RailRenderUtil.generateRail(pointRender,
                 new Pos(0, 0, 0),
                 new Pos(railTestSet.endX, 0, railTestSet.endZ),
-                railTestSet.startAngle,
-                railTestSet.endAngle, true);
+                railTestSet.startAngle, true);
 
         renderPanel.repaint();
     }
@@ -114,14 +113,12 @@ public class PanelCurveRails extends JPanel {
         DOWN_LEFT(180, 90, -2, -2),
         DOWN_RIGHT(180, 270, 2, -2);
 
-        public final double startAngle;
-        public final double endAngle;
+        public final int startAngle;
         public final int endX;
         public final int endZ;
 
-        RailTestSet(double startAngle, double endAngle, int endX, int endZ) {
+        RailTestSet(int startAngle, double endAngle, int endX, int endZ) {
             this.startAngle = startAngle;
-            this.endAngle = endAngle;
             this.endX = endX;
             this.endZ = endZ;
         }

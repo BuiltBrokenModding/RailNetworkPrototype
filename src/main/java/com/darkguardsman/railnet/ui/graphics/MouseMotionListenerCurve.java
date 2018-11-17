@@ -40,10 +40,7 @@ public class MouseMotionListenerCurve implements MouseMotionListener
 
 	
 		panel.clear();
-		JPanel controls = (JPanel)panel.getParent().getComponent(1);
-		JTextField angle = (JTextField) controls.getComponent(19);
-		Double cleanAngle = Double.parseDouble(angle.getText().trim());
-		RailRenderUtil.generateRail((PlotPointRender)panel.rendersToRun.get(3), new Pos(0,0,0), new Pos(-gx,0,gz), 0, Math.toRadians(cleanAngle), true);
+		RailRenderUtil.generateRail((PlotPointRender)panel.rendersToRun.get(3), new Pos(0,0,0), new Pos(-gx,0,gz), 0, true);
 		panel.repaint();
 	}
 

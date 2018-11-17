@@ -90,8 +90,6 @@ public class PanelCurveRailAlg extends JPanel {
 
         panel.add(new JLabel("Start Angle:"));
         panel.add(startAngleField = new JTextField("0"));
-        panel.add(new JLabel("End Angle:"));
-        panel.add(endAngleField = new JTextField("90"));
 
         //Spacer
         panel.add(new JPanel());
@@ -124,24 +122,22 @@ public class PanelCurveRailAlg extends JPanel {
         double startZ;
         double endX;
         double endZ;
-        double startAngle;
-        double endAngle;
+        int startAngle;
         try {
             startX = Double.parseDouble(startXField.getText().trim());
             startZ = Double.parseDouble(startZField.getText().trim());
             endX = Double.parseDouble(endXField.getText().trim());
             endZ = Double.parseDouble(endZField.getText().trim());
-            startAngle = Double.parseDouble(startAngleField.getText().trim());
-            endAngle = Double.parseDouble(endAngleField.getText().trim());
+            startAngle = Integer.parseInt(startAngleField.getText().trim());
         } catch (Exception e) {
             e.printStackTrace();
             //TODO display to user that data is invalid
             return;
         }
-        generateRail(new Pos(startX, 0, startZ), new Pos(endX, 0, endZ), startAngle, endAngle);
+        generateRail(new Pos(startX, 0, startZ), new Pos(endX, 0, endZ), startAngle);
     }
 
-    protected void generateRail(Pos start, Pos end, double startAngle, double endAngle) {
+    protected void generateRail(Pos start, Pos end, int startAngle) {
         renderPanel.clear();
 
         try {
@@ -150,10 +146,10 @@ public class PanelCurveRailAlg extends JPanel {
             System.out.println("Generating line rail for render");
             System.out.println("\tStart: " + start);
             System.out.println("\tend: " + end);
-            System.out.println("\tAngles: " + startAngle + ", " + endAngle);
+            System.out.println("\tAngles: " + startAngle);
 
             //Generate rail and get dots
-            RailSegmentCurve segment = RailRenderUtil.generateRail(pointRender, start, end, Math.toRadians(startAngle), Math.toRadians(endAngle), true);
+            RailSegmentCurve segment = RailRenderUtil.generateRail(pointRender, start, end, startAngle, true);
 
             //Data Debug
             int i = 0;
