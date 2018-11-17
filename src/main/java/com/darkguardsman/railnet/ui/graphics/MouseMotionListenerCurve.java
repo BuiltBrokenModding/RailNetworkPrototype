@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
@@ -35,10 +38,12 @@ public class MouseMotionListenerCurve implements MouseMotionListener
 		double gx = lWidth + (((double)arg0.getX()/panel.getWidth())*bWidth);
 		double gz = uHeight - (((double)arg0.getY()/panel.getHeight())*bHeight);	
 
-		System.out.println("x:" + gx);
-		System.out.println("y:" + gz);
+	
 		panel.clear();
-		RailRenderUtil.generateRail((PlotPointRender)panel.rendersToRun.get(3), new Pos(0,0,0), new Pos(-gx,0,gz), 0, 180, true);
+		JPanel controls = (JPanel)panel.getParent().getComponent(1);
+		JTextField angle = (JTextField) controls.getComponent(19);
+		Double cleanAngle = Double.parseDouble(angle.getText().trim());
+		RailRenderUtil.generateRail((PlotPointRender)panel.rendersToRun.get(3), new Pos(0,0,0), new Pos(-gx,0,gz), 0, Math.toRadians(cleanAngle), true);
 		panel.repaint();
 	}
 

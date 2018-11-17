@@ -30,8 +30,9 @@ public class CurveMath {
 		
 		distance = start.horizontalDistance(end);
 		
-		double divider = (3d - ((getAngleBetween2Angles(startAngle,endAngle))/Math.PI)*1.5);
-		
+		double divider = (3d - ((Math.PI -getAngleBetween2Angles(startAngle,endAngle))/(Math.PI))*1.5);
+		System.out.println(divider);
+		System.out.println(Math.toDegrees(getAngleBetween2Angles(startAngle,endAngle)));
 		if(start.collidesWithH(end,startAngle) && end.collidesWithH(start,endAngle)) {
 			segmentCount = 1;
 		} else {
@@ -55,7 +56,8 @@ public class CurveMath {
      */
     public List<IPos> getCurvePoints() {
         //Create the array ready to hold all the points
-        List<IPos> points = new ArrayList();
+        @SuppressWarnings("rawtypes")
+		List<IPos> points = new ArrayList<IPos>();
         if(segmentCount > 1) {
             //Get the influencing points, from simple tests 1/3rd the ditance to the next point at the incoming angle seems to work fine.
             startInfluencePoint = calculateInfluencingPoint(start, influenceDistance, startAngle);            
@@ -79,7 +81,7 @@ public class CurveMath {
     	angle1 = positiveAngle(angle1);
     	angle2 = positiveAngle(angle2);
     	double a = angle1>angle2?angle1-angle2:angle2-angle1;
-    	return a >= Math.PI? a-Math.PI:a;
+    	return positiveAngle(a >= Math.PI? a-2*Math.PI:a);
     }
     private double positiveAngle(double angle) {
     	return ((angle + Math.PI*2) % (Math.PI*2));
