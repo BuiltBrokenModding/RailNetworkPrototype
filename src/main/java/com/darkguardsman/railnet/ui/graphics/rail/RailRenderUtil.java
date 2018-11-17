@@ -27,13 +27,13 @@ public class RailRenderUtil {
     {
         //Generate rail and get dots
         List<PlotPoint> dots = new ArrayList();
+        List<IPos> rail1 = new ArrayList();
+        List<IPos> rail2 = new ArrayList();
         RailSegmentCurve segment = generateRail(dots, start, end, startAngle, endAngle);
-
-        //Add influence points for debug
-        if(influencePoints) {
-            pointRender.add(new PlotPoint(segment.influencePointA.x(), segment.influencePointA.z(), Color.GREEN, 14));
-            pointRender.add(new PlotPoint(segment.influencePointB.x(), segment.influencePointB.z(), Color.GREEN, 14));
-        }
+        rail1 = segment.rail1;
+        rail2 = segment.rail2;
+        pointRender.add(new PlotPoint(segment.influencePointA.x(), segment.influencePointA.z(), Color.GREEN, 14));
+        pointRender.add(new PlotPoint(segment.influencePointB.x(), segment.influencePointB.z(), Color.GREEN, 14));
 
         //Add dots to render, include lines to trace path easier
         for (int i = 0; i < dots.size(); i++) {
@@ -49,7 +49,32 @@ public class RailRenderUtil {
                 pointRender.add(dot);
             }
         }
+        for (int i = 0; i < rail1.size(); i++) {
+        	IPos point = rail1.get(i);
+            PlotPoint dot = new PlotPoint(point.x(),point.z(),Color.BLACK,2);
 
+            if(i != 0) {
+                //Adds node and sets a line to last node
+                pointRender.addPlusLinkLast(dot, Color.BLACK, 2); //TODO consider moving links to data generator
+            }
+            else
+            {
+                pointRender.add(dot);
+            }
+        }
+        for (int i = 0; i < rail2.size(); i++) {
+        	IPos point = rail2.get(i);
+            PlotPoint dot = new PlotPoint(point.x(),point.z(),Color.BLACK,2);
+
+            if(i != 0) {
+                //Adds node and sets a line to last node
+                pointRender.addPlusLinkLast(dot, Color.BLACK, 2); //TODO consider moving links to data generator
+            }
+            else
+            {
+                pointRender.add(dot);
+            }
+        }
         return segment;
     }
 

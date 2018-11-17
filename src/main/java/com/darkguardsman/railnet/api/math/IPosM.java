@@ -1,5 +1,8 @@
 package com.darkguardsman.railnet.api.math;
 
+import com.darkguardsman.railnet.lib.Pos;
+import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
+
 /**
  * Version of {@link IPos} that contains math functions
  *
@@ -53,6 +56,15 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	default double distance(IPos end) {
 		return Math.sqrt(distanceSq(end));
 	}
+	/**
+	 * Distance to the point
+	 * @param end
+	 * @return
+	 */
+	default IPosM addHorizontalVector(float f, Double distance) {
+		return (IPosM)add(new Pos(Math.cos(-f)*distance,0,Math.sin(-f)*distance));
+		
+	}
 
 	/**
      * Distance to the point squared
@@ -100,4 +112,10 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	default P divide(IPos pos) {
 		return newPos(x() / pos.x(), y() / pos.y(), z() / pos.z());
 	}
+	default boolean collidesWithH(IPos pos, double angle) {
+		 double xDiff = x() - pos.x();
+	        double zDiff = z() - pos.z();
+	        return Math.atan2(zDiff, xDiff) == angle;
+	}
+	
 }

@@ -7,6 +7,7 @@ import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
+import com.darkguardsman.railnet.ui.graphics.MouseMotionListenerCurve;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
@@ -21,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class PanelCurveRailAlg extends JPanel {
     private JPanel createRenderPanel() {
         renderPanel = new RenderPanel();
         renderPanel.setViewBoundSize(20);
-
+        renderPanel.addMouseMotionListener(new MouseMotionListenerCurve());
         renderPanel.addRendersToRun(new PlotGridRender(1, 1));
         renderPanel.addRendersToRun(new PlotGridRender(2, 2, Color.BLUE));
         renderPanel.addRendersToRun(new PlotCenterRender());
@@ -60,7 +62,7 @@ public class PanelCurveRailAlg extends JPanel {
     }
 
     private JPanel createControlPanel() {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel();       
         panel.setLayout(new GridLayout(20, 2));
         JButton button;
 
@@ -136,7 +138,6 @@ public class PanelCurveRailAlg extends JPanel {
             //TODO display to user that data is invalid
             return;
         }
-
         generateRail(new Pos(startX, 0, startZ), new Pos(endX, 0, endZ), startAngle, endAngle);
     }
 
@@ -152,7 +153,7 @@ public class PanelCurveRailAlg extends JPanel {
             System.out.println("\tAngles: " + startAngle + ", " + endAngle);
 
             //Generate rail and get dots
-            RailSegmentCurve segment = RailRenderUtil.generateRail(pointRender, start, end, startAngle, endAngle, true);
+            RailSegmentCurve segment = RailRenderUtil.generateRail(pointRender, start, end, Math.toRadians(startAngle), Math.toRadians(endAngle), true);
 
             //Data Debug
             int i = 0;
