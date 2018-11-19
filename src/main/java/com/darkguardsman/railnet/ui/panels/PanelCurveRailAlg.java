@@ -1,12 +1,8 @@
 package com.darkguardsman.railnet.ui.panels;
 
-import com.darkguardsman.railnet.api.RailHeading;
 import com.darkguardsman.railnet.api.rail.IRailPathPoint;
-import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
-import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
 import com.darkguardsman.railnet.lib.Pos;
-import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.MouseMotionListenerCurve;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
@@ -20,11 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Used to test logic for line rails visually
@@ -51,13 +43,18 @@ public class PanelCurveRailAlg extends JPanel {
     }
 
     private JPanel createRenderPanel() {
+        //Init
         renderPanel = new RenderPanel();
         renderPanel.setViewBoundSize(20);
-        renderPanel.addMouseMotionListener(new MouseMotionListenerCurve());
+
+        //Renders
         renderPanel.addRendersToRun(new PlotGridRender(1, 1));
         renderPanel.addRendersToRun(new PlotGridRender(2, 2, Color.BLUE));
         renderPanel.addRendersToRun(new PlotCenterRender());
         renderPanel.addRendersToRun(pointRender = new PlotPointRender(null));
+
+        //Listeners
+        renderPanel.addMouseMotionListener(new MouseMotionListenerCurve(renderPanel, pointRender));
         return renderPanel;
     }
 
