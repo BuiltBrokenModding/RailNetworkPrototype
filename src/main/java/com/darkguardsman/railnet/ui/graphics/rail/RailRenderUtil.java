@@ -25,7 +25,7 @@ public class RailRenderUtil {
     public static Color NODE_COLOR = Color.YELLOW;
     public static Color NODE_COLOR_ENDS = Color.BLUE;
 
-    public static RailSegmentCurve generateRail(PlotPointRender pointRender, IPosM start, IPosM end, int startAngle, boolean influencePoints)
+    public static RailSegmentCurve generateRail(PlotPointRender pointRender, IPosM start, IPosM end, int startAngle, int endAngle, boolean influencePoints)
     {
         //Generate rail and get dots
         List<PlotPoint> dots = new ArrayList();

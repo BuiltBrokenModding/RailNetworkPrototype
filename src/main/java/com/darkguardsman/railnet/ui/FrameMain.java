@@ -25,6 +25,9 @@ public class FrameMain extends JFrame {
         tabbedPane.addTab("Curve Rail Alg", icon, new PanelCurveRailAlg(),
                 "Visual test of curved rail alg");
 
+        tabbedPane.addTab("Curve Rail Alg Mouse", icon, new PanelCurveRailAlgMouse(),
+                "Visual test of curved rail alg");
+
         tabbedPane.addTab("Curve Rails", icon, new PanelCurveRails(),
                 "Visual test of pre-generated curved rails");
 

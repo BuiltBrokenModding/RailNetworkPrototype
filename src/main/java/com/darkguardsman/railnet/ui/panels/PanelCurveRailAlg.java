@@ -40,12 +40,6 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
     }
 
     @Override
-    protected void addRenderPanelListeners(RenderPanel panel)
-    {
-        renderPanel.addMouseMotionListener(new MouseMotionListenerCurve(renderPanel, pointRender));
-    }
-
-    @Override
     protected JPanel createControlPanel() {
         JPanel panel = new JPanel();       
         panel.setLayout(new GridLayout(20, 2));
@@ -72,6 +66,9 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
         panel.add(new JLabel("Start Angle:"));
         panel.add(startAngleField = new JTextField("0"));
 
+        panel.add(new JLabel("End Angle:"));
+        panel.add(endAngleField = new JTextField("0"));
+
         addSpacer(panel);
 
         panel.add(new JPanel());
@@ -97,21 +94,23 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
         double endX;
         double endZ;
         int startAngle;
+        int endAngle;
         try {
             startX = Double.parseDouble(startXField.getText().trim());
             startZ = Double.parseDouble(startZField.getText().trim());
             endX = Double.parseDouble(endXField.getText().trim());
             endZ = Double.parseDouble(endZField.getText().trim());
             startAngle = Integer.parseInt(startAngleField.getText().trim());
+            endAngle = Integer.parseInt(endAngleField.getText().trim());
         } catch (Exception e) {
             e.printStackTrace();
             //TODO display to user that data is invalid
             return;
         }
-        generateRail(new Pos(startX, 0, startZ), new Pos(endX, 0, endZ), startAngle);
+        generateRail(new Pos(startX, 0, startZ), new Pos(endX, 0, endZ), startAngle, endAngle);
     }
 
-    protected void generateRail(Pos start, Pos end, int startAngle) {
+    protected void generateRail(Pos start, Pos end, int startAngle, int endAngle) {
         renderPanel.clear();
 
         try {
@@ -123,7 +122,7 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
             System.out.println("\tAngles: " + startAngle);
 
             //Generate rail and get dots
-            RailSegmentCurve segment = RailRenderUtil.generateRail(pointRender, start, end, startAngle, true);
+            RailSegmentCurve segment = RailRenderUtil.generateRail(pointRender, start, end, startAngle, endAngle, true);
 
             //Data Debug
             int i = 0;

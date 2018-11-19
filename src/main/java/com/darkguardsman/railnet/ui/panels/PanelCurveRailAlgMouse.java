@@ -19,18 +19,12 @@ import java.awt.GridLayout;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/15/18.
  */
-public class PanelRailPlacementTest extends PanelAbstractTest {
-
-    @Override
-    protected void addRenderPanelRenders(RenderPanel panel) {
-        super.addRenderPanelRenders(panel);
-        panel.setViewBoundSize(20);
-    }
+public class PanelCurveRailAlgMouse extends PanelCurveRailAlg{
 
     @Override
     protected void addRenderPanelListeners(RenderPanel panel)
     {
-        //TODO create mouse listener
+        renderPanel.addMouseMotionListener(new MouseMotionListenerCurve(renderPanel, pointRender));
     }
 
     @Override
@@ -38,6 +32,34 @@ public class PanelRailPlacementTest extends PanelAbstractTest {
         JPanel panel = new JPanel();       
         panel.setLayout(new GridLayout(20, 2));
         JButton button;
+
+        panel.add(new JLabel("Start:"));
+        panel.add(new JPanel());
+        panel.add(new JLabel("X:"));
+        panel.add(startXField = new JTextField("-5"));
+        panel.add(new JLabel("Z:"));
+        panel.add(startZField = new JTextField("-5"));
+
+        addSpacer(panel);
+
+        panel.add(new JLabel("End:"));
+        panel.add(new JPanel());
+        panel.add(new JLabel("X:"));
+        panel.add(endXField = new JTextField("5"));
+        panel.add(new JLabel("Z:"));
+        panel.add(endZField = new JTextField("5"));
+
+        addSpacer(panel);
+
+        panel.add(new JLabel("Start Angle:"));
+        panel.add(startAngleField = new JTextField("0"));
+
+        addSpacer(panel);
+
+        panel.add(new JPanel());
+        button = new JButton("Generate");
+        button.addActionListener((a) -> generateRail());
+        panel.add(button);
 
         addSpacer(panel);
         addSpacer(panel);
