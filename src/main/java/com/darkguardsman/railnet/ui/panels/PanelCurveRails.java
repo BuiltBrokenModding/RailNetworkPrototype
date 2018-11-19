@@ -90,7 +90,7 @@ public class PanelCurveRails extends PanelAbstractTest {
         RailRenderUtil.generateRail(pointRender,
                 new Pos(0, 0, 0),
                 new Pos(railTestSet.endX, 0, railTestSet.endZ),
-                railTestSet.startAngle, true);
+                railTestSet.startAngle, railTestSet.endAngle, true);
 
         renderPanel.repaint();
     }
@@ -102,11 +102,13 @@ public class PanelCurveRails extends PanelAbstractTest {
         DOWN_RIGHT(180, 270, 2, -2);
 
         public final int startAngle;
+        public final int endAngle;
         public final int endX;
         public final int endZ;
 
-        RailTestSet(int startAngle, double endAngle, int endX, int endZ) {
+        RailTestSet(int startAngle, int endAngle, int endX, int endZ) {
             this.startAngle = startAngle;
+            this.endAngle = endAngle;
             this.endX = endX;
             this.endZ = endZ;
         }
