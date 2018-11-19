@@ -24,7 +24,7 @@ import java.awt.GridLayout;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/15/18.
  */
-public class PanelCurveRailAlg extends JPanel {
+public class PanelCurveRailAlg extends PanelAbstractTest {
 
     protected RenderPanel renderPanel;
     protected PlotPointRender pointRender;
@@ -36,13 +36,7 @@ public class PanelCurveRailAlg extends JPanel {
     protected JTextField startAngleField;
     protected JTextField endAngleField;
 
-    public PanelCurveRailAlg() {
-        setLayout(new BorderLayout());
-        add(createRenderPanel(), BorderLayout.CENTER);
-        add(createControlPanel(), BorderLayout.WEST);
-    }
-
-    private JPanel createRenderPanel() {
+    protected JPanel createRenderPanel() {
         //Init
         renderPanel = new RenderPanel();
         renderPanel.setViewBoundSize(20);
@@ -58,7 +52,7 @@ public class PanelCurveRailAlg extends JPanel {
         return renderPanel;
     }
 
-    private JPanel createControlPanel() {
+    protected JPanel createControlPanel() {
         JPanel panel = new JPanel();       
         panel.setLayout(new GridLayout(20, 2));
         JButton button;
@@ -70,9 +64,7 @@ public class PanelCurveRailAlg extends JPanel {
         panel.add(new JLabel("Z:"));
         panel.add(startZField = new JTextField("-5"));
 
-        //Spacer
-        panel.add(new JPanel());
-        panel.add(new JPanel());
+        addSpacer(panel);
 
         panel.add(new JLabel("End:"));
         panel.add(new JPanel());
@@ -81,29 +73,20 @@ public class PanelCurveRailAlg extends JPanel {
         panel.add(new JLabel("Z:"));
         panel.add(endZField = new JTextField("5"));
 
-        //Spacer
-        panel.add(new JPanel());
-        panel.add(new JPanel());
+        addSpacer(panel);
 
         panel.add(new JLabel("Start Angle:"));
         panel.add(startAngleField = new JTextField("0"));
 
-        //Spacer
-        panel.add(new JPanel());
-        panel.add(new JPanel());
+        addSpacer(panel);
 
         panel.add(new JPanel());
         button = new JButton("Generate");
         button.addActionListener((a) -> generateRail());
         panel.add(button);
 
-        //Spacer
-        panel.add(new JPanel());
-        panel.add(new JPanel());
-
-        //Spacer
-        panel.add(new JPanel());
-        panel.add(new JPanel());
+        addSpacer(panel);
+        addSpacer(panel);
 
         panel.add(new JPanel());
         button = new JButton("Clear");
