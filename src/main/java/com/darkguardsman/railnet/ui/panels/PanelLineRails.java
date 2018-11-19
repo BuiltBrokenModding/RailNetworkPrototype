@@ -2,11 +2,7 @@ package com.darkguardsman.railnet.ui.panels;
 
 import com.darkguardsman.railnet.api.RailHeading;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
-import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
-import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
-import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
-import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,32 +15,12 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/15/18.
  */
-public class PanelLineRails extends JPanel {
-
-    protected RenderPanel renderPanel;
-    protected PlotPointRender pointRender;
+public class PanelLineRails extends PanelAbstractTest {
 
     protected JTextField distanceField;
 
-    public PanelLineRails() {
-        setLayout(new BorderLayout());
-        add(createRenderPanel(), BorderLayout.CENTER);
-        add(createControlPanel(), BorderLayout.WEST);
-    }
-
-    private JPanel createRenderPanel() {
-        renderPanel = new RenderPanel();
-        renderPanel.upperBound = new Dimension(10, 10);
-        renderPanel.lowerBound = new Dimension(-10, -10);
-
-        renderPanel.addRendersToRun(new PlotGridRender(1, 1));
-        renderPanel.addRendersToRun(new PlotGridRender(2, 2, Color.BLUE));
-        renderPanel.addRendersToRun(new PlotCenterRender());
-        renderPanel.addRendersToRun(pointRender = new PlotPointRender(null));
-        return renderPanel;
-    }
-
-    private JPanel createControlPanel() {
+    @Override
+    protected JPanel createControlPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(20, 2));
         JButton button;
@@ -117,7 +93,7 @@ public class PanelLineRails extends JPanel {
             PlotPoint dot = dots.get(i);
 
             //Debug data to show the exact data used
-            System.out.println("\t\t[" + i+ "]: " + dot.x + ", " + dot.y);
+            System.out.println("\t\t[" + i + "]: " + dot.x + ", " + dot.y);
 
             //Adds node and sets a line to last node
             pointRender.addPlusLinkLast(dot, Color.CYAN, 2); //TODO consider moving links to data generator

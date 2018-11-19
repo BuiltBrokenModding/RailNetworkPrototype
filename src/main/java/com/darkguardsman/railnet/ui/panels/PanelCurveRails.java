@@ -26,31 +26,19 @@ import java.util.List;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/15/18.
  */
-public class PanelCurveRails extends JPanel {
-
-    protected RenderPanel renderPanel;
-    protected PlotPointRender pointRender;
+public class PanelCurveRails extends PanelAbstractTest {
 
     protected JTextField scaleField;
 
-    public PanelCurveRails() {
-        setLayout(new BorderLayout());
-        add(createRenderPanel(), BorderLayout.CENTER);
-        add(createControlPanel(), BorderLayout.WEST);
+    @Override
+    protected void addRenderPanelRenders(RenderPanel panel)
+    {
+        super.addRenderPanelRenders(panel);
+        panel.setViewBoundSize(5);
     }
 
-    private JPanel createRenderPanel() {
-        renderPanel = new RenderPanel();
-        renderPanel.setViewBoundSize(5);
-
-        renderPanel.addRendersToRun(new PlotGridRender(1, 1));
-        renderPanel.addRendersToRun(new PlotGridRender(2, 2, Color.BLUE));
-        renderPanel.addRendersToRun(new PlotCenterRender());
-        renderPanel.addRendersToRun(pointRender = new PlotPointRender(null));
-        return renderPanel;
-    }
-
-    private JPanel createControlPanel() {
+    @Override
+    protected JPanel createControlPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(20, 2));
         JButton button;

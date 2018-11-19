@@ -19,10 +19,7 @@ import java.awt.GridLayout;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/15/18.
  */
-public class PanelGridRenderTest extends JPanel {
-
-    protected RenderPanel renderPanel;
-    protected PlotPointRender pointRender;
+public class PanelGridRenderTest extends PanelAbstractTest {
 
     protected JTextField sizeField;
     protected JTextField padField;
@@ -32,23 +29,8 @@ public class PanelGridRenderTest extends JPanel {
     protected JTextField xEndField;
     protected JTextField yEndField;
 
-    public PanelGridRenderTest() {
-        setLayout(new BorderLayout());
-        add(createRenderPanel(), BorderLayout.CENTER);
-        add(createControlPanel(), BorderLayout.WEST);
-    }
-
-    private JPanel createRenderPanel() {
-        renderPanel = new RenderPanel();
-        renderPanel.setViewBoundSize(10);
-
-        renderPanel.addRendersToRun(new PlotGridRender(1, 1));
-        renderPanel.addRendersToRun(new PlotCenterRender());
-        renderPanel.addRendersToRun(pointRender = new PlotPointRender(null));
-        return renderPanel;
-    }
-
-    private JPanel createControlPanel() {
+    @Override
+    protected JPanel createControlPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(20, 2));
         JButton button;

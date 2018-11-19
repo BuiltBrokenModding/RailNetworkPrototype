@@ -26,9 +26,6 @@ import java.awt.GridLayout;
  */
 public class PanelCurveRailAlg extends PanelAbstractTest {
 
-    protected RenderPanel renderPanel;
-    protected PlotPointRender pointRender;
-
     protected JTextField startXField;
     protected JTextField startZField;
     protected JTextField endXField;
@@ -36,22 +33,19 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
     protected JTextField startAngleField;
     protected JTextField endAngleField;
 
-    protected JPanel createRenderPanel() {
-        //Init
-        renderPanel = new RenderPanel();
-        renderPanel.setViewBoundSize(20);
-
-        //Renders
-        renderPanel.addRendersToRun(new PlotGridRender(1, 1));
-        renderPanel.addRendersToRun(new PlotGridRender(2, 2, Color.BLUE));
-        renderPanel.addRendersToRun(new PlotCenterRender());
-        renderPanel.addRendersToRun(pointRender = new PlotPointRender(null));
-
-        //Listeners
-        renderPanel.addMouseMotionListener(new MouseMotionListenerCurve(renderPanel, pointRender));
-        return renderPanel;
+    @Override
+    protected void addRenderPanelRenders(RenderPanel panel) {
+        super.addRenderPanelRenders(panel);
+        panel.setViewBoundSize(20);
     }
 
+    @Override
+    protected void addRenderPanelListeners(RenderPanel panel)
+    {
+        renderPanel.addMouseMotionListener(new MouseMotionListenerCurve(renderPanel, pointRender));
+    }
+
+    @Override
     protected JPanel createControlPanel() {
         JPanel panel = new JPanel();       
         panel.setLayout(new GridLayout(20, 2));
