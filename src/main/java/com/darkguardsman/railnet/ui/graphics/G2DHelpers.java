@@ -21,8 +21,8 @@ public class G2DHelpers {
      * @param size  - length of the line
      */
     public static void drawLineAtAngle(Graphics2D g2, int x, int y, int angle, int size) {
-        int vectorX = MathHelpers.getX(size, angle);
-        int vectorY = MathHelpers.getY(size, angle);
+        int vectorX = (int) MathHelpers.getXPositionOnCircle(size, angle);
+        int vectorY = -(int) MathHelpers.getYPositionOnCircle(size, angle);
 
         g2.drawLine(x, y, vectorX + x, vectorY + y);
     }

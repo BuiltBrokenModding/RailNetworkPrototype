@@ -1,5 +1,7 @@
 package com.darkguardsman.railnet.ui.components;
 
+import com.darkguardsman.railnet.lib.MathHelpers;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -43,7 +45,7 @@ public class DialMouseListener implements MouseListener {
                 int dialIndex = 0;
                 for (int i = 0; i < dial.dialPositions.size(); i++) {
                     int selectionAngle = dial.getAngleVisually(i);
-                    float diff = getAngleDelta(selectionAngle, (int) clickAngle);
+                    float diff = MathHelpers.getAngleDelta(selectionAngle, (int) clickAngle);
                     if (diff < distance) {
                         distance = diff;
                         dialIndex = i;
@@ -56,10 +58,6 @@ public class DialMouseListener implements MouseListener {
                 }
             }
         }
-    }
-
-    private int getAngleDelta(int a, int b) {
-        return Math.min((a - b + 360) % 360, (b - a + 360) % 360);
     }
 
     @Override
