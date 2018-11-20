@@ -16,7 +16,7 @@ public class DialMain {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        Dial dial = new Dial(400);
+        Dial dial = new Dial(5,400);
         for (int i = 0; i < 8; i++) {
             dial.addPosition(i * 45);
         }

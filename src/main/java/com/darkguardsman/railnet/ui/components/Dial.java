@@ -32,14 +32,23 @@ public class Dial extends JPanel implements ComponentListener {
     protected int centerY;
 
     protected float dialFaceScale = 0.8f;
+    protected float clickDistance;
 
     private List<BiConsumer<Dial, Integer>> onSelectChangedList = new ArrayList();
 
-    public Dial() {
-        this(100);
+    /**
+     * @param clickDistance - allow degree distance to accept a click
+     */
+    public Dial(float clickDistance) {
+        this(clickDistance, 100);
     }
 
-    public Dial(int size) {
+    /**
+     * @param clickDistance - allow degree distance to accept a click
+     * @param size
+     */
+    public Dial(float clickDistance, int size) {
+        this.clickDistance = clickDistance;
         setMinimumSize(new Dimension(size, size));
         setPreferredSize(new Dimension(size, size));
         setMaximumSize(new Dimension(size, size));

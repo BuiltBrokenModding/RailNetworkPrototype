@@ -39,19 +39,21 @@ public class DialMouseListener implements MouseListener {
                 }
 
                 //Find best match angle
-                int distance = 360;
+                float distance = 360;
                 int dialIndex = 0;
                 for (int i = 0; i < dial.dialPositions.size(); i++) {
                     int selectionAngle = dial.getAngleVisually(i);
-                    int diff = getAngleDelta(selectionAngle, (int)clickAngle);
+                    float diff = getAngleDelta(selectionAngle, (int) clickAngle);
                     if (diff < distance) {
                         distance = diff;
                         dialIndex = i;
                     }
                 }
 
-                //Set position
-                dial.setDialPosition(dialIndex);
+                if (distance <= dial.clickDistance) {
+                    //Set position
+                    dial.setDialPosition(dialIndex);
+                }
             }
         }
     }
