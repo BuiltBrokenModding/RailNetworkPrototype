@@ -8,6 +8,7 @@ import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
 import com.darkguardsman.railnet.lib.Pos;
+import com.darkguardsman.railnet.lib.SnappedPos;
 import com.darkguardsman.railnet.lib.utils.SegmentHelper;
 import com.darkguardsman.railnet.lib.utils.SegmentHelper.ANGLE;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
@@ -86,7 +87,7 @@ public class RailRenderUtil {
 
     public static RailSegment generateRail(List<PlotPoint> dots, IPosM start, IPosM end,int startAngle) throws Exception
     {
-        RailSegment segment = SegmentHelper.generateRail(start, end,ANGLE.getAngle(startAngle));
+        RailSegment segment = SegmentHelper.generateRail(new SnappedPos(start), new SnappedPos(end),ANGLE.getAngle(startAngle));
         populatePlotPoints(segment, dots);
         return segment;
     }

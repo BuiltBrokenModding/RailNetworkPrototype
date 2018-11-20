@@ -44,7 +44,7 @@ public class RailSegmentCurve extends RailSegment {
 	}
 
 	@Override
-	protected void generatePaths() throws Exception {
+	protected void generatePaths() {
 
 		// Reset
 		getAllPaths().clear();
@@ -55,9 +55,7 @@ public class RailSegmentCurve extends RailSegment {
 		// Add start
 		path.newPoint(start.x(), start.y(), start.z());
 
-		// Generate mid points
-		int distance = (int) Math.ceil(start.distance(end));
-		
+		try {
 		CurveMath curveMath = new CurveMath(start.copy(), startAngle, end.copy(), endAngle, 1);
 		List<IPos> points = curveMath.getCurvePoints();
 
@@ -65,7 +63,9 @@ public class RailSegmentCurve extends RailSegment {
 		influencePointB = curveMath.endInfluencePoint;
 
 		path.newPoints(points);
-
+		} catch (Exception ex) {
+			
+		}
 		// Add end
 		path.newPoint(end.x(), end.y(), end.z());
 

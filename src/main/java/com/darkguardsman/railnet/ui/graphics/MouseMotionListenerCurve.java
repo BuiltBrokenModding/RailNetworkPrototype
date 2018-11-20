@@ -54,7 +54,7 @@ public class MouseMotionListenerCurve implements MouseMotionListener
             renderPanel.clear();
             try{
             //Generate new rail
-            RailRenderUtil.generateRail(plotPointRender, new Pos(0, 0, 0), new Pos(-gx, 0, gz), 180, 0);
+            RailRenderUtil.generateRail(plotPointRender, new Pos(0, 0, 0), new Pos(-gx, 0, gz), 0, 0);
             } catch (Exception ex) {
             	
             }
