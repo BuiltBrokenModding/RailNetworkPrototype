@@ -54,16 +54,26 @@ public class SegmentHelper {
 			return angle;
 		}
 	}
+	public enum SNAP_VECTORS{
+		ALL(new Point(1, 0), new Point(0, 1), new Point(-1, 0),new Point(0, -1), new Point(1, -1), new Point(1, 1), new Point(-1, 1), new Point(-1, -1)),
+		NS(new Point(1, 0), new Point(-1, 0)),
+		EW(new Point(0, 1), new Point(0, -1)),
+		NE_SW(new Point(1, 1), new Point(-1, -1)),
+		NW_SE(new Point(1, -1), new Point(-1, 1));
+		private final Point[] vectors;
+		SNAP_VECTORS(Point... points){
+			vectors = points;
+		}
+		public int length() {
+			return vectors.length;
+		}
+		public Point get(int i) {
+			return vectors[i];
+		}
+		
+	}
 
-	/**
-	 * 
-	 */
-	private static Point[] ALL_SNAP_VECTORS = new Point[] { new Point(1, 0), new Point(0, 1), new Point(-1, 0),
-			new Point(0, -1), new Point(1, -1), new Point(1, 1), new Point(-1, 1), new Point(-1, -1) };
-	private static Point[] HORIZONTAL_SNAP_VECTORS = new Point[] { new Point(1, 0), new Point(-1, 0) };
-	private static Point[] VERTICAL_SNAP_VECTORS = new Point[] { new Point(0, 1), new Point(0, -1) };
-	private static Point[] NE_SW_SNAP_VECTORS = new Point[] { new Point(1, 1), new Point(-1, -1) };
-	private static Point[] NW_SW_SNAP_VECTORS = new Point[] { new Point(1, -1), new Point(-1, 1) };
+	
 
 	/**
 	 * Get the appropriate rail segment
@@ -75,13 +85,12 @@ public class SegmentHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static RailSegment generateRail(IPosM start, IPosM end, ANGLE startAngle, boolean forceStraight)
-			throws Exception {
-		Pos snappedStart = getClosestSnapPoint(start, ALL_SNAP_VECTORS);
-		Pos snappedEnd = getClosestSnapPoint(end, ALL_SNAP_VECTORS);
+	public static RailSegment generateRail(IPosM start, IPosM end, ANGLE startAngle, boolean forceStraight) {
+		Pos snappedStart = getClosestSnapPoint(start, SNAP_VECTORS.ALL);
+		Pos snappedEnd = getClosestSnapPoint(end, SNAP_VECTORS.ALL);
 		while (snappedStart.x() == snappedEnd.x() && snappedStart.z() == snappedEnd.z()) {
 			end = end.addHVector(getAngleFromPoints(snappedStart,end).value(), 1);
-			snappedEnd = getClosestSnapPoint(end, ALL_SNAP_VECTORS);
+			snappedEnd = getClosestSnapPoint(end, SNAP_VECTORS.ALL);
 		}
 		ANGLE endAngle = ANGLE.NORTH;
 		// If we are forcing the end point to line be straight from the start point
@@ -123,22 +132,32 @@ public class SegmentHelper {
 	public static RailSegment generateRail(IPosM start, IPosM end, ANGLE startAngle) throws Exception {
 		return generateRail(start,end,startAngle,false);
 	}
-	/*
-	 public static RailSegment generateRail(IPosM start, IPosM end, boolean forceStraight) {
-	 
-
-	}*/
+	
+	/**
+	 * Gets the best detected line between 2 points, can force the line to be straight
+	 * Will be used by the rail planning tool to place the first segment of track so that the start angle is not forced.
+	 * @param start
+	 * @param end
+	 * @param forceStraight
+	 * @return
+	 * @throws Exception 
+	 */
+	public static RailSegment generateRail(IPosM start, IPosM end, boolean forceStraight) throws Exception {
+		Pos snappedStart = getClosestSnapPoint(start,SNAP_VECTORS.ALL);		
+		return generateRail(start,end,getAngleFromPoints(snappedStart,end),forceStraight);
+	}
 
 	/**
-	 * Gets the best detected segment between two points with no angle logging
+	 * Gets the best detected segment between two points, no forced straight.
 	 * 
 	 * @param start
 	 * @param end
 	 * @return
+	 * @throws Exception 
 	 */
-	/*public static RailSegment generateRail(IPosM start, IPosM end) {
+	public static RailSegment generateRail(IPosM start, IPosM end) throws Exception {
 		return generateRail(start, end, false);
-	}*/
+	}
 
 	/**
 	 * Creates a rail from given points and angles
@@ -164,19 +183,13 @@ public class SegmentHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	private static ANGLE getAngleFromPoints(IPosM start, IPosM end) throws Exception {
-
-		Pos startSnapped = getClosestSnapPoint(start, ALL_SNAP_VECTORS);
-		Pos endSnapped = getClosestSnapPoint(end, ALL_SNAP_VECTORS);
-
+	private static ANGLE getAngleFromPoints(IPosM start, IPosM end){
 		double shortestDistance = start.hDistance(end) * 2;
 		ANGLE out = ANGLE.NORTH;
-
-		ANGLE[] validAngles = getValidAngles((int) startSnapped.x(), (int) endSnapped.z());
-
+		ANGLE[] validAngles = getValidAngles((int) start.x(), (int) end.z());
 		for (int i = 0; i < validAngles.length; i++) {
-			double testDistance = startSnapped.addHVector(validAngles[i].value(), 1).hDistance(end);
-			if (shortestDistance > start.addHVector(validAngles[i].value(), 1).hDistance(end)) {
+			double testDistance = start.addHVector(validAngles[i].value(), 1).hDistance(end);
+			if (shortestDistance > testDistance) {
 				shortestDistance = testDistance;
 				out = validAngles[i];
 			}
@@ -191,7 +204,7 @@ public class SegmentHelper {
 	 * @param pos
 	 * @return
 	 */
-	public static Pos getClosestSnapPoint(IPosM pos, Point[] allowedVectors) {
+	public static Pos getClosestSnapPoint(IPosM pos, SNAP_VECTORS vectors) {
 		int x = Math.round(pos.x());
 		int y = Math.round(pos.y());
 		int z = Math.round(pos.z());
@@ -199,8 +212,8 @@ public class SegmentHelper {
 		if (gridPoint(x) == 0 && gridPoint(z) == 0) {
 			Point closestSnapPoint = null;
 			double shortestDistance = 2d;
-			for (int i = 0; i < allowedVectors.length; i++) {
-				Point snapPoint = new Point(x + allowedVectors[i].x, z + allowedVectors[i].y);
+			for (int i = 0; i < vectors.length(); i++) {
+				Point snapPoint = new Point(x + vectors.get(i).x, z + vectors.get(i).y);
 				double testDistance = snapPoint.distance(pos.x(), pos.z());
 				if (testDistance < shortestDistance) {
 					shortestDistance = testDistance;
@@ -223,11 +236,11 @@ public class SegmentHelper {
 		return Math.abs((i + 1) % 2);
 	}
 
-	public static ANGLE[] getValidAngles(int x, int z) throws Exception {
+	public static ANGLE[] getValidAngles(int x, int z) {
 		int gridx = gridPoint(x);
 		int gridz = gridPoint(z);
 		if (gridx + gridz == 0) {
-			throw new Exception("Center of rail cannot provide an angle, get the snap point first");
+			return new ANGLE[]{};
 		}
 		if (gridPoint(x) == 1 && gridPoint(z) == 1) {
 			return new ANGLE[] { ANGLE.NORTHEAST, ANGLE.NORTHWEST, ANGLE.SOUTHEAST, ANGLE.SOUTHWEST };

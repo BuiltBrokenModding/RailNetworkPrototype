@@ -52,36 +52,52 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	default double hDistance(IPos end) {
 		return Math.sqrt(Math.pow(end.x() - x(), 2) + Math.pow(end.z() - z(), 2));
 	}
-	
+
+	/**
+	 * Add a horizontal vector to a position based on an angle (degrees) and a
+	 * distance.
+	 * 
+	 * @param end
+	 * @return
+	 */
+	default IPosM addHVector(double f, double distance) {
+		f = Math.toRadians(f);
+		return (IPosM) add(new Pos(Math.cos(-f) * distance, 0, Math.sin(-f) * distance));
+	}
+
+	/**
+	 * Adds the position creating a new pos
+	 * 
+	 * @param pos
+	 * @return new position
+	 */
+	default N add(IPos pos) {
+		return newPos(x() + pos.x(), y() + pos.y(), z() + pos.z());
+	}
+
+	default int getAngle(IPos b) {
+		int angle = (int) Math.round(Math.toDegrees(Math.atan2(b.z() - z(), b.x() - x())));
+
+		if (angle < 0) {
+			angle += 360;
+		}
+
+		return angle;
+	}
+
 	/**
 	 * Distance to the point
+	 * 
 	 * @param end
 	 * @return
 	 */
 	default double distance(IPos end) {
 		return Math.sqrt(distanceSq(end));
 	}
-	/**
-	 * Add a vector to a position based on an angle (degrees) and a distance.
-	 * @param end
-	 * @return
-	 */
-	default IPosM addHVector(double f, double distance) {
-		f = Math.toRadians(f);
-		return (IPosM)add(new Pos(Math.cos(-f)*distance,0,Math.sin(-f)*distance));
-	}
-	default int getAngle(IPos b) {
-		int angle =(int) Math.round(Math.toDegrees(Math.atan2(b.z() - z(), b.x() - x())));
 
-	    if(angle < 0){
-	        angle += 360;
-	    }
-
-	    return angle;		
-	}
 	/**
-     * Distance to the point squared
-     * D * D
+	 * Distance to the point squared D * D
+	 * 
 	 * @param end
 	 * @return
 	 */
@@ -90,45 +106,10 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 		return x * x + y * y + z * z;
 	}
 
-	/**
-	 * Adds the position creating a new pos
-	 * @param pos
-	 * @return new position
-	 */
-	default P add(IPos pos) {
-		return newPos(x() + pos.x(), y() + pos.y(), z() + pos.z());
-	}
-
-	/**
-	 * Adds the position creating a new pos
-	 * @param pos
-	 * @return new position
-	 */
-	default P sub(IPos pos) {
-		return newPos(x() - pos.x(), y() - pos.y(), z() - pos.z());
-	}
-
-	/**
-	 * Adds the position creating a new pos
-	 * @param pos
-	 * @return new position
-	 */
-	default P multiply(IPos pos) {
-		return newPos(x() * pos.x(), y() * pos.y(), z() * pos.z());
-	}
-
-	/**
-	 * Adds the position creating a new pos
-	 * @param pos
-	 * @return new position
-	 */
-	default P divide(IPos pos) {
-		return newPos(x() / pos.x(), y() / pos.y(), z() / pos.z());
-	}
 	default boolean collidesWithH(IPos pos, double angle) {
-		 double xDiff = x() - pos.x();
-	        double zDiff = z() - pos.z();
-	        return Math.atan2(zDiff, xDiff) == angle;
+		double xDiff = x() - pos.x();
+		double zDiff = z() - pos.z();
+		return Math.atan2(zDiff, xDiff) == angle;
 	}
-	
+
 }
