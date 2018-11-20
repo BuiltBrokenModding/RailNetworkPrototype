@@ -1,12 +1,22 @@
 package com.darkguardsman.railnet.ui.components;
 
+import com.darkguardsman.railnet.ui.graphics.G2DHelpers;
+
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.IntConsumer;
 
+/**
+ * Round dial used to select options
+ *
+ * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
+ * Created by Dark(DarkGuardsman, Robert) on 11/19/18.
+ */
 public class Dial extends JPanel implements ComponentListener {
 
     protected final List<Integer> dialPositions = new ArrayList();
@@ -22,6 +32,8 @@ public class Dial extends JPanel implements ComponentListener {
     protected int centerY;
 
     protected float dialFaceScale = 0.8f;
+
+    private List<BiConsumer<Dial, Integer>> onSelectChangedList = new ArrayList();
 
     public Dial() {
         this(100);
@@ -39,78 +51,123 @@ public class Dial extends JPanel implements ComponentListener {
     @Override
     protected void paintComponent(Graphics g) {
 
-        Graphics2D g2 = (Graphics2D) g;
+        final Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        //Draw boarder
-        g2.drawRect(1, 1, getWidth() - 2, getHeight() - 2);
+        drawBoarder(g2);
+        drawDialBackGround(g2);
+        drawDialFace(g2);
+    }
 
+    protected void drawBoarder(Graphics2D g2) {
+        g2.drawRect(1, 1, getWidth() - 2, getHeight() - 2);
+    }
+
+    protected void drawDialBackGround(Graphics2D g2) {
         //Draw dial background
-        drawCircle(g2, Color.BLUE, centerX, centerY, dialOutsideSize);
+        G2DHelpers.drawCircle(g2, Color.BLUE, centerX, centerY, dialOutsideSize, true);
 
         //Draw dial positions
         g2.setColor(Color.GRAY);
         for (int i = 0; i < dialPositions.size(); i++) {
-            drawLineAtAngle(g2, centerX, centerY, getAngleVisually(i), dialOutsideSize / 2);
+            G2DHelpers.drawLineAtAngle(g2, centerX, centerY, getAngleVisually(i), dialOutsideSize / 2);
         }
+    }
 
+    protected void drawDialFace(Graphics2D g2) {
         //Draw dial face
-        drawCircle(g2, Color.BLACK, centerX, centerY, (int) (dialOutsideSize * dialFaceScale));
+        G2DHelpers.drawCircle(g2, Color.BLACK, centerX, centerY, (int) (dialOutsideSize * dialFaceScale), true);
 
         //Draw line on dial face
         g2.setColor(Color.GREEN);
-        drawLineAtAngle(g2, centerX, centerY, getAngleVisually(dialPosition), dialOutsideSize / 2);
+        G2DHelpers.drawLineAtAngle(g2, centerX, centerY, getAngleVisually(dialPosition), dialOutsideSize / 2);
     }
 
+    /**
+     * Angle at the index visually
+     * <p>
+     * Allows an offset to be applied if the
+     * desire is to have 0 degrees visually
+     * show at a different position then normally
+     * <p>
+     * By Default 0 degrees points right
+     *
+     * @param index - index of the angle in {@link #dialPositions}
+     * @return angle, 0 to 360 normally
+     */
     public int getAngleVisually(int index) {
         return dialPositions.get(index);
     }
 
-    private void drawLineAtAngle(Graphics2D g2, int centerX, int centerY, int angle, int size) {
-        int x = getX(size, angle);
-        int y = getY(size, angle);
-
-        g2.drawLine(centerX, centerY, centerX + x, centerY + y);
+    /**
+     * Gets the selected angle
+     *
+     * @return angle, 0 to 360 normally
+     */
+    public int getSelectedAngle() {
+        return dialPositions.get(getSelectedIndex());
     }
 
-    private void drawCircle(Graphics2D g2, Color color, int centerX, int centerY, int size) {
-        g2.setColor(color);
-        drawCircle(g2, centerX, centerY, size);
+    /**
+     * Gets the selected index
+     *
+     * @return selected index
+     */
+    public int getSelectedIndex() {
+        return dialPosition;
     }
 
-    private void drawCircle(Graphics2D g2, int centerX, int centerY, int size) {
-        int radius = size / 2;
-        g2.fillOval(centerX - radius, centerY - radius, size, size);
-    }
-
-    private int getX(int radius, int angle) {
-        return (int) (radius * Math.cos(Math.toRadians(angle)));
-    }
-
-    private int getY(int radius, int angle) {
-        return (int) -(radius * Math.sin(Math.toRadians(angle)));
-    }
-
-    public int getAngle() {
-        return dialPositions.get(dialPosition);
-    }
-
+    /**
+     * Sets the dial position
+     * <p>
+     * Checks for valid range and will print to console if an error happens.
+     * <p>
+     * Will also print to console the selected angle change.
+     * <p>
+     * will cause a redraw of the component
+     *
+     * @param index - index in {@link #dialPositions}
+     */
     public void setDialPosition(int index) {
         if (index >= 0 && index < dialPositions.size()) {
             dialPosition = index;
-            System.out.println("Dial#setDialPosition(" + index + ") - dial set to " + getAngle());
+            System.out.println("Dial#setDialPosition(" + index + ") - dial set to " + getSelectedAngle());
             repaint();
+            onSelectChangedList.forEach(listener -> listener.accept(this, index));
         } else {
             System.out.println("Dial#setDialPosition(" + index + ") - Error, Index is outside the range of values");
             new RuntimeException("trace").printStackTrace();
         }
     }
 
+    /**
+     * Adds a new position to the list of angles.
+     * <p>
+     * Will cause a redraw
+     *
+     * @param angle - new angle
+     * @return angle
+     */
     public Dial addPosition(int angle) {
-        if (!dialPositions.contains(angle))
+        if (!dialPositions.contains(angle)) {
             this.dialPositions.add(angle);
+            if (dialPosition == -1) {
+                dialPosition = 0;
+            }
+            repaint();
+        }
+        return this;
+    }
+
+    public Dial clearPositions() {
+        dialPositions.clear();
+        dialPosition = -1;
         repaint();
         return this;
+    }
+
+    public void addSelectChangeListener(BiConsumer<Dial, Integer> consumer) {
+        this.onSelectChangedList.add(consumer);
     }
 
     @Override

@@ -38,8 +38,6 @@ public class DialMouseListener implements MouseListener {
                     clickAngle -= 360;
                 }
 
-                System.out.println("Angle: " + rad + " " + clickAngle);
-
                 //Find best match angle
                 int distance = 360;
                 int dialIndex = 0;
