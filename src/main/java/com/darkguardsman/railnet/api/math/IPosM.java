@@ -44,7 +44,12 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	 */
 	P newPos(float x, float y, float z);
 
-	default double horizontalDistance(IPos end) {
+	/**
+	 * Horizontal distance between 2 points
+	 * @param end
+	 * @return
+	 */
+	default double hDistance(IPos end) {
 		return Math.sqrt(Math.pow(end.x() - x(), 2) + Math.pow(end.z() - z(), 2));
 	}
 	
@@ -57,15 +62,14 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 		return Math.sqrt(distanceSq(end));
 	}
 	/**
-	 * Distance to the point
+	 * Add a vector to a position based on an angle (degrees) and a distance.
 	 * @param end
 	 * @return
 	 */
-	default IPosM addHorizontalVector(float f, Double distance) {
+	default IPosM addHVector(double f, double distance) {
+		f = Math.toRadians(f);
 		return (IPosM)add(new Pos(Math.cos(-f)*distance,0,Math.sin(-f)*distance));
-		
 	}
-
 	/**
      * Distance to the point squared
      * D * D

@@ -87,10 +87,10 @@ public class PanelCurveRails extends PanelAbstractTest {
         renderPanel.upperBound = new Dimension(size, size);
         renderPanel.lowerBound = new Dimension(-size, -size);
 
-        RailRenderUtil.generateRail(pointRender,
+        /* RailRenderUtil.generateRail(pointRender,
                 new Pos(0, 0, 0),
                 new Pos(railTestSet.endX, 0, railTestSet.endZ),
-                railTestSet.startAngle, railTestSet.endAngle, true);
+                railTestSet.startAngle, railTestSet.endAngle, true);*/
 
         renderPanel.repaint();
     }

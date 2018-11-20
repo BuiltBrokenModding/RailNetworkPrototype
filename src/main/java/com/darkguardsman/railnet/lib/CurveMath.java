@@ -27,7 +27,7 @@ public class CurveMath {
 		this.end = end;
 		this.endAngle = endAngle;
 		
-		distance = start.horizontalDistance(end);
+		distance = start.hDistance(end);
 		
 		if(start.collidesWithH(end,startAngle) && end.collidesWithH(start,endAngle)) {
 			segmentCount = 1;
@@ -35,7 +35,7 @@ public class CurveMath {
 			segmentCount = (int) Math.ceil((distance / approxSegmentSpacing));
 		}
 		
-		distance = start.horizontalDistance(end);
+		distance = start.hDistance(end);
     	influenceDistance = getInfulenceDistance();
 	}
 	private double getInfulenceDistance() {		
@@ -60,9 +60,9 @@ public class CurveMath {
      * Creates curves between 2 points with smoothing based on the input location and direction
      *
      * @param start        Starting point
-     * @param startAngle   Starting points entering direction (radians)
+     * @param startAngle   Starting points entering direction
      * @param end          Ending point
-     * @param endAngle     Ending points leaving direction (radians)
+     * @param endAngle     Ending points leaving direction
      * @param segmentCount The number of segments to divide this rail into, minimum is 1, 2 would mean 3 points (beginning, middle, end) (more is smoother for curves)
      * @return
      * @throws Exception

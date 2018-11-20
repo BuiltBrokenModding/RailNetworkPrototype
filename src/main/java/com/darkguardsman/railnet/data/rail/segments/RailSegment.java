@@ -12,6 +12,7 @@ public abstract class RailSegment implements IRailSegment {
 
     protected ArrayList<IRailJoint> joints = new ArrayList(2);
     protected ArrayList<IRailPath> paths = new ArrayList(1);
+    
 
     protected boolean arePathsInit = false;
 
