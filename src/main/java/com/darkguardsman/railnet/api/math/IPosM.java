@@ -71,7 +71,7 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	 * @param pos
 	 * @return new position
 	 */
-	default N add(IPos pos) {
+	default P add(IPos pos) {
 		return newPos(x() + pos.x(), y() + pos.y(), z() + pos.z());
 	}
 
