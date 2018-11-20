@@ -70,6 +70,15 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 		f = Math.toRadians(f);
 		return (IPosM)add(new Pos(Math.cos(-f)*distance,0,Math.sin(-f)*distance));
 	}
+	default int getAngle(IPos b) {
+		int angle =(int) Math.round(Math.toDegrees(Math.atan2(b.z() - z(), b.x() - x())));
+
+	    if(angle < 0){
+	        angle += 360;
+	    }
+
+	    return angle;		
+	}
 	/**
      * Distance to the point squared
      * D * D

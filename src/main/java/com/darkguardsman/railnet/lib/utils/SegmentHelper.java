@@ -25,8 +25,9 @@ public class SegmentHelper {
 			this.angle = angle;
 		}
 
-		public static ANGLE getAngle(int angle) throws Exception {
-			switch (to360(angle)) {
+		public static ANGLE getAngle(double angle) {
+			int flooredAngle = (int)(Math.round(angle/45) * 45);
+			switch (to360(flooredAngle)) {
 			case 0:
 				return ANGLE.NORTH;
 			case 45:
@@ -43,15 +44,12 @@ public class SegmentHelper {
 				return ANGLE.WEST;
 			case 315:
 				return ANGLE.NORTHWEST;
-			default:
-				throw new Exception("Angle not found");
 			}
+			return ANGLE.NORTH;
 		}
-
 		public static int to360(int in) {
 			return (in + 3600) % 360;
 		}
-
 		public int value() {
 			return angle;
 		}
@@ -96,9 +94,20 @@ public class SegmentHelper {
 			// Handle situation where N-S or E-W start and point is exactly 90 degrees
 			// opposing (attempting to make 180)
 			// Instead we will snap to a perfect 90 Degree segment instead.
+			
+			
 			switch (startAngle) {
 			case NORTH:
 			case SOUTH:
+			case EAST:
+			case WEST:				
+				int diffAngle = ANGLE.to360(startAngle.value()-snappedStart.getAngle(snappedEnd));
+				System.out.println(snappedStart.getAngle(snappedEnd));
+				if( diffAngle == 90 || diffAngle == 270) {
+					
+				}
+				
+				
 				if (snappedStart.z() == snappedEnd.z()) {
 					int lengthHint = (int) (snappedEnd.x() - snappedStart.x()) / 2;
 
