@@ -43,19 +43,8 @@ public class RailSegmentCurve extends RailSegment {
 		this.endAngle = endAngle;
 	}
 
-
-
-	private static int gridPoint (int i) {
-		return Math.abs((i+1) % 2);
-	}
-	private static int getAngleFromPointAndPlayerFacing(IPos start, int angle) {
-		return 0;
-	}
-
-	
-
 	@Override
-	protected void generatePaths() {
+	protected void generatePaths() throws Exception {
 
 		// Reset
 		getAllPaths().clear();

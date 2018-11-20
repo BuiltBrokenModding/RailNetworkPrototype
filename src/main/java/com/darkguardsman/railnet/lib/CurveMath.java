@@ -21,7 +21,7 @@ public class CurveMath {
 	private double distance;
 	private double influenceDistance;
 
-	public CurveMath(IPosM start, double startAngle, IPosM end, double endAngle, double approxSegmentSpacing) {
+	public CurveMath(IPosM start, int startAngle, IPosM end, int endAngle, double approxSegmentSpacing) throws Exception {
 		this.start = start;
 		this.startAngle = startAngle;
 		this.end = end;
@@ -30,7 +30,7 @@ public class CurveMath {
 		distance = start.hDistance(end);
 
 		if (start.collidesWithH(end, startAngle) && end.collidesWithH(start, endAngle)) {
-			segmentCount = 1;
+			throw new Exception("This is a straight track");
 		} else {
 			segmentCount = (int) Math.ceil((distance / approxSegmentSpacing));
 		}
@@ -42,7 +42,8 @@ public class CurveMath {
 	private double getInfulenceDistance() {
 		double degrees = Math.round(getMinAngleBetween2Angles(startAngle, endAngle));
 		
-		switch ((int) degrees) {
+		return distance /3d;
+		/*switch ((int) degrees) {
 		case 90:
 		case 270:
 		case 180:
@@ -55,7 +56,7 @@ public class CurveMath {
 
 		default:
 			return distance / 1.5;
-		}
+		}*/
 	}
 
 	/**

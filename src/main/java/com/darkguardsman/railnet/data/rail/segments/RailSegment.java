@@ -23,7 +23,7 @@ public abstract class RailSegment implements IRailSegment {
     }
 
     @Override
-    public List<IRailPath> getAllPaths() {
+    public List<IRailPath> getAllPaths() throws Exception {
         if (!arePathsInit) {
             arePathsInit = true;
             generatePaths();
@@ -33,7 +33,7 @@ public abstract class RailSegment implements IRailSegment {
 
 
     @Override
-    public IRailPath getPath(IRailJoint from, IRailJoint to) {
+    public IRailPath getPath(IRailJoint from, IRailJoint to) throws Exception {
 
         for (IRailPath path : getAllPaths()) {
             if (path.getStart() == from && path.getEnd() == to
@@ -45,5 +45,5 @@ public abstract class RailSegment implements IRailSegment {
         return null;
     }
 
-    protected abstract void generatePaths();
+    protected abstract void generatePaths() throws Exception;
 }

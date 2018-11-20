@@ -29,8 +29,9 @@ public interface IRailSegment {
      * to follow while moving.
      *
      * @return paths
+     * @throws Exception 
      */
-    List<IRailPath> getAllPaths();
+    List<IRailPath> getAllPaths() throws Exception;
 
     /**
      * Path from one join to the next
@@ -38,8 +39,9 @@ public interface IRailSegment {
      * @param from - start
      * @param to   - end
      * @return path
+     * @throws Exception 
      */
-    IRailPath getPath(IRailJoint from, IRailJoint to);
+    IRailPath getPath(IRailJoint from, IRailJoint to) throws Exception;
 
 
 }

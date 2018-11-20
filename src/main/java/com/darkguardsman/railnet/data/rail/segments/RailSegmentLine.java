@@ -25,7 +25,7 @@ public class RailSegmentLine extends RailSegment {
 
 
     @Override
-    protected void generatePaths() {
+    protected void generatePaths() throws Exception {
 
         //Reset
         getAllPaths().clear();
