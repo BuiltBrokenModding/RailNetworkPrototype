@@ -118,7 +118,7 @@ public class CurveMath {
 
 	public Pos calculateInfluencingPoint(IPosM position, double distance, double angle) {
 		Pos outPosition = new Pos(position);
-		Pos vector = new Pos(distance * Math.sin(Math.toRadians(-angle)), 0, distance * Math.cos(Math.toRadians(-angle)));
+		Pos vector = new Pos(distance * Math.sin(Math.toRadians(angle)), 0, distance * Math.cos(Math.toRadians(angle)));
 		return outPosition.add(vector);
 	}
 

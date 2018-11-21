@@ -2,6 +2,7 @@ package com.darkguardsman.railnet.lib;
 
 import java.awt.Point;
 
+import com.darkguardsman.railnet.api.RailHeading;
 import com.darkguardsman.railnet.api.math.IPos;
 import com.darkguardsman.railnet.api.math.IPosM;
 public class SnappedPos extends AbstractPos<SnappedPos> {
@@ -34,7 +35,11 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 		Pos snap = getClosestSnapPoint(origin(),vectors);
 		this.x = snap.x;
 		this.y = snap.y;
-		this.z = snap.z;		
+		this.z = snap.z;
+	}
+	
+	public RailHeading[] possibleHeadings() {
+		return RailHeading.getPossibleHeadings((int)x,(int)z);
 	}
 	
 	public SnappedPos(float x, float y, float z) {

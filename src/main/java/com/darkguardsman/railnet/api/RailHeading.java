@@ -1,6 +1,8 @@
 package com.darkguardsman.railnet.api;
 
 import com.darkguardsman.railnet.lib.MathHelpers;
+import com.darkguardsman.railnet.lib.SnappedPos;
+import com.darkguardsman.railnet.lib.utils.SegmentHelper;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -153,4 +155,16 @@ public enum RailHeading {
     public int angle() {
     	return angle;
     }
+
+	public static RailHeading[] getPossibleHeadings(int x, int z) {
+		int xs = SnappedPos.gridPoint(x);
+		int zs = SnappedPos.gridPoint(z);
+		if(xs == 1 && zs == 1) {
+			return new RailHeading[] {NORTH_EAST,NORTH_WEST,SOUTH_EAST,SOUTH_WEST};
+		} else if(xs== 1) {
+			return new RailHeading[] {EAST,WEST};
+		} else {
+			return new RailHeading[] {NORTH,SOUTH};
+		}
+	}
 }
