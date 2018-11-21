@@ -16,7 +16,7 @@ public final class MathHelpers {
      */
     public static double wrapTo360(double angle) {
 
-        //Works the same as %
+        //Works the same as % for wrapping but keeps the decimal points
         int div = (int) angle / 360;
         if (angle > 0) {
             angle -= div * 360;
@@ -39,15 +39,26 @@ public final class MathHelpers {
      * @return angle between 0 - 360;
      */
     public static int wrapTo360(int angle) {
+        return wrap(angle, 360);
+    }
+
+    /**
+     * Wraps a value between zero and a limit
+     *
+     * @param value - value to wrap
+     * @param limit - upper limit
+     * @return wrapped value
+     */
+    public static int wrap(int value, int limit) {
         //Reduce
-        angle = angle % 360;
+        value = value % limit;
 
         //Less then zero, wrap back around
-        if (angle < 0) {
-            return angle + 360;
+        if (value < 0) {
+            return value + limit;
         }
 
-        return angle;
+        return value;
     }
 
     /**
