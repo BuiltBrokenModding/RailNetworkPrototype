@@ -4,9 +4,11 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Arrays;
 
+import com.darkguardsman.railnet.api.RailHeading;
 import com.darkguardsman.railnet.api.math.IPosM;
 import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
+import com.darkguardsman.railnet.lib.MathHelpers;
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.lib.SnappedPos;
 import com.darkguardsman.railnet.lib.SnappedPos.SNAP_VECTORS;
@@ -21,47 +23,7 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
  */
 public class SegmentHelper {
 
-	@Deprecated /** @Depicated use {@link com.darkguardsman.railnet.api.RailHeading} */
-	public enum ANGLE {
-		NORTH(0), NORTHEAST(45), EAST(90), SOUTHEAST(135), SOUTH(180), SOUTHWEST(225), WEST(270), NORTHWEST(315);
-
-		private final int angle;
-
-		ANGLE(int angle) {
-			this.angle = angle;
-		}
-
-		public static ANGLE getAngle(double angle) {
-			int flooredAngle = (int) (Math.round(angle / 45) * 45);
-			switch (to360(flooredAngle)) {
-			case 0:
-				return ANGLE.NORTH;
-			case 45:
-				return ANGLE.NORTHEAST;
-			case 90:
-				return ANGLE.EAST;
-			case 135:
-				return ANGLE.SOUTHEAST;
-			case 180:
-				return ANGLE.SOUTH;
-			case 225:
-				return ANGLE.SOUTHWEST;
-			case 270:
-				return ANGLE.WEST;
-			case 315:
-				return ANGLE.NORTHWEST;
-			}
-			return ANGLE.NORTH;
-		}
-
-		public static int to360(int in) {
-			return (in + 3600) % 360;
-		}
-
-		public int value() {
-			return angle;
-		}
-	}
+	
 
 	/**
 	 * Get the appropriate rail segment
@@ -73,16 +35,16 @@ public class SegmentHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static RailSegment generateRail(SnappedPos start, SnappedPos end, ANGLE startAngle, boolean forceStraight) {
+	public static RailSegment generateRail(SnappedPos start, SnappedPos end, RailHeading startAngle, boolean forceStraight) {
 		while (start.x() == end.x() && start.z() == end.z()) {
-			end = new SnappedPos(end.addHVector(getAngleFromPoints(start, end).value(), 1));
+			end = new SnappedPos(end.addHVector(getAngleFromPoints(start, end).angle(), 1));
 		}
-		ANGLE endAngle = ANGLE.NORTH;
+		RailHeading endAngle = RailHeading.NORTH;
 		// If we are forcing the end point to line be straight from the start point
 		// (shift click in MC)
 		if (forceStraight) {
 
-			endAngle = ANGLE.getAngle(startAngle.value() + 180);
+			endAngle = RailHeading.fromAngle(startAngle.angle() + 180);
 
 		} else {
 			// Handle situation where N-S or E-W start and point is exactly 90 degrees
@@ -94,28 +56,29 @@ public class SegmentHelper {
 			case SOUTH:
 			case EAST:
 			case WEST:
-				int diffAngle = ANGLE.to360(startAngle.value() - start.getAngle(end));
+				int diffAngle = MathHelpers.wrapTo360(startAngle.angle() - start.getAngle(end));
 				
 				if (diffAngle == 90 || diffAngle == 270) {
 					if (start.z() == end.z()) {
 						int lengthHint = (int) Math.ceil((start.x() - end.x()) / 4d) * 2;
 						end = new SnappedPos(start.x() - lengthHint, start.y(),
-								start.z() + ((startAngle == ANGLE.NORTH ? 1 : -1) * Math.abs(lengthHint)),
+								start.z() + ((startAngle == RailHeading.NORTH ? 1 : -1) * Math.abs(lengthHint)),
 								SNAP_VECTORS.EW);
-						return generateRail(start, end, startAngle, lengthHint > 0 ? ANGLE.EAST : ANGLE.WEST);
+						return generateRail(start, end, startAngle, lengthHint > 0 ? RailHeading.EAST : RailHeading.WEST);
 					} else if (start.x() == end.x()) {
 						int lengthHint = (int) Math.floor((start.z() - end.z()) / 4d) * 2;
-						end = new SnappedPos(start.x() + ((startAngle == ANGLE.EAST ? 1 : -1) * Math.abs(lengthHint)),
+						end = new SnappedPos(start.x() + ((startAngle == RailHeading.EAST ? 1 : -1) * Math.abs(lengthHint)),
 								start.y(), start.z() - lengthHint, SNAP_VECTORS.NS);
-						return generateRail(start, end, startAngle, lengthHint > 0 ? ANGLE.NORTH : ANGLE.SOUTH);
+						return generateRail(start, end, startAngle, lengthHint > 0 ? RailHeading.NORTH : RailHeading.SOUTH);
 					}
 				}
+				return generateRail(start, end, startAngle, getAngleFromPoints(end, start));
 			}
 		}
 		return null;
 	}
 
-	public static RailSegment generateRail(SnappedPos start, SnappedPos end, ANGLE startAngle) throws Exception {
+	public static RailSegment generateRail(SnappedPos start, SnappedPos end, RailHeading startAngle) throws Exception {
 		return generateRail(start, end, startAngle, false);
 	}
 
@@ -131,6 +94,7 @@ public class SegmentHelper {
 	 * @throws Exception
 	 */
 	public static RailSegment generateRail(SnappedPos start, SnappedPos end, boolean forceStraight) throws Exception {
+		System.out.println((int)start.x() + "," + (int)start.z() +" to " +(int)end.x() + "," + (int)end.z() + " = " + getAngleFromPoints(start, end).angle());
 		return generateRail(start, end, getAngleFromPoints(start, end), forceStraight);
 	}
 
@@ -155,11 +119,11 @@ public class SegmentHelper {
 	 * @param endAngle
 	 * @return
 	 */
-	public static RailSegment generateRail(IPosM start, IPosM end, ANGLE startAngle, ANGLE endAngle) {
+	public static RailSegment generateRail(IPosM start, IPosM end, RailHeading startAngle, RailHeading endAngle) {
 		if (!Arrays.asList(getValidAngles((int) start.x(), (int) start.z())).contains(startAngle)) {
 			return null;
 		}
-		return new RailSegmentCurve(start, end, startAngle.value(), endAngle.value());
+		return new RailSegmentCurve(start, end, startAngle.angle(), endAngle.angle());
 	}
 
 	/**
@@ -171,12 +135,13 @@ public class SegmentHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	private static ANGLE getAngleFromPoints(SnappedPos start, SnappedPos end) {
+	private static RailHeading getAngleFromPoints(SnappedPos start, SnappedPos end) {
 		double shortestDistance = start.hDistance(end) * 2;
-		ANGLE out = ANGLE.NORTH;
-		ANGLE[] validAngles = getValidAngles((int) start.x(), (int) start.z());
+		RailHeading out = RailHeading.NORTH;
+		RailHeading[] validAngles = getValidAngles((int) start.x(), (int) start.z());
+		System.out.println(validAngles[0]);
 		for (int i = 0; i < validAngles.length; i++) {
-			double testDistance = start.addHVector(validAngles[i].value(), 1).hDistance(end);
+			double testDistance = start.addHVector(validAngles[i].angle(), 0.25).hDistance(end);
 			if (shortestDistance > testDistance) {
 				shortestDistance = testDistance;
 				out = validAngles[i];
@@ -186,18 +151,18 @@ public class SegmentHelper {
 		return out;
 	}
 
-	public static ANGLE[] getValidAngles(int x, int z) {
+	public static RailHeading[] getValidAngles(int x, int z) {
 		int gridx = SnappedPos.gridPoint(x);
 		int gridz = SnappedPos.gridPoint(z);
 		if (gridx + gridz == 0) {
-			return new ANGLE[] {};
+			return new RailHeading[] {};
 		}
 		if (gridx == 1 && SnappedPos.gridPoint(z) == 1) {
-			return new ANGLE[] { ANGLE.NORTHEAST, ANGLE.NORTHWEST, ANGLE.SOUTHEAST, ANGLE.SOUTHWEST };
-		} else if (gridx == gridz) {
-			return new ANGLE[] { ANGLE.NORTH, ANGLE.SOUTH };
+			return new RailHeading[] { RailHeading.NORTH_EAST, RailHeading.NORTH_WEST, RailHeading.SOUTH_EAST, RailHeading.SOUTH_WEST };
+		} else if (gridx == 1) {
+			return new RailHeading[] { RailHeading.NORTH, RailHeading.SOUTH };
 		} else {
-			return new ANGLE[] { ANGLE.EAST, ANGLE.WEST };
+			return new RailHeading[] { RailHeading.EAST, RailHeading.WEST };
 		}
 	}
 }

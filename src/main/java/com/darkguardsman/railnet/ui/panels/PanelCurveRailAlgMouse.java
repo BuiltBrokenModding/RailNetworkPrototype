@@ -24,7 +24,9 @@ public class PanelCurveRailAlgMouse extends PanelCurveRailAlg{
     @Override
     protected void addRenderPanelListeners(RenderPanel panel)
     {
-        renderPanel.addMouseMotionListener(new MouseMotionListenerCurve(renderPanel, pointRender));
+    	MouseMotionListenerCurve listener  = new MouseMotionListenerCurve(renderPanel, pointRender);
+        renderPanel.addMouseMotionListener(listener);
+        renderPanel.addMouseListener(listener);
     }
 
     @Override

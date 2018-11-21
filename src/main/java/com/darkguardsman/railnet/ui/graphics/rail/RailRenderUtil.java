@@ -10,7 +10,6 @@ import com.darkguardsman.railnet.data.rail.segments.RailSegmentLine;
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.lib.SnappedPos;
 import com.darkguardsman.railnet.lib.utils.SegmentHelper;
-import com.darkguardsman.railnet.lib.utils.SegmentHelper.ANGLE;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
@@ -28,7 +27,7 @@ public class RailRenderUtil {
     public static Color NODE_COLOR = Color.YELLOW;
     public static Color NODE_COLOR_ENDS = Color.BLUE;
 
-    public static RailSegment generateRail(PlotPointRender pointRender, IPosM start, IPosM end) throws Exception
+    public static RailSegment generateRail(PlotPointRender pointRender, SnappedPos start, SnappedPos end) throws Exception
     {
         //Generate rail and get dots
         List<PlotPoint> dots = new ArrayList();
@@ -85,9 +84,9 @@ public class RailRenderUtil {
         return segment;
     }
 
-    public static RailSegment generateRail(List<PlotPoint> dots, IPosM start, IPosM end) throws Exception
+    public static RailSegment generateRail(List<PlotPoint> dots, SnappedPos start, SnappedPos end) throws Exception
     {
-        RailSegment segment = SegmentHelper.generateRail(new SnappedPos(start), new SnappedPos(end));
+        RailSegment segment = SegmentHelper.generateRail(start, end);
         populatePlotPoints(segment, dots);
         return segment;
     }

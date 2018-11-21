@@ -49,4 +49,7 @@ public enum RailHeading {
         System.out.println("Error: angle '" + angleInput + "' could not be matched to a heading.");
         return RailHeading.NORTH;
     }
+    public int angle() {
+    	return angle;
+    }
 }

@@ -4,6 +4,7 @@ import com.darkguardsman.railnet.api.rail.IRailPathPoint;
 import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
 import com.darkguardsman.railnet.lib.Pos;
+import com.darkguardsman.railnet.lib.SnappedPos;
 import com.darkguardsman.railnet.ui.graphics.MouseMotionListenerCurve;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
@@ -123,7 +124,7 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
             System.out.println("\tAngles: " + startAngle);
 
             //Generate rail and get dots
-            RailSegment segment = RailRenderUtil.generateRail(pointRender, start, end);
+            RailSegment segment = RailRenderUtil.generateRail(pointRender, new SnappedPos(start), new SnappedPos(end));
 
             //Data Debug
             int i = 0;
