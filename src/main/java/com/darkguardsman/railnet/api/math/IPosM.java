@@ -49,6 +49,7 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	 * @param end
 	 * @return
 	 */
+	//TODO rename to distanceFlat
 	default double hDistance(IPos end) {
 		return Math.sqrt(Math.pow(end.x() - x(), 2) + Math.pow(end.z() - z(), 2));
 	}
@@ -57,12 +58,14 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	 * Add a horizontal vector to a position based on an angle (degrees) and a
 	 * distance.
 	 * 
-	 * @param end
+	 * @param angleDegree - angle of the vector in degrees
+	 * @param distance - scale of the vector
 	 * @return
 	 */
-	default IPosM addHVector(double f, double distance) {
-		f = Math.toRadians(f);
-		return (IPosM) add(new Pos(Math.cos(-f) * distance, 0, Math.sin(-f) * distance));
+	//TODO rename to addAngle
+	default IPosM addHVector(double angleDegree, double distance) {
+		final double angleRadian = Math.toRadians(angleDegree);
+		return (IPosM) add(new Pos(Math.cos(-angleRadian) * distance, 0, Math.sin(-angleRadian) * distance));
 	}
 
 	/**
@@ -75,6 +78,7 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 		return newPos(x() + pos.x(), y() + pos.y(), z() + pos.z());
 	}
 
+	//TODO change to return double
 	default int getAngle(IPos b) {
 		int angle = (int) Math.round(Math.toDegrees(Math.atan2(b.z() - z(), b.x() - x())));
 
@@ -106,6 +110,7 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 		return x * x + y * y + z * z;
 	}
 
+	//TODO rename and document
 	default boolean collidesWithH(IPos pos, double angle) {
 		double xDiff = x() - pos.x();
 		double zDiff = z() - pos.z();
