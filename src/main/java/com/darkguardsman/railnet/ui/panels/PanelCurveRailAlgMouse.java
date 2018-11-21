@@ -39,36 +39,8 @@ public class PanelCurveRailAlgMouse extends PanelCurveRailAlg{
         panel.add(startXField = new JTextField("-5"));
         panel.add(new JLabel("Z:"));
         panel.add(startZField = new JTextField("-5"));
-
-        addSpacer(panel);
-
-        panel.add(new JLabel("End:"));
-        panel.add(new JPanel());
-        panel.add(new JLabel("X:"));
-        panel.add(endXField = new JTextField("5"));
-        panel.add(new JLabel("Z:"));
-        panel.add(endZField = new JTextField("5"));
-
-        addSpacer(panel);
-
         panel.add(new JLabel("Start Angle:"));
-        panel.add(startAngleField = new JTextField("0"));
-
-        addSpacer(panel);
-
-        panel.add(new JPanel());
-        button = new JButton("Generate");
-        button.addActionListener((a) -> generateRail());
-        panel.add(button);
-
-        addSpacer(panel);
-        addSpacer(panel);
-
-        panel.add(new JPanel());
-        button = new JButton("Clear");
-        button.addActionListener((a) -> renderPanel.clear());
-        panel.add(button);
-
+        panel.add(startAngleField = new JTextField("0"));   
 
         return panel;
     }

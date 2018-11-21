@@ -76,7 +76,7 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	}
 
 	default int getAngle(IPos b) {
-		int angle = (int) Math.round(Math.toDegrees(Math.atan2(b.z() - z(), b.x() - x()))) + 90;
+		int angle = (int) Math.round(Math.toDegrees(Math.atan2(b.z() - z(), b.x() - x())));
 
 		if (angle < 0) {
 			angle += 360;

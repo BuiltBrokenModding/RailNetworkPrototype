@@ -28,13 +28,13 @@ public class RailRenderUtil {
     public static Color NODE_COLOR = Color.YELLOW;
     public static Color NODE_COLOR_ENDS = Color.BLUE;
 
-    public static RailSegment generateRail(PlotPointRender pointRender, IPosM start, IPosM end, int startAngle, int endAngle) throws Exception
+    public static RailSegment generateRail(PlotPointRender pointRender, IPosM start, IPosM end) throws Exception
     {
         //Generate rail and get dots
         List<PlotPoint> dots = new ArrayList();
         List<IPosM> rail1 = new ArrayList<IPosM>();
         List<IPosM> rail2 = new ArrayList<IPosM>();
-        RailSegment segment = generateRail(dots, start, end, startAngle);
+        RailSegment segment = generateRail(dots, start, end);
         //Add dots to render, include lines to trace path easier
         for (int i = 0; i < dots.size(); i++) {
 
@@ -85,9 +85,9 @@ public class RailRenderUtil {
         return segment;
     }
 
-    public static RailSegment generateRail(List<PlotPoint> dots, IPosM start, IPosM end,int startAngle) throws Exception
+    public static RailSegment generateRail(List<PlotPoint> dots, IPosM start, IPosM end) throws Exception
     {
-        RailSegment segment = SegmentHelper.generateRail(new SnappedPos(start), new SnappedPos(end),ANGLE.getAngle(startAngle));
+        RailSegment segment = SegmentHelper.generateRail(new SnappedPos(start), new SnappedPos(end));
         populatePlotPoints(segment, dots);
         return segment;
     }

@@ -81,7 +81,7 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 			double shortestDistance = 2d;
 					for (int i = 0; i < vectors.length(); i++) {
 						Point snapPoint = new Point(x + (xoffset * (x>0?1:-1)) + vectors.get(i).x, z  + (zoffset * (z>0?1:-1)) + vectors.get(i).y);
-						double testDistance = snapPoint.distance(x, z);
+						double testDistance = snapPoint.distance(pos.x(), pos.z());
 						if (testDistance < shortestDistance) {
 							shortestDistance = testDistance;
 							closestSnapPoint = snapPoint;

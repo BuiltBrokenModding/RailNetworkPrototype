@@ -123,7 +123,7 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
             System.out.println("\tAngles: " + startAngle);
 
             //Generate rail and get dots
-            RailSegment segment = RailRenderUtil.generateRail(pointRender, start, end, startAngle, endAngle);
+            RailSegment segment = RailRenderUtil.generateRail(pointRender, start, end);
 
             //Data Debug
             int i = 0;

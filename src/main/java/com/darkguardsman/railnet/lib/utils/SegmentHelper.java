@@ -2,6 +2,7 @@ package com.darkguardsman.railnet.lib.utils;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 
 import com.darkguardsman.railnet.api.math.IPosM;
 import com.darkguardsman.railnet.data.rail.segments.RailSegment;
@@ -9,6 +10,7 @@ import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.lib.SnappedPos;
 import com.darkguardsman.railnet.lib.SnappedPos.SNAP_VECTORS;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 /**
  * Assists with the placement of segments, confirms the snap points, gets the
@@ -84,26 +86,25 @@ public class SegmentHelper {
 			// Handle situation where N-S or E-W start and point is exactly 90 degrees
 			// opposing (attempting to make 180)
 			// Instead we will snap to a perfect 90 Degree segment instead.
-
+			
 			switch (startAngle) {
 			case NORTH:
 			case SOUTH:
 			case EAST:
 			case WEST:
 				int diffAngle = ANGLE.to360(startAngle.value() - start.getAngle(end));
-				System.out.println(diffAngle);
+				
 				if (diffAngle == 90 || diffAngle == 270) {
 					if (start.z() == end.z()) {
-						int lengthHint = (int) (start.x() - end.x()) / 2;
+						int lengthHint = (int) Math.ceil((start.x() - end.x()) / 4d) * 2;
 						end = new SnappedPos(start.x() - lengthHint, start.y(),
 								start.z() + ((startAngle == ANGLE.NORTH ? 1 : -1) * Math.abs(lengthHint)),
 								SNAP_VECTORS.EW);
 						return generateRail(start, end, startAngle, lengthHint > 0 ? ANGLE.EAST : ANGLE.WEST);
 					} else if (start.x() == end.x()) {
-						int lengthHint = (int) (start.z() - end.z()) / 2;
-						end = new SnappedPos(start.x()+ ((startAngle == ANGLE.EAST ? 1 : -1) * Math.abs(lengthHint)) , start.y(),
-								start.z() - lengthHint,
-								SNAP_VECTORS.NS);
+						int lengthHint = (int) Math.floor((start.z() - end.z()) / 4d) * 2;
+						end = new SnappedPos(start.x() + ((startAngle == ANGLE.EAST ? 1 : -1) * Math.abs(lengthHint)),
+								start.y(), start.z() - lengthHint, SNAP_VECTORS.NS);
 						return generateRail(start, end, startAngle, lengthHint > 0 ? ANGLE.NORTH : ANGLE.SOUTH);
 					}
 				}
@@ -153,6 +154,9 @@ public class SegmentHelper {
 	 * @return
 	 */
 	public static RailSegment generateRail(IPosM start, IPosM end, ANGLE startAngle, ANGLE endAngle) {
+		if (!Arrays.asList(getValidAngles((int) start.x(), (int) start.z())).contains(startAngle)) {
+			return null;
+		}
 		return new RailSegmentCurve(start, end, startAngle.value(), endAngle.value());
 	}
 
@@ -168,7 +172,7 @@ public class SegmentHelper {
 	private static ANGLE getAngleFromPoints(SnappedPos start, SnappedPos end) {
 		double shortestDistance = start.hDistance(end) * 2;
 		ANGLE out = ANGLE.NORTH;
-		ANGLE[] validAngles = getValidAngles((int) start.x(), (int) end.z());
+		ANGLE[] validAngles = getValidAngles((int) start.x(), (int) start.z());
 		for (int i = 0; i < validAngles.length; i++) {
 			double testDistance = start.addHVector(validAngles[i].value(), 1).hDistance(end);
 			if (shortestDistance > testDistance) {
