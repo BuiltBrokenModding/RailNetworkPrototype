@@ -9,6 +9,48 @@ package com.darkguardsman.railnet.lib;
 public final class MathHelpers {
 
     /**
+     * Wraps the angle between 0 - 360
+     *
+     * @param angle - angle in degrees
+     * @return angle between 0 - 360;
+     */
+    public static double wrapTo360(double angle) {
+
+        //Works the same as %
+        int div = (int) angle / 360;
+        if (angle > 0) {
+            angle -= div * 360;
+        } else if (angle < 0) {
+            angle += div * 360;
+        }
+
+        //Less then zero, wrap back around
+        if (angle < 0) {
+            return angle + 360;
+        }
+
+        return angle;
+    }
+
+    /**
+     * Wraps the angle between 0 - 360
+     *
+     * @param angle - angle in degrees
+     * @return angle between 0 - 360;
+     */
+    public static int wrapTo360(int angle) {
+        //Reduce
+        angle = angle % 360;
+
+        //Less then zero, wrap back around
+        if (angle < 0) {
+            return angle + 360;
+        }
+
+        return angle;
+    }
+
+    /**
      * Position on the X axis for the given angle
      *
      * @param radius - radius of the circle
