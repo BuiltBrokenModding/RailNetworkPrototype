@@ -20,6 +20,8 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
  *
  */
 public class SegmentHelper {
+
+	@Deprecated /** @Depicated use {@link com.darkguardsman.railnet.api.RailHeading} */
 	public enum ANGLE {
 		NORTH(0), NORTHEAST(45), EAST(90), SOUTHEAST(135), SOUTH(180), SOUTHWEST(225), WEST(270), NORTHWEST(315);
 
