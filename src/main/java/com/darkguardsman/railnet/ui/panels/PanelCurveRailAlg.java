@@ -124,11 +124,11 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
             System.out.println("\tAngles: " + startAngle);
 
             //Generate rail and get dots
-            RailSegment segment = RailRenderUtil.generateRail(pointRender, new SnappedPos(start), new SnappedPos(end));
+            RailSegment segment[] = RailRenderUtil.generateRail(pointRender, new SnappedPos(start), new SnappedPos(end));
 
             //Data Debug
             int i = 0;
-            for (IRailPathPoint dot : segment.getAllPaths().get(0).getPathPoints()) {
+            for (IRailPathPoint dot : segment[0].getAllPaths().get(0).getPathPoints()) {
                 System.out.println("\t\t[" + (i++) + "]: " + dot.x() + ", " + dot.y());
             }
 

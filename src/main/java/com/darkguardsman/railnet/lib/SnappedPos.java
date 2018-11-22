@@ -26,6 +26,7 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 			return vectors[i];
 		}		
 		public static SNAP_VECTORS getFromAngle(int angle) {
+			angle = MathHelpers.wrapTo360(angle);
 			switch (angle) {
 			case 45:
 			case 135:
@@ -78,7 +79,7 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 	 * @return
 	 */
 	public static int gridPoint(int i) {
-		return (Math.abs(i) + 1) % 2;
+		return (Math.abs(i)) % 2;
 	}
 
 	/**
@@ -88,26 +89,25 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 	 * @return
 	 */
 	private static Pos getClosestSnapPoint(IPosM pos, SNAP_VECTORS vectors) {
-		int x = Math.round(pos.x());
+		//Snap to the closest centre first		
+		int x = Math.round(pos.x()/2)*2;
 		int y = Math.round(pos.y());
-		int z = Math.round(pos.z());
-		int xoffset = gridPoint(x);
-		int zoffset = gridPoint(z);
-		
-			Point closestSnapPoint = null;
-			double shortestDistance = 2d;
-					for (int i = 0; i < vectors.length(); i++) {
-						Point snapPoint = new Point(x + (xoffset * (x>0?1:-1)) + vectors.get(i).x, z  + (zoffset * (z>0?1:-1)) + vectors.get(i).y);
-						double testDistance = snapPoint.distance(pos.x(), pos.z());
+		int z = Math.round(pos.z()/2)*2;
+		//Find the closest snap point on the surrounding given snap vectors to the original position	
+		Pos closestSnapPoint = null;
+			double shortestDistance = 4d;
+					for (int i = 0; i < vectors.length(); i++) {						
+						Point vector = vectors.get(i);
+						Pos testPosition = new Pos(x+vector.x,y,z+vector.y);
+						double testDistance = pos.hDistance(testPosition);
+						
 						if (testDistance < shortestDistance) {
 							shortestDistance = testDistance;
-							closestSnapPoint = snapPoint;
+							closestSnapPoint = testPosition;
 						}
-					}
-				
-			x = closestSnapPoint.x;
-			z = closestSnapPoint.y;
-		return new Pos(x, y, z);
+					}				
+			
+		return closestSnapPoint;
 	}
 
 	

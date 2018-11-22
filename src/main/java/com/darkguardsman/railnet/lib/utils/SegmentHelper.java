@@ -24,7 +24,7 @@ import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 public class SegmentHelper {
 
 	/**
-	 * Get the appropriate rail segment
+	 * Get the appropriate rail segment(s) Returns 2 segments if trying to create a semi circle
 	 * 
 	 * @param start
 	 * @param end
@@ -33,7 +33,7 @@ public class SegmentHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static RailSegment generateRail(SnappedPos start, SnappedPos end, RailHeading startAngle,
+	public static RailSegment[] generateRail(SnappedPos start, SnappedPos end, RailHeading startAngle,
 			boolean forceStraight) {
 		if (start.x() == end.x() && start.z() == end.z()) {
 			return null;
@@ -101,11 +101,11 @@ public class SegmentHelper {
 							/ (Math.sin(Math.toRadians(rightAngle)));
 				}
 				//Make the distance round up to a % 4 snap point to avoid issue with the quad circle snapping to the wrong place
-				double snapAssist = 4;
+				double snapAssist = 2;
 				if(startAngle.angle == 45 || startAngle.angle == 135 || startAngle.angle == 225 || startAngle.angle == 315 ) {
-					snapAssist = Math.sqrt(32);
+					snapAssist = Math.sqrt(2);
 				}
-				distanceToIntersectPoint = Math.ceil(distanceToIntersectPoint/snapAssist)*snapAssist;
+				distanceToIntersectPoint = Math.ceil(distanceToIntersectPoint/snapAssist)*snapAssist/2;
 				System.out.println(String.format("distanceToIntersectPoint: %s", distanceToIntersectPoint));
 				// Now we have the distance we just need to find the point 45 degrees in front
 				// of us on the left/right that also intersects that line
@@ -118,23 +118,52 @@ public class SegmentHelper {
 				} else {
 					startAngle45 = startAngle.angle + 45;
 				}
-				System.out.println(String.format("startAngle45: %s", startAngle45));
-				SNAP_VECTORS possibleVectors = SNAP_VECTORS.getFromAngle(-startRightAngle);
-				System.out.println(String.format("possibleVectors: %s", possibleVectors));
-				end = new SnappedPos(start.addHVector(startAngle45, distanceToQuarterCircleEnd/2),
-						possibleVectors);
 				
-				return generateRail(start, end, startAngle, RailHeading.fromAngle(startRightAngle-180));
+				//======Create part 1=======			
+				//The end angle is the opposite of our exit angle
+				endAngle = RailHeading.fromAngle(startRightAngle-180);
+
+				//Get the possible snap vectors to ensure we snap to the right place
+				SNAP_VECTORS possibleVectors = SNAP_VECTORS.getFromAngle(endAngle.angle);
+				
+				//Find the end point by adding on 45 degrees with a length gotten from pythagoras;
+				end = new SnappedPos(start.addHVector(startAngle45, distanceToQuarterCircleEnd),
+						possibleVectors);	
+				
+				RailSegment part1 = generateRail(start, end, startAngle, endAngle);
+				
+				//======Create part 2=======
+				//The start position of our second part will be the end point of our first
+				start = end;
+				//Get the new possible vectors
+				possibleVectors = SNAP_VECTORS.getFromAngle(startRightAngle+90);
+				//Get the new adjustment vector
+				if (left) {
+					startAngle45 -= 90;
+				} else {
+					startAngle45 += 90;
+				}
+				end =  new SnappedPos(start.addHVector(startAngle45, distanceToQuarterCircleEnd),
+						possibleVectors);
+				//Our end angle is now our original start angle
+				endAngle = startAngle;
+				//Our startAngle is now the original 90 degree from rail part 1
+				startAngle = RailHeading.fromAngle(startRightAngle);
+				
+				RailSegment part2 = generateRail(start, end, startAngle , endAngle);
+				//Return both segments
+				return new RailSegment[] {part1,part2};
 
 			} else {
-				return generateRail(start, end, startAngle, getAngleFromPoints(end, start));
+				return new RailSegment[] {generateRail(start, end, startAngle, getAngleFromPoints(end, start))};
+				
 			}
 
 		}
 		return null;
 	}
 
-	public static RailSegment generateRail(SnappedPos start, SnappedPos end, RailHeading startAngle) throws Exception {
+	public static RailSegment[] generateRail(SnappedPos start, SnappedPos end, RailHeading startAngle) throws Exception {
 		return generateRail(start, end, startAngle, false);
 	}
 
@@ -150,7 +179,7 @@ public class SegmentHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static RailSegment generateRail(SnappedPos start, SnappedPos end, boolean forceStraight) throws Exception {
+	public static RailSegment[] generateRail(SnappedPos start, SnappedPos end, boolean forceStraight) throws Exception {
 		return generateRail(start, end, getAngleFromPoints(start, end), forceStraight);
 	}
 
@@ -162,7 +191,7 @@ public class SegmentHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static RailSegment generateRail(SnappedPos start, SnappedPos end) throws Exception {
+	public static RailSegment[] generateRail(SnappedPos start, SnappedPos end) throws Exception {
 		return generateRail(start, end, false);
 	}
 
@@ -177,9 +206,9 @@ public class SegmentHelper {
 	 */
 	public static RailSegment generateRail(SnappedPos start, SnappedPos end, RailHeading startAngle,
 			RailHeading endAngle) {
-		if (!Arrays.asList(start.possibleHeadings()).contains(startAngle)) {
-			return null;
-		}
+		//if (!Arrays.asList(start.possibleHeadings()).contains(startAngle)) {
+		//	return null;
+		//}
 		return new RailSegmentCurve(start, end, startAngle.angle, endAngle.angle);
 	}
 

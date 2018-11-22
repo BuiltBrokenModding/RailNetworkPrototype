@@ -27,13 +27,13 @@ public class RailRenderUtil {
     public static Color NODE_COLOR = Color.YELLOW;
     public static Color NODE_COLOR_ENDS = Color.BLUE;
 
-    public static RailSegment generateRail(PlotPointRender pointRender, SnappedPos start, SnappedPos end) throws Exception
+    public static RailSegment[] generateRail(PlotPointRender pointRender, SnappedPos start, SnappedPos end) throws Exception
     {
         //Generate rail and get dots
         List<PlotPoint> dots = new ArrayList();
         List<IPosM> rail1 = new ArrayList<IPosM>();
         List<IPosM> rail2 = new ArrayList<IPosM>();
-        RailSegment segment = generateRail(dots, start, end);
+        RailSegment[] segments = generateRail(dots, start, end);
         //Add dots to render, include lines to trace path easier
         for (int i = 0; i < dots.size(); i++) {
 
@@ -74,7 +74,7 @@ public class RailRenderUtil {
                 pointRender.add(dot);
             }
         }
-        return segment;
+        return segments;
     }
 
     public static RailSegmentLine generateRail(List<PlotPoint> dots, RailHeading heading,
@@ -84,11 +84,16 @@ public class RailRenderUtil {
         return segment;
     }
 
-    public static RailSegment generateRail(List<PlotPoint> dots, SnappedPos start, SnappedPos end) throws Exception
+    public static RailSegment[] generateRail(List<PlotPoint> dots, SnappedPos start, SnappedPos end) throws Exception
     {
-        RailSegment segment = SegmentHelper.generateRail(start, end,RailHeading.NORTH_EAST);
-        populatePlotPoints(segment, dots);
-        return segment;
+        RailSegment[]segments = SegmentHelper.generateRail(start, end);
+        if (segments != null) {
+        	for(int i = 0; i < segments.length;i++) {
+        		populatePlotPoints(segments[i], dots);
+        	}
+        	
+        }
+        return segments;
     }
 
     public static void populatePlotPoints(RailSegment segment, List<PlotPoint> dots) {
