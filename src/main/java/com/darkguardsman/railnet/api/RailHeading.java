@@ -152,10 +152,16 @@ public enum RailHeading {
 
         return RailHeading.NORTH;
     }
-    public int angle() {
-    	return angle;
-    }
 
+    /**
+     * Returns the possible headings of a point based on its snap point, 0,0 is the centre of our snap grid,
+     * 1,1 is the corners heading NW,NE,SW,SE (-1,1)(1,-1) and (-1,-1) all result in (1,1) as we base it on modulo 2
+     * 1,0 is east and west
+     * 0,1 is north and south
+     * @param x
+     * @param z
+     * @return
+     */
 	public static RailHeading[] getPossibleHeadings(int x, int z) {
 		int xs = SnappedPos.gridPoint(x);
 		int zs = SnappedPos.gridPoint(z);

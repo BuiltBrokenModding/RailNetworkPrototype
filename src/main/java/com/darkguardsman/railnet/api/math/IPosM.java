@@ -65,7 +65,7 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	//TODO rename to addAngle
 	default IPosM addHVector(double angleDegree, double distance) {
 		final double angleRadian = Math.toRadians(angleDegree);
-		return (IPosM) add(new Pos(Math.cos(-angleRadian) * distance, 0, Math.sin(-angleRadian) * distance));
+		return (IPosM) add(new Pos(Math.cos(angleRadian) * distance, 0, Math.sin(angleRadian) * distance));
 	}
 
 	/**
@@ -79,8 +79,8 @@ public interface IPosM<N extends IPosM, P extends IPos> extends IPos<N> {
 	}
 
 	//TODO change to return double
-	default int getAngle(IPos b) {
-		int angle = (int) Math.round(Math.toDegrees(Math.atan2(b.z() - z(), b.x() - x()))) - 90;
+	default double getAngle(IPos b) {
+		double angle = Math.toDegrees(Math.atan2(b.z() - z(), b.x() - x())) - 90;
 
 		if (angle < 0) {
 			angle += 360;

@@ -14,8 +14,7 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 		ALL(new Point(1, 0), new Point(0, 1), new Point(-1, 0),new Point(0, -1), new Point(1, -1), new Point(1, 1), new Point(-1, 1), new Point(-1, -1)),
 		NS(new Point(1, 0), new Point(-1, 0)),
 		EW(new Point(0, 1), new Point(0, -1)),
-		NE_SW(new Point(1, 1), new Point(-1, -1)),
-		NW_SE(new Point(1, -1), new Point(-1, 1));
+		NE_SW_NW_SE(new Point(1, 1), new Point(-1, -1),new Point(1, -1), new Point(-1, 1));
 		private final Point[] vectors;
 		SNAP_VECTORS(Point... points){
 			vectors = points;
@@ -26,6 +25,19 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 		public Point get(int i) {
 			return vectors[i];
 		}		
+		public static SNAP_VECTORS getFromAngle(int angle) {
+			switch (angle) {
+			case 45:
+			case 135:
+			case 225:
+			case 315:
+				return NE_SW_NW_SE;
+			case 90:
+			case 270:
+				return EW;
+			}
+			return NS;
+		}
 	}
 
 	public SnappedPos(float x, float y, float z,SNAP_VECTORS vectors) {
@@ -66,7 +78,7 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 	 * @return
 	 */
 	public static int gridPoint(int i) {
-		return Math.abs((i + 1) % 2);
+		return (Math.abs(i) + 1) % 2;
 	}
 
 	/**

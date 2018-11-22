@@ -1,12 +1,14 @@
 package com.darkguardsman.railnet.ui.graphics;
 
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.darkguardsman.railnet.lib.Pos;
+import com.darkguardsman.railnet.lib.SnappedPos;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
@@ -18,7 +20,7 @@ import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
  *      for what you can and can't do with the code. Created by Shovinus on
  *      11/16/2018.
  */
-public class MouseMotionListenerCurve implements MouseMotionListener {
+public class MouseMotionListenerCurve implements MouseMotionListener, MouseListener {
 	protected final RenderPanel renderPanel;
 	protected final PlotPointRender plotPointRender;
 
@@ -32,43 +34,97 @@ public class MouseMotionListenerCurve implements MouseMotionListener {
 
 	}
 
+	private SnappedPos start;
+
 	@Override
 	public void mouseMoved(MouseEvent mouseEvent) {
 		if (mouseEvent.getSource() == renderPanel) {
 
 			// Mouse pos
 			final int mouseX = mouseEvent.getX();
-			final int mouseY = mouseEvent.getY();
+			final int mouseY = mouseEvent.getY();			
 
 			// Data render bounds
 			final double minX = renderPanel.getDrawMinX();
 			final double minY = renderPanel.getDrawMinY();
 			final double maxX = renderPanel.getDrawMaxX();
 			final double maxY = renderPanel.getDrawMaxY();
-
+			
 			// Size of bounds
 			double bWidth = maxX - minX;
 			double bHeight = maxY - minY;
-
-			// Convert mouse to data position
-			double gx = minX + (((double) mouseX / renderPanel.getWidth()) * bWidth); // TODO document
-			double gz = maxY - (((double) mouseY / renderPanel.getHeight()) * bHeight);
-
 			
-			JPanel parent = (JPanel) renderPanel.getParent().getComponent(1);
-			int ax = Integer.parseInt(((JTextField) parent.getComponent(3)).getText());
-			int az = Integer.parseInt(((JTextField) parent.getComponent(5)).getText());
+			// Convert mouse to data position
+			float mx = (float) (minX + (((float) mouseX / renderPanel.getWidth()) * bWidth)); // TODO document
+			float mz = (float) (maxY - (((float) mouseY / renderPanel.getHeight()) * bHeight));
 			// Clear data
 			renderPanel.clear();
+			
 			try {
-				// Generate new rail
-				RailRenderUtil.generateRail(plotPointRender, new Pos(ax, 0, az), new Pos(-gx, 0, gz));
+			if (start != null) {
+				SnappedPos end = new SnappedPos(mx, 0f, mz);			
+			System.out.println("--------");
+			System.out.println(String.format("Mouse Pos: %s,%s", mx,mz));
+			System.out.println(String.format("Start: %d,%d,%d", (int)start.x(),(int)start.y(),(int)start.z()));
+			System.out.println(String.format("End: %d,%d,%d", (int)end.x(),(int)end.y(),(int)end.z()));
+			System.out.println("-");
+			    RailRenderUtil.generateRail(plotPointRender, start, end);	
+			} 
+			
 			} catch (Exception ex) {
-
 			}
 			// Draw
 			renderPanel.repaint();
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent mouseEvent) {
+		if (mouseEvent.getSource() == renderPanel) {
+
+			// Mouse pos
+			final int mouseX = mouseEvent.getX();
+			final int mouseY = mouseEvent.getY();			
+
+			// Data render bounds
+			final double minX = renderPanel.getDrawMinX();
+			final double minY = renderPanel.getDrawMinY();
+			final double maxX = renderPanel.getDrawMaxX();
+			final double maxY = renderPanel.getDrawMaxY();
+			
+			// Size of bounds
+			double bWidth = maxX - minX;
+			double bHeight = maxY - minY;
+			
+			// Convert mouse to data position
+			float mx = (float) (minX + (((float) mouseX / renderPanel.getWidth()) * bWidth)); // TODO document
+			float mz = (float) (maxY - (((float) mouseY / renderPanel.getHeight()) * bHeight));
+			 start = new SnappedPos(mx, 0f, mz);
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
