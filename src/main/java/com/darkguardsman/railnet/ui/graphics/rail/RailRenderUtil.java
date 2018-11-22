@@ -86,7 +86,7 @@ public class RailRenderUtil {
 
     public static RailSegment generateRail(List<PlotPoint> dots, SnappedPos start, SnappedPos end) throws Exception
     {
-        RailSegment segment = SegmentHelper.generateRail(start, end);
+        RailSegment segment = SegmentHelper.generateRail(start, end,RailHeading.NORTH_EAST);
         populatePlotPoints(segment, dots);
         return segment;
     }

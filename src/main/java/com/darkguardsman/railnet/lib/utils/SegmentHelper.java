@@ -46,12 +46,16 @@ public class SegmentHelper {
 		} else {
 			// Get the angle from the start point to the end point
 			int angleToEnd = (int) Math.round(start.getAngle(end));
+			System.out.println(String.format("Angle to End: %s", angleToEnd));
 			// Get the angle between the heading and the angle to the end point
 			int diffAngle = MathHelpers.wrapTo360(angleToEnd - startAngle.angle);
+			System.out.println(String.format("Diff Angle: %s", diffAngle));
 			// Is the end point on your left or your right?
 			boolean left = (diffAngle > 180);
+			System.out.println(String.format("Left: %s", left));
 			// Is the end point 90 degrees or more either side of your heading?
 			boolean behind = (diffAngle >= 90 && diffAngle <= 270);
+			System.out.println(String.format("Behind: %s", behind));
 			// If behind then imagine we are aiming to build a quarter circle (90 degree
 			// turn) where the end is in-line with a point running parallel to the original
 			// end point (we will change the end point to suit)
@@ -66,6 +70,7 @@ public class SegmentHelper {
 				int rightAngle = 90;
 				// We can find the distance to the end point
 				double endDistance = start.hDistance(end);
+				System.out.println(String.format("endDistance: %s", endDistance));
 				// We can get the angle between the 90 degree line and the line to the end
 				// point;
 				int startRightAngle;
@@ -76,18 +81,32 @@ public class SegmentHelper {
 				} else {
 					startRightAngle = startAngle.angle + 90;
 				}
+				System.out.println(String.format("startRightAngle: %s", startRightAngle));
+				double startToEndAngle = start.getAngle(end.origin());
+				
 				double distanceToIntersectPoint;
 				//If the right angle is inline then the distance is merely the distance to end
-				double angleBetween = MathHelpers.wrapTo360(startRightAngle - start.getAngle(end));
+				double angleBetween = MathHelpers.wrapTo360(startRightAngle - startToEndAngle);
+				if(angleBetween > 90) {
+					angleBetween = 360 - angleBetween;
+				}
+				System.out.println(String.format("angleBetween: %s", angleBetween));
 				if(angleBetween == 0) {
 					distanceToIntersectPoint = start.distance(end);
 				} else {
 					// The angle we are looking for is the difference between the angle to the end
 					
-					// a/sin(a) = b/sin(b); a = b/(sin(a)*sin(b))
-					distanceToIntersectPoint = endDistance
-							/ (Math.sin(Math.toRadians(angleBetween)) * Math.sin(rightAngle));
-				}				
+					// a/sin(a) = b/sin(b); a = b*sin(a)/sin(b))
+					distanceToIntersectPoint = endDistance * Math.sin(Math.toRadians(90-angleBetween))
+							/ (Math.sin(Math.toRadians(rightAngle)));
+				}
+				//Make the distance round up to a % 4 snap point to avoid issue with the quad circle snapping to the wrong place
+				double snapAssist = 4;
+				if(startAngle.angle == 45 || startAngle.angle == 135 || startAngle.angle == 225 || startAngle.angle == 315 ) {
+					snapAssist = Math.sqrt(32);
+				}
+				distanceToIntersectPoint = Math.ceil(distanceToIntersectPoint/snapAssist)*snapAssist;
+				System.out.println(String.format("distanceToIntersectPoint: %s", distanceToIntersectPoint));
 				// Now we have the distance we just need to find the point 45 degrees in front
 				// of us on the left/right that also intersects that line
 				// so h = sqrt(2a^2);
@@ -99,17 +118,16 @@ public class SegmentHelper {
 				} else {
 					startAngle45 = startAngle.angle + 45;
 				}
-				System.out.println(String.format("Start: %d,%d,%d", (int)start.x(),(int)start.y(),(int)start.z()));
-				System.out.println(String.format("End: %d,%d,%d", (int)end.x(),(int)end.y(),(int)end.z()));
-				System.out.println(String.format("Start Angle: %s", startAngle.angle));
-				System.out.println(String.format("Angle to End: %s", angleToEnd));
-				System.out.println(String.format("Diff Angle: %s", diffAngle));
-				end = new SnappedPos(start.addHVector(startAngle45, distanceToQuarterCircleEnd),
-						SNAP_VECTORS.getFromAngle(startRightAngle));
-				return generateRail(start, end, startAngle, RailHeading.fromAngle(startRightAngle));
+				System.out.println(String.format("startAngle45: %s", startAngle45));
+				SNAP_VECTORS possibleVectors = SNAP_VECTORS.getFromAngle(-startRightAngle);
+				System.out.println(String.format("possibleVectors: %s", possibleVectors));
+				end = new SnappedPos(start.addHVector(startAngle45, distanceToQuarterCircleEnd/2),
+						possibleVectors);
+				
+				return generateRail(start, end, startAngle, RailHeading.fromAngle(startRightAngle-180));
 
 			} else {
-				//return generateRail(start, end, startAngle, getAngleFromPoints(end, start));
+				return generateRail(start, end, startAngle, getAngleFromPoints(end, start));
 			}
 
 		}
@@ -120,6 +138,7 @@ public class SegmentHelper {
 		return generateRail(start, end, startAngle, false);
 	}
 
+	
 	/**
 	 * Gets the best detected line between 2 points, can force the line to be
 	 * straight Will be used by the rail planning tool to place the first segment of
@@ -174,17 +193,34 @@ public class SegmentHelper {
 	 * @throws Exception
 	 */
 	private static RailHeading getAngleFromPoints(SnappedPos start, SnappedPos end) {
-		double shortestDistance = start.hDistance(end) * 2;
-		RailHeading out = RailHeading.NORTH;
+		
+		boolean xPositive = end.origin().x() >= start.origin().x();
+		boolean zPositive = end.origin().z() >= start.origin().z();
+		
+
+		
 		RailHeading[] validAngles = start.possibleHeadings();
-		for (int i = 0; i < validAngles.length; i++) {
-			double testDistance = start.addHVector(validAngles[i].angle, 0.25).hDistance(end);
-			if (shortestDistance > testDistance) {
-				shortestDistance = testDistance;
-				out = validAngles[i];
+		
+		for(int i = 0; i < validAngles.length;i++) {
+			RailHeading validAngle = validAngles[i];
+			//If an offset is not 0 then matters if the difference for that axis matches ours
+			boolean offXMatters = validAngle.offsetX != 0;
+			boolean offXPositive = validAngle.offsetX > 0;	
+			boolean offZMatters = validAngle.offsetZ != 0;
+			boolean offZPositive = validAngle.offsetZ > 0;			
+			
+			//If the x offset is important and does not match our offset side ignore this vector
+			if(offXMatters && offXPositive != xPositive ) {
+				continue;
 			}
+			//Same for z
+			if(offZMatters && offZPositive != zPositive) {
+				continue;
+			}			
+
+			return validAngle;
 		}
 
-		return out;
+		return null;
 	}
 }

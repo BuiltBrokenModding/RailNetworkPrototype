@@ -15,14 +15,14 @@ import java.util.List;
  * Created by Dark(DarkGuardsman, Robert) on 11/14/18.
  */
 public enum RailHeading {
-    NORTH(0, -1, 0),
-    NORTH_EAST(1, -1, 45),
+    NORTH(0, 1, 0),
+    NORTH_EAST(1, 1, 45),
     EAST(1, 0, 90),
-    SOUTH_EAST(1, 1, 135),
-    SOUTH(0, 1, 180),
-    SOUTH_WEST(-1, 1, 225),
+    SOUTH_EAST(1, -1, 135),
+    SOUTH(0, -1, 180),
+    SOUTH_WEST(-1, -1, 225),
     WEST(-1, 0, 270),
-    NORTH_WEST(-1, -1, 315);
+    NORTH_WEST(-1, 1, 315);
 
     /**
      * Offset for the X axis

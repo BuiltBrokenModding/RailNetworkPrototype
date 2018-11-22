@@ -25,10 +25,9 @@ public final class MathHelpers {
         }
 
         //Less then zero, wrap back around
-        if (angle < 0) {
-            return angle + 360;
+        while (angle < 0) {
+        	angle += 360;
         }
-
         return angle;
     }
 
