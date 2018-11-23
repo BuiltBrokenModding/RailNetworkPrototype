@@ -43,5 +43,6 @@ public interface IRailSegment {
      */
     IRailPath getPath(IRailJoint from, IRailJoint to) throws Exception;
 
-
+    IRailJoint start();
+    IRailJoint end();
 }

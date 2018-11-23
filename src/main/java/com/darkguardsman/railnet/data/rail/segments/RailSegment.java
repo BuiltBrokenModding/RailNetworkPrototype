@@ -22,6 +22,7 @@ public abstract class RailSegment implements IRailSegment {
         return joints;
     }
 
+    
     @Override
     public List<IRailPath> getAllPaths() {
         if (!arePathsInit) {

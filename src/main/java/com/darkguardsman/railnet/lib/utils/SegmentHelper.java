@@ -38,6 +38,8 @@ public class SegmentHelper {
 		if (start.x() == end.x() && start.z() == end.z()) {
 			return null;
 		}
+		startAngle = RailHeading.fromAngle(90);
+		start.clearOrigin();
 		RailHeading endAngle = RailHeading.NORTH;
 		// If we are forcing the end point to line be straight from the start point
 		// (shift click in MC)
@@ -101,16 +103,21 @@ public class SegmentHelper {
 							/ (Math.sin(Math.toRadians(rightAngle)));
 				}
 				//Make the distance round up to a % 4 snap point to avoid issue with the quad circle snapping to the wrong place
-				double snapAssist = 2;
+				double snapAssist = 1;
+				double snapFactor = 4;
 				if(startAngle.angle == 45 || startAngle.angle == 135 || startAngle.angle == 225 || startAngle.angle == 315 ) {
 					snapAssist = Math.sqrt(2);
 				}
-				distanceToIntersectPoint = Math.ceil(distanceToIntersectPoint/snapAssist)*snapAssist/2;
+				distanceToIntersectPoint = Math.round(distanceToIntersectPoint/(snapFactor*snapAssist))*(snapFactor*snapAssist) +2*snapAssist;
+				if(distanceToIntersectPoint<18) {
+					distanceToIntersectPoint = 18;
+				}
 				System.out.println(String.format("distanceToIntersectPoint: %s", distanceToIntersectPoint));
 				// Now we have the distance we just need to find the point 45 degrees in front
 				// of us on the left/right that also intersects that line
 				// so h = sqrt(2a^2);
-				double distanceToQuarterCircleEnd = Math.sqrt(distanceToIntersectPoint * distanceToIntersectPoint * 2);
+				double distanceToQuarterCircleEnd = Math.sqrt(distanceToIntersectPoint/2 * distanceToIntersectPoint/2 * 2);
+				System.out.println(String.format("distanceToQuarterCircleEnd: %s", distanceToQuarterCircleEnd));
 				// Now we merely add this as a vector to our start point
 				double startAngle45;
 				if (left) {
@@ -136,15 +143,16 @@ public class SegmentHelper {
 				//The start position of our second part will be the end point of our first
 				start = end;
 				//Get the new possible vectors
-				possibleVectors = SNAP_VECTORS.getFromAngle(startRightAngle+90);
+				possibleVectors = SNAP_VECTORS.getFromAngle(startAngle.angle);
 				//Get the new adjustment vector
 				if (left) {
 					startAngle45 -= 90;
 				} else {
 					startAngle45 += 90;
 				}
-				end =  new SnappedPos(start.addHVector(startAngle45, distanceToQuarterCircleEnd),
-						possibleVectors);
+				end = new SnappedPos(part1.start().addHVector(startRightAngle, distanceToIntersectPoint),
+						possibleVectors);	
+				
 				//Our end angle is now our original start angle
 				endAngle = startAngle;
 				//Our startAngle is now the original 90 degree from rail part 1
@@ -164,6 +172,7 @@ public class SegmentHelper {
 	}
 
 	public static RailSegment[] generateRail(SnappedPos start, SnappedPos end, RailHeading startAngle) throws Exception {
+		start.clearOrigin();
 		return generateRail(start, end, startAngle, false);
 	}
 
@@ -180,6 +189,7 @@ public class SegmentHelper {
 	 * @throws Exception
 	 */
 	public static RailSegment[] generateRail(SnappedPos start, SnappedPos end, boolean forceStraight) throws Exception {
+		start.clearOrigin();
 		return generateRail(start, end, getAngleFromPoints(start, end), forceStraight);
 	}
 
@@ -192,6 +202,7 @@ public class SegmentHelper {
 	 * @throws Exception
 	 */
 	public static RailSegment[] generateRail(SnappedPos start, SnappedPos end) throws Exception {
+		start.clearOrigin();
 		return generateRail(start, end, false);
 	}
 

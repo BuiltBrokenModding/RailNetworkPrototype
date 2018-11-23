@@ -12,8 +12,8 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 	
 	public enum SNAP_VECTORS{
 		ALL(new Point(1, 0), new Point(0, 1), new Point(-1, 0),new Point(0, -1), new Point(1, -1), new Point(1, 1), new Point(-1, 1), new Point(-1, -1)),
-		NS(new Point(1, 0), new Point(-1, 0)),
-		EW(new Point(0, 1), new Point(0, -1)),
+		NS(new Point(0, 1), new Point(0, -1)),
+		EW(new Point(1, 0), new Point(-1, 0)),
 		NE_SW_NW_SE(new Point(1, 1), new Point(-1, -1),new Point(1, -1), new Point(-1, 1));
 		private final Point[] vectors;
 		SNAP_VECTORS(Point... points){
@@ -49,6 +49,16 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 		this.x = snap.x;
 		this.y = snap.y;
 		this.z = snap.z;
+	}
+	/**
+	 * Sets the origin as the snapped location
+	 * @return
+	 */
+	public SnappedPos clearOrigin() {
+		this.ox = x;
+		this.oy = y;
+		this.oz = z;
+		return this;
 	}
 	
 	public RailHeading[] possibleHeadings() {

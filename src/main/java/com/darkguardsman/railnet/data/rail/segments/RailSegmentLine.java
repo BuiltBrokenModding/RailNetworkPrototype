@@ -53,4 +53,18 @@ public class RailSegmentLine extends RailSegment {
         //add path
         getAllPaths().add(path);
     }
+
+
+	@Override
+	public IRailJoint start() {
+		// TODO Auto-generated method stub
+		return start;
+	}
+
+
+	@Override
+	public IRailJoint end() {
+		// TODO Auto-generated method stub
+		return end;
+	}
 }

@@ -73,4 +73,14 @@ public class RailSegmentCurve extends RailSegment {
 		getAllPaths().add(path);		
 
 	}
+
+	@Override
+	public IRailJoint start() {
+		return start;
+	}
+
+	@Override
+	public IRailJoint end() {
+		return end;
+	}
 }
