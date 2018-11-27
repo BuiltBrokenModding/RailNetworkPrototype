@@ -15,7 +15,9 @@ import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
@@ -27,54 +29,40 @@ public class RailRenderUtil {
     public static Color NODE_COLOR = Color.YELLOW;
     public static Color NODE_COLOR_ENDS = Color.BLUE;
 
-    public static RailSegment[] generateRail(PlotPointRender pointRender, SnappedPos start, SnappedPos end) throws Exception
-    {
+    public static RailSegment[] generateRail(PlotPointRender pointRender, SnappedPos start, SnappedPos end) throws Exception {
+
+        final List<PlotPoint> dots = new ArrayList();
+        final List<IPos> rail1 = new ArrayList();
+        final List<IPos> rail2 = new ArrayList();
+
         //Generate rail and get dots
-        List<PlotPoint> dots = new ArrayList();
-        List<IPosM> rail1 = new ArrayList<IPosM>();
-        List<IPosM> rail2 = new ArrayList<IPosM>();
-        RailSegment[] segments = generateRail(dots, start, end);
-        //Add dots to render, include lines to trace path easier
-        for (int i = 0; i < dots.size(); i++) {
+        final RailSegment[] segments = generateRail(dots, start, end);
 
-            PlotPoint dot = dots.get(i);
-
-            if(i != 0) {
-                //Adds node and sets a line to last node
-                pointRender.addPlusLinkLast(dot, Color.CYAN, 2); //TODO consider moving links to data generator
-            }
-            else
-            {
-                pointRender.add(dot);
-            }
-        }
-        for (int i = 0; i < rail1.size(); i++) {
-        	IPos point = rail1.get(i);
-            PlotPoint dot = new PlotPoint(point.x(),point.z(),Color.BLACK,2);
-
-            if(i != 0) {
-                //Adds node and sets a line to last node
-                pointRender.addPlusLinkLast(dot, Color.BLACK, 2); //TODO consider moving links to data generator
-            }
-            else
-            {
-                pointRender.add(dot);
-            }
-        }
-        for (int i = 0; i < rail2.size(); i++) {
-        	IPos point = rail2.get(i);
-            PlotPoint dot = new PlotPoint(point.x(),point.z(),Color.BLACK,2);
-
-            if(i != 0) {
-                //Adds node and sets a line to last node
-                pointRender.addPlusLinkLast(dot, Color.BLACK, 2); //TODO consider moving links to data generator
-            }
-            else
-            {
-                pointRender.add(dot);
-            }
-        }
+        //Generate visual connection lines
+        plotLineDots(dots, pointRender, Color.CYAN, 2); //TODO move color to static variable
+        plotLinePoints(rail1, pointRender, Color.BLACK, 2); //TODO covert to lines only
+        plotLinePoints(rail2, pointRender, Color.BLACK, 2); //TODO covert to lines only
         return segments;
+    }
+
+    public static void plotLinePoints(Collection<IPos> points, PlotPointRender pointRender, Color lineColor, int lineSize) {
+        final List<PlotPoint> dots = points.stream().map(p -> new PlotPoint(p.x(), p.z(), lineColor, lineSize)).collect(Collectors.toList());
+        plotLineDots(dots, pointRender, lineColor, lineSize);
+    }
+
+    public static void plotLineDots(Collection<PlotPoint> dots, PlotPointRender pointRender, Color lineColor, int lineSize) {
+        int i = 0;
+        for (PlotPoint dot: dots) {
+
+            if (i != 0) {
+                //Adds node and sets a line to last node
+                pointRender.addPlusLinkLast(dot, lineColor, lineSize); //TODO consider moving links to data generator
+            } else {
+                pointRender.add(dot);
+            }
+
+            i++;
+        }
     }
 
     public static RailSegmentLine generateRail(List<PlotPoint> dots, RailHeading heading,
@@ -84,14 +72,13 @@ public class RailRenderUtil {
         return segment;
     }
 
-    public static RailSegment[] generateRail(List<PlotPoint> dots, SnappedPos start, SnappedPos end) throws Exception
-    {
-        RailSegment[]segments = SegmentHelper.generateRail(start, end);
+    public static RailSegment[] generateRail(List<PlotPoint> dots, SnappedPos start, SnappedPos end) throws Exception {
+        RailSegment[] segments = SegmentHelper.generateRail(start, end);
         if (segments != null) {
-        	for(int i = 0; i < segments.length;i++) {
-        		populatePlotPoints(segments[i], dots);
-        	}
-        	
+            for (int i = 0; i < segments.length; i++) {
+                populatePlotPoints(segments[i], dots);
+            }
+
         }
         return segments;
     }
