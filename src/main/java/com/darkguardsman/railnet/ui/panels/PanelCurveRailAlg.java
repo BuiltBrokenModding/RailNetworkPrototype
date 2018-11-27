@@ -35,6 +35,12 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
     protected JTextField startAngleField;
     protected JTextField endAngleField;
 
+    public PanelCurveRailAlg() {
+        super("Test path point generate for curved rails." +
+                "\n\nMeant to act as a low level test without any snap point prediction." +
+                "\nThis way path point generation can be tested without worrying about the state of snap logic.");
+    }
+
     @Override
     protected void addRenderPanelRenders(RenderPanel panel) {
         super.addRenderPanelRenders(panel);
@@ -43,7 +49,7 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
 
     @Override
     protected JPanel createControlPanel() {
-        JPanel panel = new JPanel();       
+        JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(20, 2));
         JButton button;
 

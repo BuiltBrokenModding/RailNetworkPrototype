@@ -21,6 +21,10 @@ import java.awt.GridLayout;
  */
 public class PanelRailPlacementTest extends PanelAbstractTest {
 
+    public PanelRailPlacementTest() {
+        super("Test snap grid handling");
+    }
+
     @Override
     protected void addRenderPanelRenders(RenderPanel panel) {
         super.addRenderPanelRenders(panel);

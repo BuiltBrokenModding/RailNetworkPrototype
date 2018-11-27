@@ -30,6 +30,10 @@ public class PanelCurveRails extends PanelAbstractTest {
 
     protected JTextField scaleField;
 
+    public PanelCurveRails() {
+        super("Test common shapes for curved rails");
+    }
+
     @Override
     protected void addRenderPanelRenders(RenderPanel panel)
     {

@@ -19,6 +19,13 @@ public class PanelLineRails extends PanelAbstractTest {
 
     protected JTextField distanceField;
 
+    public PanelLineRails()
+    {
+        super("Test path point generation for line rails." +
+                "\n\nMeant to act as a low level test without any snap point prediction." +
+                "\nAs well a test of possible strait rail directions.");
+    }
+
     @Override
     protected JPanel createControlPanel() {
         JPanel panel = new JPanel();

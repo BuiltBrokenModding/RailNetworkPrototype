@@ -5,9 +5,12 @@ import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.TextArea;
 
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
@@ -17,11 +20,39 @@ public abstract class PanelAbstractTest extends JPanel {
 
     protected RenderPanel renderPanel;
     protected PlotPointRender pointRender;
+    protected TextArea purposeTextArea;
 
-    public PanelAbstractTest() {
+    protected final String testPurpose;
+
+    public PanelAbstractTest(String testPurpose) {
+        this.testPurpose = testPurpose;
+
         setLayout(new BorderLayout());
+        if (testPurpose != null)
+            add(createFooterPanel(), BorderLayout.SOUTH);
         add(createRenderPanel(), BorderLayout.CENTER);
         add(createControlPanel(), BorderLayout.WEST);
+    }
+
+    protected JTabbedPane createFooterPanel() {
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        //Purpose
+        JPanel panel = new JPanel();
+        purposeTextArea = new TextArea();
+        purposeTextArea.setText(testPurpose);
+        purposeTextArea.setEditable(false);
+        panel.add(purposeTextArea);
+
+        JPanel consolePanel = new JPanel();
+        consolePanel.add(new JLabel("TODO"));
+
+
+        tabbedPane.addTab("Purpose", null, panel);
+        tabbedPane.addTab("Console", null, consolePanel);
+
+
+        return tabbedPane;
     }
 
     /**
@@ -48,16 +79,14 @@ public abstract class PanelAbstractTest extends JPanel {
         return renderPanel;
     }
 
-    protected void addRenderPanelRenders(RenderPanel panel)
-    {
+    protected void addRenderPanelRenders(RenderPanel panel) {
         renderPanel.addRendersToRun(new PlotGridRender(1, 1));
         renderPanel.addRendersToRun(new PlotGridRender(2, 2, Color.BLUE));
         renderPanel.addRendersToRun(new PlotCenterRender());
         renderPanel.addRendersToRun(pointRender = new PlotPointRender(null));
     }
 
-    protected void addRenderPanelListeners(RenderPanel panel)
-    {
+    protected void addRenderPanelListeners(RenderPanel panel) {
 
     }
 

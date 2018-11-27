@@ -2,7 +2,6 @@ package com.darkguardsman.railnet.api;
 
 import com.darkguardsman.railnet.lib.MathHelpers;
 import com.darkguardsman.railnet.lib.SnappedPos;
-import com.darkguardsman.railnet.lib.utils.SegmentHelper;
 
 import java.util.Arrays;
 import java.util.Collections;

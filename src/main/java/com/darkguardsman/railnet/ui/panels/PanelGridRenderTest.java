@@ -29,6 +29,10 @@ public class PanelGridRenderTest extends PanelAbstractTest {
     protected JTextField xEndField;
     protected JTextField yEndField;
 
+    public PanelGridRenderTest() {
+        super("Test visual rendering of grid");
+    }
+
     @Override
     protected JPanel createControlPanel() {
         JPanel panel = new JPanel();

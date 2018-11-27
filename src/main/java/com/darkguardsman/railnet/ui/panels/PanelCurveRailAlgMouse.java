@@ -19,21 +19,24 @@ import java.awt.GridLayout;
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/15/18.
  */
-public class PanelCurveRailAlgMouse extends PanelCurveRailAlg{
+public class PanelCurveRailAlgMouse extends PanelCurveRailAlg {
+
+    public PanelCurveRailAlgMouse() {
+        super();
+        purposeTextArea.setText("Version of Curve rail test that includes mouse input for rapid testing.");
+    }
 
     @Override
-    protected void addRenderPanelListeners(RenderPanel panel)
-    {
-    	MouseMotionListenerCurve listener  = new MouseMotionListenerCurve(renderPanel, pointRender);
+    protected void addRenderPanelListeners(RenderPanel panel) {
+        MouseMotionListenerCurve listener = new MouseMotionListenerCurve(renderPanel, pointRender);
         renderPanel.addMouseMotionListener(listener);
         renderPanel.addMouseListener(listener);
     }
 
     @Override
     protected JPanel createControlPanel() {
-        JPanel panel = new JPanel();       
+        JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(20, 2));
-        JButton button;
 
         panel.add(new JLabel("Start:"));
         panel.add(new JPanel());
@@ -42,7 +45,7 @@ public class PanelCurveRailAlgMouse extends PanelCurveRailAlg{
         panel.add(new JLabel("Z:"));
         panel.add(startZField = new JTextField("-5"));
         panel.add(new JLabel("Start Angle:"));
-        panel.add(startAngleField = new JTextField("0"));   
+        panel.add(startAngleField = new JTextField("0"));
 
         return panel;
     }
