@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Helper to handle generating data for visual renders of rails
+ *
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/16/18.
  */
@@ -29,6 +31,15 @@ public class RailRenderUtil {
     public static Color NODE_COLOR = Color.YELLOW;
     public static Color NODE_COLOR_ENDS = Color.BLUE;
 
+    /**
+     * Generates a rail(s) from the provided data
+     *
+     * @param pointRender - render to supply visual data to
+     * @param start       - start of the rail
+     * @param end         - end of the rail
+     * @return list of generated rails
+     * @throws Exception TODO why?
+     */
     public static RailSegment[] generateRail(PlotPointRender pointRender, SnappedPos start, SnappedPos end) throws Exception {
 
         final List<PlotPoint> dots = new ArrayList();
@@ -45,26 +56,16 @@ public class RailRenderUtil {
         return segments;
     }
 
-    public static void plotLinePoints(Collection<IPos> points, PlotPointRender pointRender, Color lineColor, int lineSize) {
-        final List<PlotPoint> dots = points.stream().map(p -> new PlotPoint(p.x(), p.z(), lineColor, lineSize)).collect(Collectors.toList());
-        plotLineDots(dots, pointRender, lineColor, lineSize);
-    }
-
-    public static void plotLineDots(Collection<PlotPoint> dots, PlotPointRender pointRender, Color lineColor, int lineSize) {
-        int i = 0;
-        for (PlotPoint dot: dots) {
-
-            if (i != 0) {
-                //Adds node and sets a line to last node
-                pointRender.addPlusLinkLast(dot, lineColor, lineSize); //TODO consider moving links to data generator
-            } else {
-                pointRender.add(dot);
-            }
-
-            i++;
-        }
-    }
-
+    /**
+     * Generates a simple {@link RailSegmentLine} for visual testing of the rail object
+     *
+     * @param dots     - list to output dots to for render
+     * @param heading  - direction of the rail
+     * @param x        - start point, can be negative depending on the test
+     * @param z        - start point, can be negative depending on the test
+     * @param distance - distance to render the rail
+     * @return completed segment, not normally used by the renders
+     */
     public static RailSegmentLine generateRail(List<PlotPoint> dots, RailHeading heading,
                                                double x, double z, double distance) {
         RailSegmentLine segment = new RailSegmentLine(heading, (float) x, 0, (float) z, (int) distance);
@@ -72,17 +73,36 @@ public class RailRenderUtil {
         return segment;
     }
 
+    /**
+     * Called to generate rail(s) from the provided data
+     *
+     * @param dots  - list to add visual dots to
+     * @param start - start of the rail
+     * @param end   - end of the rails
+     * @return array of generated rails
+     * @throws Exception TODO why?
+     */
     public static RailSegment[] generateRail(List<PlotPoint> dots, SnappedPos start, SnappedPos end) throws Exception {
         RailSegment[] segments = SegmentHelper.generateRail(start, end);
         if (segments != null) {
             for (int i = 0; i < segments.length; i++) {
                 populatePlotPoints(segments[i], dots);
+                //TODO consider creating an overlap visual for start/end points
+                //TODO consider alternating colors to better see data
             }
 
         }
         return segments;
     }
 
+    /**
+     * Helper method to convert rail segment into visual path data. Will
+     * generate a dot per path point. With the start and end dot getting
+     * a unique edge color to make it easier to see.
+     *
+     * @param segment - segment to grab path data from
+     * @param dots    - list to add dots towards
+     */
     public static void populatePlotPoints(RailSegment segment, List<PlotPoint> dots) {
 
         List<IRailPathPoint> points = segment.getAllPaths().get(0).getPathPoints();
@@ -97,6 +117,42 @@ public class RailRenderUtil {
             point.addEdge(Color.CYAN, NODE_EDGE_SIZE);
 
             dots.add(point);
+        }
+    }
+
+    /**
+     * Converts points into dots and maps lines between them
+     *
+     * @param points      - 3D points to render, Y is not used for 2D renders
+     * @param pointRender - render to add lines and dots to
+     * @param lineColor   - color of lines
+     * @param lineSize    - size of lines
+     */
+    public static void plotLinePoints(Collection<IPos> points, PlotPointRender pointRender, Color lineColor, int lineSize) {
+        final List<PlotPoint> dots = points.stream().map(p -> new PlotPoint(p.x(), p.z(), lineColor, lineSize)).collect(Collectors.toList());
+        plotLineDots(dots, pointRender, lineColor, lineSize);
+    }
+
+    /**
+     * Creates lines between the dots
+     *
+     * @param dots        - list of dots
+     * @param pointRender - render to add lines and dots to
+     * @param lineColor   - color of lines
+     * @param lineSize    - size of lines
+     */
+    public static void plotLineDots(Collection<PlotPoint> dots, PlotPointRender pointRender, Color lineColor, int lineSize) {
+        int i = 0;
+        for (PlotPoint dot : dots) {
+
+            if (i != 0) {
+                //Adds node and sets a line to last node
+                pointRender.addPlusLinkLast(dot, lineColor, lineSize); //TODO consider moving links to data generator
+            } else {
+                pointRender.add(dot);
+            }
+
+            i++;
         }
     }
 }
