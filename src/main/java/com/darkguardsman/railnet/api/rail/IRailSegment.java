@@ -1,6 +1,7 @@
 package com.darkguardsman.railnet.api.rail;
 
 import com.darkguardsman.railnet.api.material.IRailMaterial;
+import com.darkguardsman.railnet.api.material.IRailMaterialType;
 
 import java.util.*;
 
@@ -84,7 +85,7 @@ public interface IRailSegment {
      *
      * @return map of materials
      */
-    Map<IRailMaterial, Integer> getRailMaterialCost(); //TODO add with type, empty generics for placeholders
+    Map<IRailMaterialType, Integer> getRailMaterialCost(); //TODO add with type, empty generics for placeholders
 
     /**
      * Gets the remaining materials needed to
@@ -92,7 +93,7 @@ public interface IRailSegment {
      *
      * @return
      */
-    Map<IRailMaterial, Integer> getRemainingRailMaterialCost(); //TODO add with type, empty generics for placeholders
+    Map<IRailMaterialType, Integer> getRemainingRailMaterialCost(); //TODO add with type, empty generics for placeholders
 
     /**
      * Adds materials towards the completion of the

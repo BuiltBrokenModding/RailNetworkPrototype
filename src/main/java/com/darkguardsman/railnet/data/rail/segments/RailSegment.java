@@ -1,6 +1,8 @@
 package com.darkguardsman.railnet.data.rail.segments;
 
+import com.darkguardsman.railnet.RailConfig;
 import com.darkguardsman.railnet.api.material.IRailMaterial;
+import com.darkguardsman.railnet.api.material.IRailMaterialType;
 import com.darkguardsman.railnet.api.rail.*;
 
 import java.util.*;
@@ -14,8 +16,9 @@ public abstract class RailSegment implements IRailSegment {
     protected final ArrayList<IRailJoint> joints = new ArrayList(2);
     protected final ArrayList<IRailPath> paths = new ArrayList(1);
 
-    protected final Map<IRailMaterial, Integer> railCost = new HashMap();
-    protected final Map<IRailMaterial, Integer> remainingRailCost = new HashMap();
+    protected final Map<IRailMaterialType, Integer> railCost = new HashMap();
+    protected final Map<IRailMaterialType, Integer> remainingRailCost = new HashMap();
+    protected final Map<IRailMaterial, Integer> railMaterialsUsed = new HashMap();
 
     protected boolean arePathsInit = false;
     protected boolean isRailCostInit = false;
@@ -51,7 +54,7 @@ public abstract class RailSegment implements IRailSegment {
     }
 
     @Override
-    public Map<IRailMaterial, Integer> getRailMaterialCost() {
+    public Map<IRailMaterialType, Integer> getRailMaterialCost() {
         if (!isRailCostInit) {
             isRailCostInit = true;
             initRailCost();
@@ -59,10 +62,29 @@ public abstract class RailSegment implements IRailSegment {
         return railCost;
     }
 
-    protected abstract void initRailCost();
+    protected void initRailCost() {
+        final double distance = getRailDistance();
+
+        int metalNeeded = (int) Math.floor(getNumberOfRails() * distance * RailConfig.railMetalMaterialAmountPerMeter);
+        railCost.put(RailConfig.railMetalMaterial, metalNeeded);
+
+        int woodNeeded = (int) Math.floor(getNumberOfRails() * distance * RailConfig.railWoodMaterialAmountPerMeter);
+        railCost.put(RailConfig.railWoodMaterial, woodNeeded);
+
+        remainingRailCost.putAll(railCost); //TODO when save/load is added change this to match loaded data
+    }
+
+    /**
+     * Number of rails the track contains
+     *
+     * @return
+     */
+    protected int getNumberOfRails() {
+        return 2;
+    }
 
     @Override
-    public Map<IRailMaterial, Integer> getRemainingRailMaterialCost() {
+    public Map<IRailMaterialType, Integer> getRemainingRailMaterialCost() {
         if (!isRailCostInit) {
             isRailCostInit = true;
             initRailCost();
@@ -80,23 +102,28 @@ public abstract class RailSegment implements IRailSegment {
             }
 
             //check if we still need the material
-            if (remainingRailCost.containsKey(material)) {
+            if (remainingRailCost.containsKey(material.getMaterialType())) {
 
                 //Get items needed
-                final int itemsNeeded = remainingRailCost.get(material);
+                final int itemsNeeded = remainingRailCost.get(material.getMaterialType());
 
                 if (amount >= itemsNeeded) {
 
                     //Remove entry as we cover all needed items
                     if (doAction) {
-                        remainingRailCost.remove(material);
+                        remainingRailCost.remove(material.getMaterialType());
                     }
 
                     //Items left over
                     int remain = amount - itemsNeeded;
+                    int used = amount - remain;
+
+                    if (doAction) {
+                        trackUsedMaterials(material, used);
+                    }
 
                     //Return amount used
-                    return amount - remain;
+                    return used;
                 } else {
 
                     //Items still left after applying amount
@@ -104,7 +131,8 @@ public abstract class RailSegment implements IRailSegment {
 
                     //Update entry
                     if (doAction) {
-                        remainingRailCost.put(material, left);
+                        remainingRailCost.put(material.getMaterialType(), left);
+                        trackUsedMaterials(material, amount);
                     }
 
                     //Return amount used
@@ -115,5 +143,15 @@ public abstract class RailSegment implements IRailSegment {
         return 0;
     }
 
+    protected void trackUsedMaterials(IRailMaterial material, int used) {
+        if (!railMaterialsUsed.containsKey(material)) {
+            railMaterialsUsed.put(material, used);
+        } else {
+            railMaterialsUsed.put(material, used + railMaterialsUsed.get(material));
+        }
+    }
+
     protected abstract void generatePaths();
+
+    protected abstract double getRailDistance();
 }
