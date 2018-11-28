@@ -38,6 +38,7 @@ public class RailSegmentCurve extends RailSegment {
     public List<Pos> rail2 = new ArrayList<Pos>();
 
     public RailSegmentCurve(IPosM start, IPosM end, int startAngle, int endAngle) {
+        super();
         this.start = new RailJoint(this, start);
         this.end = new RailJoint(this, end);
 

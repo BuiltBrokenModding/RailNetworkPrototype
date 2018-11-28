@@ -16,6 +16,17 @@ import java.util.*;
 public interface IRailSegment {
 
     /**
+     * Unique ID of the rail segment.
+     * <p>
+     * Used to track the rail for save/load
+     * as well track render data stored seperately
+     * from the rail.
+     *
+     * @return UUID
+     */
+    UUID getRailID();
+
+    /**
      * Joints of the rail segment. Normally only
      * contains 2 values but could be more
      * for unique rail types that don't follow

@@ -6,17 +6,21 @@ import com.darkguardsman.railnet.api.rail.*;
 import com.darkguardsman.railnet.data.rail.*;
 import com.darkguardsman.railnet.data.rail.path.*;
 
+import java.util.UUID;
+
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
  * Created by Dark(DarkGuardsman, Robert) on 11/14/18.
  */
 public class RailSegmentLine extends RailSegment {
     public final IRailJoint start;
+
     public final IRailJoint end;
     public final RailHeading heading;
     public final int distance;
 
     public RailSegmentLine(RailHeading heading, float startX, float startY, float startZ, int distance) {
+        super();
         this.heading = heading;
         this.distance = distance;
         start = new RailJoint(this, startX, startY, startZ);

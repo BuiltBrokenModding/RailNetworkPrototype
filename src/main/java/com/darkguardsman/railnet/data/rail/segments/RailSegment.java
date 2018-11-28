@@ -23,6 +23,16 @@ public abstract class RailSegment implements IRailSegment {
     protected boolean arePathsInit = false;
     protected boolean isRailCostInit = false;
 
+    protected UUID uniqueID;
+
+    public RailSegment() {
+        uniqueID = UUID.randomUUID();
+    }
+
+    @Override
+    public UUID getRailID() {
+        return uniqueID;
+    }
 
     @Override
     public List<IRailJoint> getJoints() {
@@ -81,6 +91,15 @@ public abstract class RailSegment implements IRailSegment {
      */
     protected int getNumberOfRails() {
         return 2;
+    }
+
+    /**
+     * Width of the track
+     *
+     * @return
+     */
+    protected float getRailWidth() {
+        return 1.5f; //US & EU standard 1,435 mm, rounded up for simplicity
     }
 
     @Override
@@ -143,6 +162,13 @@ public abstract class RailSegment implements IRailSegment {
         return 0;
     }
 
+    /**
+     * Internal method to track materials applied when building
+     * the track
+     *
+     * @param material - exact material
+     * @param used     - number of material used
+     */
     protected void trackUsedMaterials(IRailMaterial material, int used) {
         if (!railMaterialsUsed.containsKey(material)) {
             railMaterialsUsed.put(material, used);
@@ -151,7 +177,17 @@ public abstract class RailSegment implements IRailSegment {
         }
     }
 
+    /**
+     * Called to generate the path carts will
+     * follow when navigating the rail
+     */
     protected abstract void generatePaths();
 
+    /**
+     * Called to get the distance traveled by
+     * the track
+     *
+     * @return
+     */
     protected abstract double getRailDistance();
 }
