@@ -1,5 +1,7 @@
 package com.darkguardsman.railnet.api.rail;
 
+import com.darkguardsman.railnet.api.material.IRailMaterial;
+
 import java.util.*;
 
 /**
@@ -29,7 +31,7 @@ public interface IRailSegment {
      * to follow while moving.
      *
      * @return paths
-     * @throws Exception 
+     * @throws Exception
      */
     List<IRailPath> getAllPaths() throws Exception;
 
@@ -39,10 +41,75 @@ public interface IRailSegment {
      * @param from - start
      * @param to   - end
      * @return path
-     * @throws Exception 
+     * @throws Exception
      */
     IRailPath getPath(IRailJoint from, IRailJoint to) throws Exception;
 
+    /**
+     * Start of the rail segment.
+     * <p>
+     * Does not define direction
+     *
+     * @return
+     */
     IRailJoint start();
+
+    /**
+     * End of the rail segment.
+     * <p>
+     * Does not define direction
+     *
+     * @return
+     */
     IRailJoint end();
+
+    /**
+     * Checks if the rail is completed.
+     * <p>
+     * Should only return true if all components
+     * of the rail exist and are built. Damage
+     * to the rail should not affect completion
+     * status unless the damage prevents usage
+     * of the rail.
+     *
+     * @return true if completed
+     */
+    default boolean isRailCompleted() {
+        return getRemainingRailMaterialCost() == null;
+    }
+
+    /**
+     * Gets the material cost of the rail
+     * as a map of type to amount
+     *
+     * @return map of materials
+     */
+    Map<IRailMaterial, Integer> getRailMaterialCost(); //TODO add with type, empty generics for placeholders
+
+    /**
+     * Gets the remaining materials needed to
+     * complete the rail.
+     *
+     * @return
+     */
+    Map<IRailMaterial, Integer> getRemainingRailMaterialCost(); //TODO add with type, empty generics for placeholders
+
+    /**
+     * Adds materials towards the completion of the
+     * rail.
+     * <p>
+     * If doAction is true it will added
+     * the material to the completion goal and
+     * attempt to finish the rail.
+     * <p>
+     * If doAction is false it will simulate the
+     * action allowing for checking the status
+     * of the rail or if the action can be completed.
+     *
+     * @param material - material being added
+     * @param amount   - amount of material added
+     * @param doAction - true to build, false to simulate
+     * @return amount of material used
+     */
+    int buildRail(IRailMaterial material, int amount, boolean doAction); //TODO replace with type, object is a placeholder
 }
