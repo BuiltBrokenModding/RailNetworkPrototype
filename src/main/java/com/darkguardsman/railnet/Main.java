@@ -1,5 +1,7 @@
 package com.darkguardsman.railnet;
 
+import com.darkguardsman.railnet.api.RailNetAPI;
+import com.darkguardsman.railnet.mod.RailInit;
 import com.darkguardsman.railnet.ui.*;
 
 import javax.swing.*;
@@ -13,6 +15,8 @@ public class Main
 {
     public static void main(String... args)
     {
+        RailInit.init();
+        
         FrameMain frameMain = new FrameMain();
         frameMain.init();
         frameMain.setSize(800, 800);
