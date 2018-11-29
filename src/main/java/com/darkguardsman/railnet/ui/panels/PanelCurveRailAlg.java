@@ -124,10 +124,10 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
         try {
 
             //Debug info so we can see the math
-            System.out.println("Generating line rail for render");
-            System.out.println("\tStart: " + start);
-            System.out.println("\tend: " + end);
-            System.out.println("\tAngles: " + startAngle);
+           log("Generating line rail for render");
+           log("\tStart: " + start);
+           log("\tend: " + end);
+           log("\tAngles: " + startAngle);
 
             //Generate rail and get dots
             RailSegment segment[] = RailRenderUtil.generateRail(pointRender, new SnappedPos(start), new SnappedPos(end));
@@ -135,7 +135,7 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
             //Data Debug
             int i = 0;
             for (IRailPathPoint dot : segment[0].getAllPaths().get(0).getPathPoints()) {
-                System.out.println("\t\t[" + (i++) + "]: " + dot.x() + ", " + dot.y());
+               log("\t\t[" + (i++) + "]: " + dot.x() + ", " + dot.y());
             }
 
             renderPanel.repaint();

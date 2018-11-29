@@ -77,18 +77,18 @@ public class PanelLineRails extends PanelAbstractTest {
         double z = -heading.offsetZ * (distance / 2);
 
         //Debug info so we can see the math
-        System.out.println("Generating line rail for render");
-        System.out.println("\tWith Heading: " + heading);
-        System.out.println("\tStart: " + x + ", " + z);
-        System.out.println("\tDistance: " + distance);
+        log("Generating line rail for render");
+        log("\tWith Heading: " + heading);
+        log("\tStart: " + x + ", " + z);
+        log("\tDistance: " + distance);
 
         //Generate rail and get dots
         List<PlotPoint> dots = new ArrayList();
         RailRenderUtil.generateRail(dots, heading, x, z, distance);
 
         //More debug
-        System.out.println("\tPoints:");
-        System.out.println("\t\tSize: " + dots.size());
+        log("\tPoints:");
+        log("\t\tSize: " + dots.size());
 
         //Extra line to visual show start to end path, added to debug for issues
         pointRender.addLine(dots.get(0), dots.get(dots.size() - 1), Color.blue, 8);
@@ -100,7 +100,7 @@ public class PanelLineRails extends PanelAbstractTest {
             PlotPoint dot = dots.get(i);
 
             //Debug data to show the exact data used
-            System.out.println("\t\t[" + i + "]: " + dot.x + ", " + dot.y);
+            log("\t\t[" + i + "]: " + dot.x + ", " + dot.y);
 
             //Adds node and sets a line to last node
             pointRender.addPlusLinkLast(dot, Color.CYAN, 2); //TODO consider moving links to data generator

@@ -5,12 +5,12 @@ import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.TextArea;
+import java.util.Date;
 
 /**
  * @see <a href="https://github.com/BuiltBrokenModding/VoltzEngine/blob/development/license.md">License</a> for what you can and can't do with the code.
@@ -21,6 +21,7 @@ public abstract class PanelAbstractTest extends JPanel {
     protected RenderPanel renderPanel;
     protected PlotPointRender pointRender;
     protected TextArea purposeTextArea;
+    protected JTextArea errorLog = new JTextArea(30, 30);
 
     protected final String testPurpose;
 
@@ -45,7 +46,9 @@ public abstract class PanelAbstractTest extends JPanel {
         panel.add(purposeTextArea);
 
         JPanel consolePanel = new JPanel();
-        consolePanel.add(new JLabel("TODO"));
+        consolePanel.setLayout(new FlowLayout());
+        JScrollPane scrollPane = new JScrollPane(errorLog = new JTextArea(10, 50));
+        consolePanel.add(scrollPane);
 
 
         tabbedPane.addTab("Purpose", null, panel);
@@ -110,5 +113,12 @@ public abstract class PanelAbstractTest extends JPanel {
     protected void addSpacer(JPanel panel) {
         panel.add(new JPanel());
         panel.add(new JPanel());
+    }
+
+    protected void log(String msg) {
+        System.out.println(msg);
+
+        String message = new Date() + " " +  msg; //TODO toggle on/off
+        errorLog.append(message + "\n"); //TODO store in list so we can re-render, search, and filter
     }
 }
