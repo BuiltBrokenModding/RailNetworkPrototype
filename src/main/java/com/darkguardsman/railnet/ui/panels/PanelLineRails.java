@@ -70,7 +70,7 @@ public class PanelLineRails extends PanelAbstractTest {
     protected void generateLineRail(RailHeading heading, double distance) {
 
         //Reset data
-        renderPanel.clear();
+        clearTest();
 
         //Set start position negative of center for best visual layout
         double x = -heading.offsetX * (distance / 2);
@@ -84,7 +84,7 @@ public class PanelLineRails extends PanelAbstractTest {
 
         //Generate rail and get dots
         List<PlotPoint> dots = new ArrayList();
-        RailRenderUtil.generateRail(dots, heading, x, z, distance);
+        newRail(RailRenderUtil.generateRail(dots, heading, x, z, distance));
 
         //More debug
         log("\tPoints:");

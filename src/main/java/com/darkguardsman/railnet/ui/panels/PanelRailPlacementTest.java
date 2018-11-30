@@ -48,7 +48,7 @@ public class PanelRailPlacementTest extends PanelAbstractTest {
 
         panel.add(new JPanel());
         button = new JButton("Clear");
-        button.addActionListener((a) -> renderPanel.clear());
+        button.addActionListener((a) -> clearTest());
         panel.add(button);
 
 

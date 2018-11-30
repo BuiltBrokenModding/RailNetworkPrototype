@@ -1,5 +1,8 @@
 package com.darkguardsman.railnet.ui.panels;
 
+import com.darkguardsman.railnet.api.rail.IRailSegment;
+import com.darkguardsman.railnet.ui.components.RailDataTable;
+import com.darkguardsman.railnet.ui.components.RailTableModel;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
@@ -22,6 +25,7 @@ public abstract class PanelAbstractTest extends JPanel {
     protected PlotPointRender pointRender;
     protected TextArea purposeTextArea;
     protected JTextArea errorLog = new JTextArea(30, 30);
+    protected RailDataTable railTable;
 
     protected final String testPurpose;
 
@@ -50,10 +54,9 @@ public abstract class PanelAbstractTest extends JPanel {
         JScrollPane scrollPane = new JScrollPane(errorLog = new JTextArea(10, 50));
         consolePanel.add(scrollPane);
 
-
         tabbedPane.addTab("Purpose", null, panel);
         tabbedPane.addTab("Console", null, consolePanel);
-
+        tabbedPane.addTab("Table", null, new JScrollPane(railTable = new RailDataTable()));
 
         return tabbedPane;
     }
@@ -118,7 +121,18 @@ public abstract class PanelAbstractTest extends JPanel {
     protected void log(String msg) {
         System.out.println(msg);
 
-        String message = new Date() + " " +  msg; //TODO toggle on/off
+        String message = new Date() + " " + msg; //TODO toggle on/off
         errorLog.append(message + "\n"); //TODO store in list so we can re-render, search, and filter
+    }
+
+    protected void clearTest()
+    {
+        renderPanel.clear();
+        railTable.clearRails();
+    }
+
+    protected void newRail(IRailSegment segment)
+    {
+        railTable.addRail(segment);
     }
 }

@@ -119,7 +119,7 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
     }
 
     protected void generateRail(Pos start, Pos end, int startAngle, int endAngle) {
-        renderPanel.clear();
+        clearTest();
 
         try {
 
@@ -130,11 +130,16 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
            log("\tAngles: " + startAngle);
 
             //Generate rail and get dots
-            RailSegment segment[] = RailRenderUtil.generateRail(pointRender, new SnappedPos(start), new SnappedPos(end));
+            RailSegment[] segments = RailRenderUtil.generateRail(pointRender, new SnappedPos(start), new SnappedPos(end));
+
+            for(RailSegment segment : segments)
+            {
+                newRail(segment);
+            }
 
             //Data Debug
             int i = 0;
-            for (IRailPathPoint dot : segment[0].getAllPaths().get(0).getPathPoints()) {
+            for (IRailPathPoint dot : segments[0].getAllPaths().get(0).getPathPoints()) {
                log("\t\t[" + (i++) + "]: " + dot.x() + ", " + dot.y());
             }
 

@@ -74,7 +74,7 @@ public class PanelCurveRails extends PanelAbstractTest {
     }
 
     protected void generate(RailTestSet railTestSet) {
-        renderPanel.clear();
+        clearTest();
 
         int scale;
 
