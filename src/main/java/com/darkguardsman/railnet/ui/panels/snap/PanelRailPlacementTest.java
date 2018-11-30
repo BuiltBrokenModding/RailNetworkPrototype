@@ -23,6 +23,10 @@ public class PanelRailPlacementTest extends PanelAbstractTest {
     protected void addRenderPanelRenders(RenderPanel panel) {
         super.addRenderPanelRenders(panel);
         panel.setViewBoundSize(20);
+
+        MouseMotionListenerSnap mouseMotionListenerSnap = new MouseMotionListenerSnap(renderPanel, pointRender);
+        renderPanel.addMouseListener(mouseMotionListenerSnap);
+        renderPanel.addMouseMotionListener(mouseMotionListenerSnap);
     }
 
     @Override

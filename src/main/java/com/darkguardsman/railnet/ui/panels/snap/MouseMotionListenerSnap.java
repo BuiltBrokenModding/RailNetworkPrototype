@@ -21,11 +21,11 @@ import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
  *      for what you can and can't do with the code. Created by Shovinus on
  *      11/16/2018.
  */
-public class MouseMotionListenerCurve implements MouseMotionListener, MouseListener {
+public class MouseMotionListenerSnap implements MouseMotionListener, MouseListener {
 	protected final RenderPanel renderPanel;
 	protected final PlotPointRender plotPointRender;
 
-	public MouseMotionListenerCurve(RenderPanel renderPanel, PlotPointRender plotPointRender) {
+	public MouseMotionListenerSnap(RenderPanel renderPanel, PlotPointRender plotPointRender) {
 		this.renderPanel = renderPanel;
 		this.plotPointRender = plotPointRender;
 	}

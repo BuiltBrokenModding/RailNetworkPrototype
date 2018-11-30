@@ -1,6 +1,5 @@
 package com.darkguardsman.railnet.ui.panels.curve;
 
-import com.darkguardsman.railnet.ui.panels.snap.MouseMotionListenerCurve;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 
 import javax.swing.JLabel;
