@@ -7,6 +7,7 @@ import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.lib.SnappedPos;
 import com.darkguardsman.railnet.ui.graphics.MouseMotionListenerCurve;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
+import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
@@ -19,6 +20,8 @@ import javax.swing.JTextField;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Used to test logic for line rails visually
@@ -124,23 +127,19 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
         try {
 
             //Debug info so we can see the math
-           log("Generating line rail for render");
-           log("\tStart: " + start);
-           log("\tend: " + end);
-           log("\tAngles: " + startAngle);
+            log("Generating line rail for render");
+            log("\tStart: " + start);
+            log("\tend: " + end);
+            log("\tAngles: " + startAngle);
 
             //Generate rail and get dots
-            RailSegment[] segments = RailRenderUtil.generateRail(pointRender, new SnappedPos(start), new SnappedPos(end));
-
-            for(RailSegment segment : segments)
-            {
-                newRail(segment);
-            }
+            RailSegmentCurve segment = RailRenderUtil.generateCurveRail(pointRender, start, end, startAngle, endAngle);
+            newRail(segment);
 
             //Data Debug
             int i = 0;
-            for (IRailPathPoint dot : segments[0].getAllPaths().get(0).getPathPoints()) {
-               log("\t\t[" + (i++) + "]: " + dot.x() + ", " + dot.y());
+            for (IRailPathPoint dot : segment.getAllPaths().get(0).getPathPoints()) {
+                log("\t\t[" + (i++) + "]: " + dot.x() + ", " + dot.y());
             }
 
             renderPanel.repaint();

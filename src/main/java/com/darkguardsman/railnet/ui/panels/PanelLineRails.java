@@ -84,7 +84,7 @@ public class PanelLineRails extends PanelAbstractTest {
 
         //Generate rail and get dots
         List<PlotPoint> dots = new ArrayList();
-        newRail(RailRenderUtil.generateRail(dots, heading, x, z, distance));
+        newRail(RailRenderUtil.generateLineRail(dots, heading, x, z, distance));
 
         //More debug
         log("\tPoints:");

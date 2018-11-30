@@ -56,6 +56,29 @@ public class RailRenderUtil {
         return segments;
     }
 
+
+    /**
+     * Generates a simple {@link RailSegmentLine} for visual testing of the rail object
+     *
+     * @param pointRender - render to supply visual data to
+     * @param heading     - direction of the rail
+     * @param x           - start point, can be negative depending on the test
+     * @param z           - start point, can be negative depending on the test
+     * @param distance    - distance to render the rail
+     * @return completed segment, not normally used by the renders
+     */
+    public static RailSegmentLine generateLineRail(PlotPointRender pointRender, RailHeading heading,
+                                                   double x, double z, double distance) {
+        final List<PlotPoint> dots = new ArrayList();
+
+        RailSegmentLine segment = generateLineRail(dots, heading, x, z, distance);
+
+        //Generate visual connection lines
+        plotLineDots(dots, pointRender, Color.CYAN, 2); //TODO move color to static variable
+
+        return segment;
+    }
+
     /**
      * Generates a simple {@link RailSegmentLine} for visual testing of the rail object
      *
@@ -66,9 +89,46 @@ public class RailRenderUtil {
      * @param distance - distance to render the rail
      * @return completed segment, not normally used by the renders
      */
-    public static RailSegmentLine generateRail(List<PlotPoint> dots, RailHeading heading,
-                                               double x, double z, double distance) {
+    public static RailSegmentLine generateLineRail(List<PlotPoint> dots, RailHeading heading,
+                                                   double x, double z, double distance) {
         RailSegmentLine segment = new RailSegmentLine(heading, (float) x, 0, (float) z, (int) distance);
+        populatePlotPoints(segment, dots);
+        return segment;
+    }
+
+    /**
+     * Generates a simple {@link RailSegmentLine} for visual testing of the rail object
+     *
+     * @param pointRender - render to supply visual data to
+     * @param start       - start of the segment
+     * @param end         - end of the segment
+     * @param startAngle  - start angle
+     * @param endAngle    - end angle
+     * @return completed segment, not normally used by the renders
+     */
+    public static RailSegmentCurve generateCurveRail(PlotPointRender pointRender, Pos start, Pos end, int startAngle, int endAngle) {
+        final List<PlotPoint> dots = new ArrayList();
+
+        RailSegmentCurve segment = generateCurveRail(dots, start, end, startAngle, endAngle);
+
+        //Generate visual connection lines
+        plotLineDots(dots, pointRender, Color.CYAN, 2); //TODO move color to static variable
+
+        return segment;
+    }
+
+    /**
+     * Generates a simple {@link RailSegmentLine} for visual testing of the rail object
+     *
+     * @param dots       - list to output dots to for render
+     * @param start      - start of the segment
+     * @param end        - end of the segment
+     * @param startAngle - start angle
+     * @param endAngle   - end angle
+     * @return completed segment, not normally used by the renders
+     */
+    public static RailSegmentCurve generateCurveRail(List<PlotPoint> dots, Pos start, Pos end, int startAngle, int endAngle) {
+        RailSegmentCurve segment = new RailSegmentCurve(start, end, startAngle, endAngle);
         populatePlotPoints(segment, dots);
         return segment;
     }
