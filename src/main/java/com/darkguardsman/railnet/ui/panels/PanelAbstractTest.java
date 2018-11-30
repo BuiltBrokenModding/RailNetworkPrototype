@@ -9,10 +9,7 @@ import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.TextArea;
+import java.awt.*;
 import java.util.Date;
 
 /**
@@ -32,10 +29,16 @@ public abstract class PanelAbstractTest extends JPanel {
     public PanelAbstractTest(String testPurpose) {
         this.testPurpose = testPurpose;
 
-        setLayout(new BorderLayout());
-        if (testPurpose != null)
-            add(createFooterPanel(), BorderLayout.SOUTH);
-        add(createRenderPanel(), BorderLayout.CENTER);
+        this.setLayout(new BorderLayout());
+
+        JSplitPane centerPanel = new JSplitPane(
+                JSplitPane.VERTICAL_SPLIT,
+                createRenderPanel(),
+                createFooterPanel());
+
+        centerPanel.setDividerLocation(500);
+
+        add(centerPanel, BorderLayout.CENTER);
         add(createControlPanel(), BorderLayout.WEST);
     }
 
@@ -54,9 +57,14 @@ public abstract class PanelAbstractTest extends JPanel {
         JScrollPane scrollPane = new JScrollPane(errorLog = new JTextArea(10, 50));
         consolePanel.add(scrollPane);
 
+        JPanel tablePanel = new JPanel();
+        consolePanel.setLayout(new FlowLayout());
+        scrollPane = new JScrollPane(railTable = new RailDataTable());
+        tablePanel.add(scrollPane);
+
         tabbedPane.addTab("Purpose", null, panel);
         tabbedPane.addTab("Console", null, consolePanel);
-        tabbedPane.addTab("Table", null, new JScrollPane(railTable = new RailDataTable()));
+        tabbedPane.addTab("Table", null, tablePanel);
 
         return tabbedPane;
     }
@@ -121,18 +129,16 @@ public abstract class PanelAbstractTest extends JPanel {
     protected void log(String msg) {
         System.out.println(msg);
 
-        String message = new Date() + " " + msg; //TODO toggle on/off
+        String message = new Date() + " " + msg; //TODO toggle on/off date
         errorLog.append(message + "\n"); //TODO store in list so we can re-render, search, and filter
     }
 
-    protected void clearTest()
-    {
+    protected void clearTest() {
         renderPanel.clear();
         railTable.clearRails();
     }
 
-    protected void newRail(IRailSegment segment)
-    {
+    protected void newRail(IRailSegment segment) {
         railTable.addRail(segment);
     }
 }
