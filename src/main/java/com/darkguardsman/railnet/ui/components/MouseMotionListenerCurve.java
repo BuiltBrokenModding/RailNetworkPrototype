@@ -1,4 +1,4 @@
-package com.darkguardsman.railnet.ui.graphics;
+package com.darkguardsman.railnet.ui.components;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.lib.SnappedPos;
+import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 

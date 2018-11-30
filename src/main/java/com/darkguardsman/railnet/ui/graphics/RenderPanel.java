@@ -1,6 +1,7 @@
 package com.darkguardsman.railnet.ui.graphics;
 
 
+import com.darkguardsman.railnet.ui.components.ResizeListenerBoxSize;
 import com.darkguardsman.railnet.ui.graphics.data.PlotConnection;
 import com.darkguardsman.railnet.ui.graphics.render.IPlotRenderObject;
 

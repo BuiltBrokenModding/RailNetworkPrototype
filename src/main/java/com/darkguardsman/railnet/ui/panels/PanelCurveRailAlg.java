@@ -1,27 +1,16 @@
 package com.darkguardsman.railnet.ui.panels;
 
 import com.darkguardsman.railnet.api.rail.IRailPathPoint;
-import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
 import com.darkguardsman.railnet.lib.Pos;
-import com.darkguardsman.railnet.lib.SnappedPos;
-import com.darkguardsman.railnet.ui.graphics.MouseMotionListenerCurve;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
-import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
-import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
-import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
-import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Used to test logic for line rails visually

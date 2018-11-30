@@ -1,16 +1,9 @@
 package com.darkguardsman.railnet.ui.panels;
 
-import com.darkguardsman.railnet.api.rail.IRailPathPoint;
-import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
-import com.darkguardsman.railnet.lib.Pos;
-import com.darkguardsman.railnet.ui.graphics.MouseMotionListenerCurve;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
-import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import java.awt.GridLayout;
 
 /**

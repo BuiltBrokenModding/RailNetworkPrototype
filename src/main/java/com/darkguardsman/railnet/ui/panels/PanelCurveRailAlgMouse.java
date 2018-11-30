@@ -1,13 +1,8 @@
 package com.darkguardsman.railnet.ui.panels;
 
-import com.darkguardsman.railnet.api.rail.IRailPathPoint;
-import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
-import com.darkguardsman.railnet.lib.Pos;
-import com.darkguardsman.railnet.ui.graphics.MouseMotionListenerCurve;
+import com.darkguardsman.railnet.ui.components.MouseMotionListenerCurve;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
-import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -41,9 +36,9 @@ public class PanelCurveRailAlgMouse extends PanelCurveRailAlg {
         panel.add(new JLabel("Start:"));
         panel.add(new JPanel());
         panel.add(new JLabel("X:"));
-        panel.add(startXField = new JTextField("-5"));
+        panel.add(startXField = new JTextField("0"));
         panel.add(new JLabel("Z:"));
-        panel.add(startZField = new JTextField("-5"));
+        panel.add(startZField = new JTextField("0"));
         panel.add(new JLabel("Start Angle:"));
         panel.add(startAngleField = new JTextField("0"));
 
