@@ -1,6 +1,7 @@
-package com.darkguardsman.railnet.ui.panels;
+package com.darkguardsman.railnet.ui.panels.snap;
 
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
+import com.darkguardsman.railnet.ui.panels.PanelAbstractTest;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;

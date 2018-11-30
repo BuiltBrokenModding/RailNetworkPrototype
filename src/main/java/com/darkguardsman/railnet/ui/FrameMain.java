@@ -1,6 +1,11 @@
 package com.darkguardsman.railnet.ui;
 
 import com.darkguardsman.railnet.ui.panels.*;
+import com.darkguardsman.railnet.ui.panels.curve.PanelCurveRailAlg;
+import com.darkguardsman.railnet.ui.panels.curve.PanelCurveRailAlgMouse;
+import com.darkguardsman.railnet.ui.panels.segments.PanelCurveRails;
+import com.darkguardsman.railnet.ui.panels.segments.PanelLineRails;
+import com.darkguardsman.railnet.ui.panels.snap.PanelRailPlacementTest;
 
 import javax.swing.*;
 

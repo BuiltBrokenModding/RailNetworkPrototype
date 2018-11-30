@@ -1,8 +1,9 @@
-package com.darkguardsman.railnet.ui.panels;
+package com.darkguardsman.railnet.ui.panels.segments;
 
 import com.darkguardsman.railnet.api.RailHeading;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
+import com.darkguardsman.railnet.ui.panels.PanelAbstractTest;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,10 +1,11 @@
-package com.darkguardsman.railnet.ui.panels;
+package com.darkguardsman.railnet.ui.panels.curve;
 
 import com.darkguardsman.railnet.api.rail.IRailPathPoint;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
+import com.darkguardsman.railnet.ui.panels.PanelAbstractTest;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -89,17 +90,38 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
     }
 
     protected void generateRail() {
-        double startX;
-        double startZ;
+
         double endX;
         double endZ;
-        int startAngle;
-        int endAngle;
+        try {
+            endX = Double.parseDouble(endXField.getText().trim());
+            endZ = Double.parseDouble(endZField.getText().trim());
+        } catch (Exception e) {
+            e.printStackTrace();
+            //TODO display to user that data is invalid
+            return;
+        }
+        generateRail(new Pos(endX, 0, endZ));
+    }
+
+    public void generateRail(Pos end) {
+        double startX;
+        double startZ;
         try {
             startX = Double.parseDouble(startXField.getText().trim());
             startZ = Double.parseDouble(startZField.getText().trim());
-            endX = Double.parseDouble(endXField.getText().trim());
-            endZ = Double.parseDouble(endZField.getText().trim());
+        } catch (Exception e) {
+            e.printStackTrace();
+            //TODO display to user that data is invalid
+            return;
+        }
+        generateRail(new Pos(startX, 0, startZ), end);
+    }
+
+    protected void generateRail(Pos start, Pos end) {
+        int startAngle;
+        int endAngle;
+        try {
             startAngle = Integer.parseInt(startAngleField.getText().trim());
             endAngle = Integer.parseInt(endAngleField.getText().trim());
         } catch (Exception e) {
@@ -107,10 +129,10 @@ public class PanelCurveRailAlg extends PanelAbstractTest {
             //TODO display to user that data is invalid
             return;
         }
-        generateRail(new Pos(startX, 0, startZ), new Pos(endX, 0, endZ), startAngle, endAngle);
+        generateRail(start, end, startAngle, endAngle);
     }
 
-    protected void generateRail(Pos start, Pos end, int startAngle, int endAngle) {
+    public void generateRail(Pos start, Pos end, int startAngle, int endAngle) {
         clearTest();
 
         try {

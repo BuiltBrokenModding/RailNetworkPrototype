@@ -1,6 +1,6 @@
-package com.darkguardsman.railnet.ui.panels;
+package com.darkguardsman.railnet.ui.panels.curve;
 
-import com.darkguardsman.railnet.ui.components.MouseMotionListenerCurve;
+import com.darkguardsman.railnet.ui.panels.snap.MouseMotionListenerCurve;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 
 import javax.swing.JLabel;
@@ -23,9 +23,7 @@ public class PanelCurveRailAlgMouse extends PanelCurveRailAlg {
 
     @Override
     protected void addRenderPanelListeners(RenderPanel panel) {
-        MouseMotionListenerCurve listener = new MouseMotionListenerCurve(renderPanel, pointRender);
-        renderPanel.addMouseMotionListener(listener);
-        renderPanel.addMouseListener(listener);
+        renderPanel.addMouseMotionListener(new MouseMotionListenerCurveAlg(this));
     }
 
     @Override
@@ -39,8 +37,13 @@ public class PanelCurveRailAlgMouse extends PanelCurveRailAlg {
         panel.add(startXField = new JTextField("0"));
         panel.add(new JLabel("Z:"));
         panel.add(startZField = new JTextField("0"));
+
+
         panel.add(new JLabel("Start Angle:"));
         panel.add(startAngleField = new JTextField("0"));
+
+        panel.add(new JLabel("End Angle:"));
+        panel.add(endAngleField = new JTextField("0"));
 
         return panel;
     }

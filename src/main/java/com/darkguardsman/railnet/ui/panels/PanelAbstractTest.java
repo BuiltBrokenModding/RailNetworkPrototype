@@ -18,11 +18,11 @@ import java.util.Date;
  */
 public abstract class PanelAbstractTest extends JPanel {
 
-    protected RenderPanel renderPanel;
-    protected PlotPointRender pointRender;
-    protected TextArea purposeTextArea;
-    protected JTextArea errorLog = new JTextArea(30, 30);
-    protected RailDataTable railTable;
+    public RenderPanel renderPanel;
+    public PlotPointRender pointRender;
+    public TextArea purposeTextArea;
+    public JTextArea errorLog = new JTextArea(30, 30);
+    public RailDataTable railTable;
 
     protected final String testPurpose;
 

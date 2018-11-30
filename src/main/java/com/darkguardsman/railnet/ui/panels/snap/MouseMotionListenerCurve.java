@@ -1,4 +1,4 @@
-package com.darkguardsman.railnet.ui.components;
+package com.darkguardsman.railnet.ui.panels.snap;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

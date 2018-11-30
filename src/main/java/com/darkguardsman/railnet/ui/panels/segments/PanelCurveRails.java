@@ -1,4 +1,4 @@
-package com.darkguardsman.railnet.ui.panels;
+package com.darkguardsman.railnet.ui.panels.segments;
 
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
 import com.darkguardsman.railnet.lib.Pos;
@@ -8,6 +8,7 @@ import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 import com.darkguardsman.railnet.ui.graphics.render.PlotCenterRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotGridRender;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
+import com.darkguardsman.railnet.ui.panels.PanelAbstractTest;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
