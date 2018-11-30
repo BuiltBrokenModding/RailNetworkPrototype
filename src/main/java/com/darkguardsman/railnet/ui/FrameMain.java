@@ -21,29 +21,48 @@ public class FrameMain extends JFrame {
     public void init() {
         //setLayout(new BorderLayout());
 
-        JTabbedPane tabbedPane = new JTabbedPane();
-        ImageIcon icon = null;
+        JTabbedPane mainTabPanel = new JTabbedPane();
 
-        tabbedPane.addTab("Line Rails", icon, new PanelLineRails(),
-                "Visual test of line rails");
-
-        tabbedPane.addTab("Curve Rail Alg", icon, new PanelCurveRailAlg(),
-                "Visual test of curved rail alg");
-
-        tabbedPane.addTab("Curve Rail Alg Mouse", icon, new PanelCurveRailAlgMouse(),
-                "Visual test of curved rail alg");
-
-        tabbedPane.addTab("Curve Rails", icon, new PanelCurveRails(),
-                "Visual test of pre-generated curved rails");
-
-        tabbedPane.addTab("Placement", icon, new PanelRailPlacementTest(),
+        //------------------
+        mainTabPanel.addTab("Placement", null, new PanelRailPlacementTest(),
                 "Test of rail placement logic");
 
+        //------------------
+        JTabbedPane simpleTestPanel = new JTabbedPane();
+
+        simpleTestPanel.addTab("Line Rails", null, new PanelLineRails(),
+                "Visual test of line rails");
+
+        simpleTestPanel.addTab("Curve Rails", null, new PanelCurveRails(),
+                "Visual test of pre-generated curved rails");
+
+        mainTabPanel.addTab("Simple Tests", null, simpleTestPanel,
+                "Simple tests checking single components");
+
+        //------------------
+
+        JTabbedPane testPanel = new JTabbedPane();
+
+        testPanel .addTab("Curve Rail Alg", null, new PanelCurveRailAlg(),
+                "Visual test of curved rail alg");
+
+        testPanel .addTab("Curve Rail Alg Mouse", null, new PanelCurveRailAlgMouse(),
+                "Visual test of curved rail alg");
 
         //Place everything before, everything after is render tests
-        tabbedPane.addTab("Grid Render Test", icon, new PanelGridRenderTest(),
+        testPanel .addTab("Grid Render Test", null, new PanelGridRenderTest(),
                 "Tests that the grid is rendering correctly");
 
-        add(tabbedPane);
+        mainTabPanel.addTab("Alg Tests", null, testPanel,
+                "Tests aimed at checking algs used in other tests");
+
+        //------------------
+
+
+
+
+
+
+        add(mainTabPanel);
     }
 }
