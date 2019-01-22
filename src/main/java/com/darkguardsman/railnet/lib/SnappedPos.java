@@ -100,24 +100,10 @@ public class SnappedPos extends AbstractPos<SnappedPos> {
 	 */
 	private static Pos getClosestSnapPoint(IPosM pos, SNAP_VECTORS vectors) {
 		//Snap to the closest centre first		
-		int x = Math.round(pos.x()/2)*2;
+		int x = Math.round(pos.x());
 		int y = Math.round(pos.y());
-		int z = Math.round(pos.z()/2)*2;
-		//Find the closest snap point on the surrounding given snap vectors to the original position	
-		Pos closestSnapPoint = null;
-			double shortestDistance = 4d;
-					for (int i = 0; i < vectors.length(); i++) {						
-						Point vector = vectors.get(i);
-						Pos testPosition = new Pos(x+vector.x,y,z+vector.y);
-						double testDistance = pos.hDistance(testPosition);
-						
-						if (testDistance < shortestDistance) {
-							shortestDistance = testDistance;
-							closestSnapPoint = testPosition;
-						}
-					}				
-			
-		return closestSnapPoint;
+		int z = Math.round(pos.z());		
+		return new Pos(x,y,z);
 	}
 
 	

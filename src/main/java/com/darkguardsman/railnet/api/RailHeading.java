@@ -162,6 +162,10 @@ public enum RailHeading {
      * @return
      */
 	public static RailHeading[] getPossibleHeadings(int x, int z) {
+		return new RailHeading[] {NORTH_EAST,NORTH_WEST,SOUTH_EAST,SOUTH_WEST,EAST,WEST,NORTH,SOUTH};
+		/**
+		 * No longer snap, but leave in just incase
+		 
 		int xs = SnappedPos.gridPoint(x);
 		int zs = SnappedPos.gridPoint(z);
 		if(xs == 1 && zs == 1) {
@@ -170,6 +174,6 @@ public enum RailHeading {
 			return new RailHeading[] {EAST,WEST};
 		} else {
 			return new RailHeading[] {NORTH,SOUTH};
-		}
+		} */
 	}
 }
