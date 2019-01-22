@@ -3,6 +3,8 @@ package com.darkguardsman.railnet.ui.graphics.rail;
 import com.darkguardsman.railnet.api.RailHeading;
 import com.darkguardsman.railnet.api.math.IPos;
 import com.darkguardsman.railnet.api.math.IPosM;
+import com.darkguardsman.railnet.api.rail.IRailJoint;
+import com.darkguardsman.railnet.api.rail.IRailPath;
 import com.darkguardsman.railnet.api.rail.IRailPathPoint;
 import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
@@ -31,32 +33,50 @@ public class RailRenderUtil {
     public static Color NODE_COLOR = Color.YELLOW;
     public static Color NODE_COLOR_ENDS = Color.BLUE;
 
-    /**
-     * Generates a rail(s) from the provided data
-     *
-     * @param pointRender - render to supply visual data to
-     * @param start       - start of the rail
-     * @param end         - end of the rail
-     * @return list of generated rails
-     * @throws Exception TODO why?
-     */
-    public static RailSegment[] generateRail(PlotPointRender pointRender, SnappedPos start, SnappedPos end) throws Exception {
+   
 
-        final List<PlotPoint> dots = new ArrayList();
-        final List<IPos> rail1 = new ArrayList();
-        final List<IPos> rail2 = new ArrayList();
-
-        //Generate rail and get dots
-        final RailSegment[] segments = generateRail(dots, start, end);
-
-        //Generate visual connection lines
-        plotLineDots(dots, pointRender, Color.CYAN, 2); //TODO move color to static variable
-        plotLinePoints(rail1, pointRender, Color.BLACK, 2); //TODO covert to lines only
-        plotLinePoints(rail2, pointRender, Color.BLACK, 2); //TODO covert to lines only
-        return segments;
+    public static void generateTrack(RailSegment[] segments,PlotPointRender pointRender) {
+    	for(int i = 0; i < segments.length;i++) {
+    		RailSegment segment = segments[i];
+    		generateSegment(segment, pointRender);
+    	}
     }
-
-
+    public static void generateSegment(RailSegment segment,PlotPointRender pointRender) {
+    	generateRails(segment, pointRender);
+    	generateSleepers(segment, pointRender);
+    	generateVisualPath(segment, pointRender);
+    }
+    /**
+     * Generates the actual metal rails for the segment
+     * @param segment
+     */
+    private static void generateRails(RailSegment segment,PlotPointRender pointRender) {
+    	for(IRailJoint joint :  segment.getJoints()) {
+    		
+    	}
+    }
+    /**
+     * Generates the sleepers for the track
+     * @param segment
+     */
+    private static void generateSleepers(RailSegment segment,PlotPointRender pointRender) {
+    	
+    }
+    /**
+     * Generates a view of the actual path the train entity would use
+     * @param segment
+     */
+    @SuppressWarnings("rawtypes")
+	private static void generateVisualPath(RailSegment segment,PlotPointRender pointRender) {
+    	for(IRailPath path  : segment.getAllPaths()) {
+    		IPos start = path.getStart();
+    		for(IRailPathPoint pathPoint : path.getPathPoints()) {
+    		pointRender.addLine(new PlotPoint(start.x(), start.z(),Color.blue),new PlotPoint(pathPoint.x(), pathPoint.z(),Color.blue), Color.getColor("", 0x006600), 2);
+    		start = pathPoint;
+    		}
+    	}
+    }
+    
     /**
      * Generates a simple {@link RailSegmentLine} for visual testing of the rail object
      *
@@ -133,28 +153,7 @@ public class RailRenderUtil {
         return segment;
     }
 
-    /**
-     * Called to generate rail(s) from the provided data
-     *
-     * @param dots  - list to add visual dots to
-     * @param start - start of the rail
-     * @param end   - end of the rails
-     * @return array of generated rails
-     * @throws Exception TODO why?
-     */
-    public static RailSegment[] generateRail(List<PlotPoint> dots, SnappedPos start, SnappedPos end) throws Exception {
-        RailSegment[] segments = SegmentHelper.generateRail(start, end);
-        if (segments != null) {
-            for (int i = 0; i < segments.length; i++) {
-                populatePlotPoints(segments[i], dots);
-                //TODO consider creating an overlap visual for start/end points
-                //TODO consider alternating colors to better see data
-            }
-
-        }
-        return segments;
-    }
-
+    
     /**
      * Helper method to convert rail segment into visual path data. Will
      * generate a dot per path point. With the start and end dot getting

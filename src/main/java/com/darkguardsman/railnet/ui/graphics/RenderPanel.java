@@ -122,7 +122,7 @@ public class RenderPanel extends JPanel {
         //TODO trim line to fit inside view & padding
 
         g2.setColor(color);
-        g2.drawLine((int) Math.floor(x1), (int) Math.floor(y1), (int) Math.ceil(x2), (int) Math.ceil(y2));
+        g2.drawLine((int) Math.floor(x1), (int) Math.floor(y1), (int) Math.floor(x2), (int) Math.floor(y2));
     }
 
     public void drawVerticalLine(Graphics2D g2, Color color, double x) {

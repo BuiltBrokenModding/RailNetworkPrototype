@@ -11,6 +11,7 @@ import com.darkguardsman.railnet.data.rail.path.RailPath;
 import com.darkguardsman.railnet.lib.CurveMath;
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.ui.graphics.data.PlotPoint;
+import com.sun.xml.internal.ws.policy.PolicyIntersector;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -28,19 +29,18 @@ import java.util.Vector;
 public class RailSegmentCurve extends RailSegment {
     public final IRailJoint start;
     public final IRailJoint end;
+    
     public final int startAngle;
     public final int endAngle;
-
-    public IPosM influencePointA;
-    public IPosM influencePointB;
-
+    
     public RailSegmentCurve(IPosM start, IPosM end, int startAngle, int endAngle) {
         super();
-        this.start = new RailJoint(this, start);
-        this.end = new RailJoint(this, end);
+        this.start = new RailJoint(this, start,startAngle);
+        this.end = new RailJoint(this, end,endAngle);
 
         this.startAngle = startAngle;
         this.endAngle = endAngle;
+        this.generatePaths();
     }
 
     @Override
@@ -58,11 +58,8 @@ public class RailSegmentCurve extends RailSegment {
         try {
             CurveMath curveMath = new CurveMath(start.copy(), startAngle, end.copy(), endAngle, 1);
             List<IPos> points = curveMath.getCurvePoints();
-
-            influencePointA = curveMath.startInfluencePoint;
-            influencePointB = curveMath.endInfluencePoint;
-
             path.newPoints(points);
+            
         } catch (Exception ex) {
             ex.printStackTrace(); //TODO generate log and data needed to ID reason for exception
         }
@@ -71,7 +68,13 @@ public class RailSegmentCurve extends RailSegment {
 
         // add path
         getAllPaths().add(path);
-
+        
+        IRailPathPoint prev = 
+        //Get the joints with gradients
+        for(int i = 0 ; i < path.getPathPoints().size(); i++) {
+        	
+        }
+        
     }
 
     @Override

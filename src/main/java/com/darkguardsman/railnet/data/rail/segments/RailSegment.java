@@ -20,6 +20,8 @@ public abstract class RailSegment implements IRailSegment {
     protected final Map<IRailMaterialType, Integer> remainingRailCost = new HashMap();
     protected final Map<IRailMaterial, Integer> railMaterialsUsed = new HashMap();
 
+    protected final ArrayList<IRailJoint> sleeperPositions = new ArrayList(2);
+    
     protected boolean arePathsInit = false;
     protected boolean isRailCostInit = false;
 

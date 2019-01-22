@@ -3,12 +3,17 @@ package com.darkguardsman.railnet.ui.panels.snap;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.darkguardsman.railnet.api.RailHeading;
+import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.lib.SnappedPos;
+import com.darkguardsman.railnet.lib.utils.SegmentHelper;
 import com.darkguardsman.railnet.ui.graphics.RenderPanel;
 import com.darkguardsman.railnet.ui.graphics.rail.RailRenderUtil;
 import com.darkguardsman.railnet.ui.graphics.render.PlotPointRender;
@@ -36,6 +41,8 @@ public class MouseMotionListenerSnap implements MouseMotionListener, MouseListen
 	}
 
 	private SnappedPos start;
+	private RailHeading heading;
+	private List<RailSegment> storedSegments = new ArrayList<RailSegment>();
 
 	@Override
 	public void mouseMoved(MouseEvent mouseEvent) {
@@ -69,8 +76,16 @@ public class MouseMotionListenerSnap implements MouseMotionListener, MouseListen
 			System.out.println(String.format("Start: %d,%d,%d", (int)start.x(),(int)start.y(),(int)start.z()));
 			System.out.println(String.format("End: %d,%d,%d", (int)end.x(),(int)end.y(),(int)end.z()));
 			System.out.println("-");
-			    RailRenderUtil.generateRail(plotPointRender, start, end);	
-			} 
+			if(heading != null) {
+				SegmentHelper.generateRail(start, end, heading, mouseEvent.isShiftDown());
+			}
+				RailSegment[] segments = SegmentHelper.generateRail(start, end, mouseEvent.isShiftDown());
+				
+			    RailRenderUtil.generateTrack(segments,plotPointRender);
+			} else {
+				RailSegment[] segments = SegmentHelper.generateRail(new SnappedPos(mx, 0f, mz).clearOrigin(), new SnappedPos(mx, 0f, mz), mouseEvent.isShiftDown());
+				RailRenderUtil.generateTrack(segments,plotPointRender);
+			}
 			
 			} catch (Exception ex) {
 			}

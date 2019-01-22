@@ -8,37 +8,21 @@ package com.darkguardsman.railnet.lib;
  */
 public final class MathHelpers {
 
+    
     /**
-     * Wraps the angle between 0 - 360
-     *
-     * @param angle - angle in degrees
-     * @return angle between 0 - 360;
+     * Gets the distance between 2 angles
+     * @TODO check if existing function exists    
+     * @param angleA
+     * @param angleB
+     * @return
      */
-    public static double wrapTo360(double angle) {
-
-        //Works the same as % for wrapping but keeps the decimal points
-        int div = (int) angle / 360;
-        if (angle > 0) {
-            angle -= div * 360;
-        } else if (angle < 0) {
-            angle += div * 360;
-        }
-
-        //Less then zero, wrap back around
-        while (angle < 0) {
-        	angle += 360;
-        }
-        return angle;
-    }
-
-    /**
-     * Wraps the angle between 0 - 360
-     *
-     * @param angle - angle in degrees
-     * @return angle between 0 - 360;
-     */
-    public static int wrapTo360(int angle) {
-        return wrap(angle, 360);
+    public static Double getAngleDistance(Double angleA, Double angleB) {
+		Double difference = wrap(angleA-angleB,360);
+		if(difference < 180) {
+			return difference;
+		}else {
+			return 360 - difference;
+		}
     }
 
     /**
@@ -48,16 +32,22 @@ public final class MathHelpers {
      * @param limit - upper limit
      * @return wrapped value
      */
-    public static int wrap(int value, int limit) {
-        //Reduce
-        value = value % limit;
-
-        //Less then zero, wrap back around
-        if (value < 0) {
-            return value + limit;
+    public static double wrap(double value, int limit) {
+      	 //Works the same as % for wrapping but keeps the decimal points
+        int div = (int) value / limit;
+        if (value > 0) {
+        	value -= div * limit;
+        } else if (value < 0) {
+        	value += div * limit;
         }
-
+        //Less then zero, wrap back around
+        while (value < 0) {
+        	value += limit;
+        }
         return value;
+    }
+    public static int wrap(int value, int limit) {
+    	return (int) wrap((double)value,limit);
     }
 
     /**

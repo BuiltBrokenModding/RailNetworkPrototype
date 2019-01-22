@@ -137,7 +137,7 @@ public enum RailHeading {
      * @return heading
      */
     public static RailHeading fromAngle(double angleInput) {
-        final double angle = MathHelpers.wrapTo360(angleInput);
+        final double angle = MathHelpers.wrap(angleInput,360);
         final int limitedAngle = ((int) Math.round(angle / 45)) * 45; //TODO test that this snaps to closest
 
         for (RailHeading heading : values()) {
@@ -153,27 +153,13 @@ public enum RailHeading {
     }
 
     /**
-     * Returns the possible headings of a point based on its snap point, 0,0 is the centre of our snap grid,
-     * 1,1 is the corners heading NW,NE,SW,SE (-1,1)(1,-1) and (-1,-1) all result in (1,1) as we base it on modulo 2
-     * 1,0 is east and west
-     * 0,1 is north and south
+     * Returns the possible headings, legacy, snapping to positions was removed on realising it would only be hindering to our cause given we are based on a flexible model
+     * @deprecated
      * @param x
      * @param z
      * @return
      */
 	public static RailHeading[] getPossibleHeadings(int x, int z) {
 		return new RailHeading[] {NORTH_EAST,NORTH_WEST,SOUTH_EAST,SOUTH_WEST,EAST,WEST,NORTH,SOUTH};
-		/**
-		 * No longer snap, but leave in just incase
-		 
-		int xs = SnappedPos.gridPoint(x);
-		int zs = SnappedPos.gridPoint(z);
-		if(xs == 1 && zs == 1) {
-			return new RailHeading[] {NORTH_EAST,NORTH_WEST,SOUTH_EAST,SOUTH_WEST};
-		} else if(xs== 1) {
-			return new RailHeading[] {EAST,WEST};
-		} else {
-			return new RailHeading[] {NORTH,SOUTH};
-		} */
 	}
 }

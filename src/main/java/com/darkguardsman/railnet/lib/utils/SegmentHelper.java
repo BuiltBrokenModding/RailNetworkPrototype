@@ -5,14 +5,12 @@ import java.awt.geom.Point2D;
 import java.util.Arrays;
 
 import com.darkguardsman.railnet.api.RailHeading;
-import com.darkguardsman.railnet.api.math.Helper;
 import com.darkguardsman.railnet.api.math.IPosM;
 import com.darkguardsman.railnet.data.rail.segments.RailSegment;
 import com.darkguardsman.railnet.data.rail.segments.RailSegmentCurve;
 import com.darkguardsman.railnet.lib.MathHelpers;
 import com.darkguardsman.railnet.lib.Pos;
 import com.darkguardsman.railnet.lib.SnappedPos;
-import com.darkguardsman.railnet.lib.SnappedPos.SNAP_VECTORS;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 /**
@@ -95,7 +93,7 @@ public class SegmentHelper {
 			int angleToEnd = (int) Math.round(start.getAngle(end));
 			System.out.println(String.format("Angle to End: %s", angleToEnd));
 			// Get the angle between the heading and the angle to the end point
-			int diffAngle = MathHelpers.wrapTo360(angleToEnd - startAngle.angle);
+			int diffAngle = MathHelpers.wrap(angleToEnd - startAngle.angle,360);
 			System.out.println(String.format("Diff Angle: %s", diffAngle));
 			// Is the end point on your left or your right?
 			boolean left = (diffAngle > 180);
@@ -131,7 +129,7 @@ public class SegmentHelper {
 
 				double distanceToIntersectPoint;
 				// If the right angle is inline then the distance is merely the distance to end
-				double angleBetween = MathHelpers.wrapTo360(startRightAngle - startToEndAngle);
+				double angleBetween = MathHelpers.wrap(startRightAngle - startToEndAngle,360);
 				if (angleBetween > 90) {
 					angleBetween = 360 - angleBetween;
 				}
@@ -177,28 +175,24 @@ public class SegmentHelper {
 				// The end angle is the opposite of our exit angle
 				endAngle = RailHeading.fromAngle(startRightAngle - 180);
 
-				// Get the possible snap vectors to ensure we snap to the right place
-				SNAP_VECTORS possibleVectors = SNAP_VECTORS.getFromAngle(endAngle.angle);
 
 				// Find the end point by adding on 45 degrees with a length gotten from
 				// pythagoras;
-				end = new SnappedPos(start.addHVector(startAngle45, distanceToQuarterCircleEnd), possibleVectors);
+				end = new SnappedPos(start.addHVector(startAngle45, distanceToQuarterCircleEnd));
 
 				RailSegment part1 = generateRail(start, end, startAngle, endAngle);
 
 				// ======Create part 2=======
 				// The start position of our second part will be the end point of our first
 				start = end;
-				// Get the new possible vectors
-				possibleVectors = SNAP_VECTORS.getFromAngle(startAngle.angle);
+			
 				// Get the new adjustment vector
 				if (left) {
 					startAngle45 -= 90;
 				} else {
 					startAngle45 += 90;
 				}
-				end = new SnappedPos(part1.start().addHVector(startRightAngle, distanceToIntersectPoint),
-						possibleVectors);
+				end = new SnappedPos(part1.start().addHVector(startRightAngle, distanceToIntersectPoint));
 
 				// Our end angle is now our original start angle
 				endAngle = startAngle;
@@ -250,10 +244,10 @@ public class SegmentHelper {
 		
 		RailHeading[] validAngles = start.possibleHeadings();
 		RailHeading out = validAngles[0];
-		Double distance = Helper.getAngleDistance(angle,(double) out.angle);
+		Double distance = MathHelpers.getAngleDistance(angle,(double) out.angle);
 		for (int i = 1; i < validAngles.length; i++) {
 			RailHeading testAngle = validAngles[i];
-			Double testDistance = Helper.getAngleDistance(angle,(double) testAngle.angle);
+			Double testDistance = MathHelpers.getAngleDistance(angle,(double) testAngle.angle);
 			if(testDistance < distance) {
 				out = testAngle;
 				distance = testDistance;

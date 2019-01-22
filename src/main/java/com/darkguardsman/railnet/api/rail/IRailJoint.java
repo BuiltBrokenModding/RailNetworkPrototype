@@ -8,4 +8,5 @@ import com.darkguardsman.railnet.api.math.*;
  */
 public interface IRailJoint<N extends IRailJoint, P extends IPos> extends IPosM<N, P> {
     IRailSegment getRail();
+    public double angle();
 }

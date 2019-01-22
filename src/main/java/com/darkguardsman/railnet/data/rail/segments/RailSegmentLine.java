@@ -23,8 +23,8 @@ public class RailSegmentLine extends RailSegment {
         super();
         this.heading = heading;
         this.distance = distance;
-        start = new RailJoint(this, startX, startY, startZ);
-        end = new RailJoint(this, startX + heading.offsetX * distance, startY, startZ + heading.offsetZ * distance);
+        start = new RailJoint(this, startX, startY, startZ,heading.angle);
+        end = new RailJoint(this, startX + heading.offsetX * distance, startY, startZ + heading.offsetZ * distance,heading.angle);
     }
 
 
