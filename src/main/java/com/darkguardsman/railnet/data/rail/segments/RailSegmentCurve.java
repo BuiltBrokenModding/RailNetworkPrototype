@@ -31,7 +31,6 @@ public class RailSegmentCurve extends RailSegment {
     public final IRailJoint end;
     
     public final int startAngle;
-    public final int endAngle;
     
     public RailSegmentCurve(IPosM start, IPosM end, int startAngle, int endAngle) {
         super();
@@ -56,7 +55,7 @@ public class RailSegmentCurve extends RailSegment {
         path.newPoint(start.x(), start.y(), start.z());
 
         try {
-            CurveMath curveMath = new CurveMath(start.copy(), startAngle, end.copy(), endAngle, 1);
+            CurveMath curveMath = new CurveMath(start.copy(), startAngle, end.copy(), endAngle, 0.5);
             List<IPos> points = curveMath.getCurvePoints();
             path.newPoints(points);
             
@@ -69,11 +68,19 @@ public class RailSegmentCurve extends RailSegment {
         // add path
         getAllPaths().add(path);
         
-        IRailPathPoint prev = 
+        List<IRailPathPoint> points = path.getPathPoints();
         //Get the joints with gradients
-        for(int i = 0 ; i < path.getPathPoints().size(); i++) {
+        joints.clear();
+        joints.add(start);
+        for(int i = 1 ; i < points.size() - 1; i++) {
         	
+        	IRailPathPoint prev = points.get(i-1);
+        	IRailPathPoint here= points.get(i);
+        	IRailPathPoint next= points.get(i+1);
+        	
+        	joints.add(new RailJoint(this, here,prev.getAngle(next)));
         }
+        joints.add(end);
         
     }
 

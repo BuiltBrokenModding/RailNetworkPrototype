@@ -41,7 +41,7 @@ public class RailJoint extends AbstractPos<RailJoint> implements IRailJoint<Rail
     }
 
 	@Override
-	public double angle() {
+	public double gradient() {
 		return angle;
 	}
 	/**
